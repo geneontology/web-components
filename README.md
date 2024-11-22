@@ -4,8 +4,8 @@ This repository is where we are doing experimental work to consolidate GO web co
 
 For the latest stable version of the GO web components, please visit:
 
-* [wc-gocam-viz](https://github.com/geneontology/wc-gocam-viz)
-* [wc-ribbon](https://github.com/geneontology/wc-ribbon)
+- [wc-gocam-viz](https://github.com/geneontology/wc-gocam-viz)
+- [wc-ribbon](https://github.com/geneontology/wc-ribbon)
 
 ---
 
