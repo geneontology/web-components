@@ -21,6 +21,20 @@ export namespace Components {
         "placeholder": string;
         "value": string;
     }
+    interface WcSpinner {
+        /**
+          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+         */
+        "spinnerColor": string;
+        /**
+          * Define the size of the spinner (TO DO).
+         */
+        "spinnerSize": number;
+        /**
+          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+         */
+        "spinnerStyle": string;
+    }
 }
 export interface WcGoAutocompleteCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -44,8 +58,15 @@ declare global {
         prototype: HTMLWcGoAutocompleteElement;
         new (): HTMLWcGoAutocompleteElement;
     };
+    interface HTMLWcSpinnerElement extends Components.WcSpinner, HTMLStencilElement {
+    }
+    var HTMLWcSpinnerElement: {
+        prototype: HTMLWcSpinnerElement;
+        new (): HTMLWcSpinnerElement;
+    };
     interface HTMLElementTagNameMap {
         "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
+        "wc-spinner": HTMLWcSpinnerElement;
     }
 }
 declare namespace LocalJSX {
@@ -68,8 +89,23 @@ declare namespace LocalJSX {
         "placeholder"?: string;
         "value"?: string;
     }
+    interface WcSpinner {
+        /**
+          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+         */
+        "spinnerColor"?: string;
+        /**
+          * Define the size of the spinner (TO DO).
+         */
+        "spinnerSize"?: number;
+        /**
+          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+         */
+        "spinnerStyle"?: string;
+    }
     interface IntrinsicElements {
         "wc-go-autocomplete": WcGoAutocomplete;
+        "wc-spinner": WcSpinner;
     }
 }
 export { LocalJSX as JSX };
@@ -77,6 +113,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "wc-go-autocomplete": LocalJSX.WcGoAutocomplete & JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
+            "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
         }
     }
 }
