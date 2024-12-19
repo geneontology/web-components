@@ -9,7 +9,8 @@ import {
   Watch,
 } from "@stencil/core";
 
-import { truncate, groupKey, subjectGroupKey, sameArray } from "./utils";
+import { truncate, groupKey, subjectGroupKey } from "./utils";
+import { sameArray } from "../../globals/utils";
 import {
   RibbonModel,
   RibbonCategory,

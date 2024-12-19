@@ -42,6 +42,20 @@ Type: `Promise<void>`
 
 Type: `Promise<void>`
 
+## Dependencies
+
+### Used by
+
+- [wc-go-ribbon](../go-ribbon)
+
+### Graph
+
+```mermaid
+graph TD;
+  wc-go-ribbon --> wc-ribbon-table
+  style wc-ribbon-table fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ---
 
 _Built with [StencilJS](https://stenciljs.com/)_

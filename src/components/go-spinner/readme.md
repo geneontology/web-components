@@ -14,12 +14,14 @@
 
 ### Used by
 
+- [wc-go-ribbon](../go-ribbon)
 - [wc-ribbon-strips](../go-ribbon-strips)
 
 ### Graph
 
 ```mermaid
 graph TD;
+  wc-go-ribbon --> wc-spinner
   wc-ribbon-strips --> wc-spinner
   style wc-spinner fill:#f9f,stroke:#333,stroke-width:4px
 ```

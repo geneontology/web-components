@@ -63,6 +63,10 @@ Type: `Promise<void>`
 
 ## Dependencies
 
+### Used by
+
+- [wc-go-ribbon](../go-ribbon)
+
 ### Depends on
 
 - [wc-spinner](../go-spinner)
@@ -76,6 +80,7 @@ graph TD;
   wc-ribbon-strips --> wc-spinner
   wc-ribbon-strips --> wc-ribbon-subject
   wc-ribbon-strips --> wc-ribbon-cell
+  wc-go-ribbon --> wc-ribbon-strips
   style wc-ribbon-strips fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
