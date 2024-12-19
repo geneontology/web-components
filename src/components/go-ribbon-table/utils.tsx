@@ -1,20 +1,3 @@
-export function addEndingSlash(url) {
-  if (url == "") return url;
-  if (url.endsWith("/")) return url;
-  return url + "/";
-}
-
-/**
- * Transform http://example.com/page in page
- * @param url
- */
-export function removeBaseURL(url) {
-  if (!url.startsWith("http://")) return url;
-  url = url.substring(7);
-  let murl = url.substring(url.indexOf("/") + 1);
-  return murl;
-}
-
 /**
  * For table that have cells with multiple values
  * When merging rows based on such cells with multiple values, we have to fill with empty cells the columns that

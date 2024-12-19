@@ -1,7 +1,7 @@
 import { Component, h, Prop, Watch, State, Method } from "@stencil/core";
 
-import { Table, SuperCell } from "./globals/models";
-import { bioLinkToTable, addEmptyCells } from "./globals/utils";
+import { Table, SuperCell } from "../../globals/models";
+import { bioLinkToTable, addEmptyCells } from "./utils";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
 

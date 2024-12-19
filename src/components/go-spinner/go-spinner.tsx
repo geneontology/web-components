@@ -1,6 +1,6 @@
 import { Component, Prop, h, Element, Watch } from "@stencil/core";
 
-import { SPINNER_STYLE } from "./enums";
+import { SPINNER_STYLE } from "../../globals/enums";
 
 @Component({
   tag: "wc-spinner",
