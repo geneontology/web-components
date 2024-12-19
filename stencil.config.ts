@@ -1,7 +1,9 @@
 import { Config } from "@stencil/core";
+import { sass } from "@stencil/sass";
 
 export const config: Config = {
   namespace: "web-components",
+  plugins: [sass()],
   outputTargets: [
     {
       type: "dist",
@@ -18,6 +20,7 @@ export const config: Config = {
     {
       type: "www",
       serviceWorker: null, // disable service workers
+      copy: [{ src: "**/*.html" }, { src: "*.css" }],
     },
   ],
   testing: {
