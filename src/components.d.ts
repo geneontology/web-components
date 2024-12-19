@@ -6,114 +6,185 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface WcGoAutocomplete {
-        /**
-          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-         */
-        "category": string;
-        /**
-          * Maximum number of results to show
-         */
-        "maxResults": number;
-        /**
-          * Default placeholder for the autocomplete
-         */
-        "placeholder": string;
-        "value": string;
-    }
-    interface WcSpinner {
-        /**
-          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-         */
-        "spinnerColor": string;
-        /**
-          * Define the size of the spinner (TO DO).
-         */
-        "spinnerSize": number;
-        /**
-          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-         */
-        "spinnerStyle": string;
-    }
+  interface WcGoAutocomplete {
+    /**
+     * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+     */
+    category: string;
+    /**
+     * Maximum number of results to show
+     */
+    maxResults: number;
+    /**
+     * Default placeholder for the autocomplete
+     */
+    placeholder: string;
+    value: string;
+  }
+  interface WcLightModal {
+    close: () => Promise<void>;
+    modalAnchor: string;
+    modalContent: string;
+    modalTitle: string;
+    open: () => Promise<void>;
+    toggle: () => Promise<void>;
+    x: number;
+    y: number;
+  }
+  interface WcSpinner {
+    /**
+     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+     */
+    spinnerColor: string;
+    /**
+     * Define the size of the spinner (TO DO).
+     */
+    spinnerSize: number;
+    /**
+     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+     */
+    spinnerStyle: string;
+  }
 }
 export interface WcGoAutocompleteCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLWcGoAutocompleteElement;
+  detail: T;
+  target: HTMLWcGoAutocompleteElement;
 }
 declare global {
-    interface HTMLWcGoAutocompleteElementEventMap {
-        "itemSelected": any;
-    }
-    interface HTMLWcGoAutocompleteElement extends Components.WcGoAutocomplete, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLWcGoAutocompleteElement: {
-        prototype: HTMLWcGoAutocompleteElement;
-        new (): HTMLWcGoAutocompleteElement;
-    };
-    interface HTMLWcSpinnerElement extends Components.WcSpinner, HTMLStencilElement {
-    }
-    var HTMLWcSpinnerElement: {
-        prototype: HTMLWcSpinnerElement;
-        new (): HTMLWcSpinnerElement;
-    };
-    interface HTMLElementTagNameMap {
-        "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
-        "wc-spinner": HTMLWcSpinnerElement;
-    }
+  interface HTMLWcGoAutocompleteElementEventMap {
+    itemSelected: any;
+  }
+  interface HTMLWcGoAutocompleteElement
+    extends Components.WcGoAutocomplete,
+      HTMLStencilElement {
+    addEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGoAutocompleteElement,
+        ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>,
+      ) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGoAutocompleteElement,
+        ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>,
+      ) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions,
+    ): void;
+  }
+  var HTMLWcGoAutocompleteElement: {
+    prototype: HTMLWcGoAutocompleteElement;
+    new (): HTMLWcGoAutocompleteElement;
+  };
+  interface HTMLWcLightModalElement
+    extends Components.WcLightModal,
+      HTMLStencilElement {}
+  var HTMLWcLightModalElement: {
+    prototype: HTMLWcLightModalElement;
+    new (): HTMLWcLightModalElement;
+  };
+  interface HTMLWcSpinnerElement
+    extends Components.WcSpinner,
+      HTMLStencilElement {}
+  var HTMLWcSpinnerElement: {
+    prototype: HTMLWcSpinnerElement;
+    new (): HTMLWcSpinnerElement;
+  };
+  interface HTMLElementTagNameMap {
+    "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
+    "wc-light-modal": HTMLWcLightModalElement;
+    "wc-spinner": HTMLWcSpinnerElement;
+  }
 }
 declare namespace LocalJSX {
-    interface WcGoAutocomplete {
-        /**
-          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-         */
-        "category"?: string;
-        /**
-          * Maximum number of results to show
-         */
-        "maxResults"?: number;
-        /**
-          * Event triggered whenever an item is selected from the autocomplete
-         */
-        "onItemSelected"?: (event: WcGoAutocompleteCustomEvent<any>) => void;
-        /**
-          * Default placeholder for the autocomplete
-         */
-        "placeholder"?: string;
-        "value"?: string;
-    }
-    interface WcSpinner {
-        /**
-          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-         */
-        "spinnerColor"?: string;
-        /**
-          * Define the size of the spinner (TO DO).
-         */
-        "spinnerSize"?: number;
-        /**
-          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-         */
-        "spinnerStyle"?: string;
-    }
-    interface IntrinsicElements {
-        "wc-go-autocomplete": WcGoAutocomplete;
-        "wc-spinner": WcSpinner;
-    }
+  interface WcGoAutocomplete {
+    /**
+     * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+     */
+    category?: string;
+    /**
+     * Maximum number of results to show
+     */
+    maxResults?: number;
+    /**
+     * Event triggered whenever an item is selected from the autocomplete
+     */
+    onItemSelected?: (event: WcGoAutocompleteCustomEvent<any>) => void;
+    /**
+     * Default placeholder for the autocomplete
+     */
+    placeholder?: string;
+    value?: string;
+  }
+  interface WcLightModal {
+    modalAnchor?: string;
+    modalContent?: string;
+    modalTitle?: string;
+    x?: number;
+    y?: number;
+  }
+  interface WcSpinner {
+    /**
+     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+     */
+    spinnerColor?: string;
+    /**
+     * Define the size of the spinner (TO DO).
+     */
+    spinnerSize?: number;
+    /**
+     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+     */
+    spinnerStyle?: string;
+  }
+  interface IntrinsicElements {
+    "wc-go-autocomplete": WcGoAutocomplete;
+    "wc-light-modal": WcLightModal;
+    "wc-spinner": WcSpinner;
+  }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
-    export namespace JSX {
-        interface IntrinsicElements {
-            "wc-go-autocomplete": LocalJSX.WcGoAutocomplete & JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
-            "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
-        }
+  export namespace JSX {
+    interface IntrinsicElements {
+      "wc-go-autocomplete": LocalJSX.WcGoAutocomplete &
+        JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
+      "wc-light-modal": LocalJSX.WcLightModal &
+        JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
+      "wc-spinner": LocalJSX.WcSpinner &
+        JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
     }
+  }
 }
