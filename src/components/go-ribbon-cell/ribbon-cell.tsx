@@ -5,7 +5,7 @@ import { Component, Prop, Element } from "@stencil/core";
 import { heatColor, darken } from "./utils";
 import { CELL_TYPES, COLOR_BY } from "../../globals/enums";
 
-import { RibbonGroup, RibbonSubject } from "../../globals/models";
+import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
 import { Watch } from "@stencil/core";
 
 @Component({
@@ -16,8 +16,8 @@ import { Watch } from "@stencil/core";
 export class RibbonCell {
   @Element() el: HTMLElement;
 
-  @Prop() subject: RibbonSubject;
-  @Prop() group: RibbonGroup;
+  @Prop() subject: IRibbonSubject;
+  @Prop() group: IRibbonGroup;
 
   @Prop() classLabels = "term,terms";
   @Prop() annotationLabels = "annotation,annotations";

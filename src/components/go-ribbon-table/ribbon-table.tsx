@@ -1,6 +1,6 @@
 import { Component, h, Prop, Watch, State, Method } from "@stencil/core";
 
-import { Table, SuperCell } from "../../globals/models";
+import { ITable, ISuperCell } from "../../globals/models";
 import { bioLinkToTable, addEmptyCells } from "./utils";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
@@ -93,14 +93,14 @@ export class RibbonTable {
    * This contains the original table, converted from either data or bioLinkData
    * Its value only changes when data or bioLinkData changes
    */
-  originalTable: Table;
+  originalTable: ITable;
 
   /**
    * Contains the current representation from originalTable, including any grouping or sorting
    * Any change to this state will trigger a render
    */
   @State()
-  table: Table;
+  table: ITable;
 
   /**
    * Contains (header_id ; header)
@@ -313,7 +313,7 @@ export class RibbonTable {
       const row = { cells: [] };
       for (const header of table.header) {
         // console.log(" --- header: ", header);
-        let eqcell: SuperCell = undefined;
+        let eqcell: ISuperCell = undefined;
         if (keyColumns.includes(header.id)) {
           eqcell = rrows[0].cells.filter((elt) => elt.headerId == header.id)[0];
         } else if (otherColumns.includes(header.id)) {
@@ -334,6 +334,9 @@ export class RibbonTable {
 
             // TODO: can include test here for filder redudancy
             for (const val of otherCell.values) {
+              if (filterRedudancy) {
+                /* empty */
+              }
               eqcell.values.push(val);
             }
           }

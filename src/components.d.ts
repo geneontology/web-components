@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { RibbonGroup, RibbonModel, RibbonSubject } from "./globals/models";
-export { RibbonGroup, RibbonModel, RibbonSubject } from "./globals/models";
+import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
+export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export namespace Components {
   interface WcGoAutocomplete {
     /**
@@ -129,13 +129,13 @@ export namespace Components {
     binaryColor: boolean;
     classLabels: string;
     colorBy: number;
-    group: RibbonGroup;
+    group: IRibbonGroup;
     hovered: boolean;
     maxColor: string;
     maxHeatLevel: number;
     minColor: string;
     selected: boolean;
-    subject: RibbonSubject;
+    subject: IRibbonSubject;
   }
   interface WcRibbonStrips {
     /**
@@ -180,7 +180,7 @@ export namespace Components {
     maxColor: string;
     maxHeatLevel: number;
     minColor: string;
-    ribbonSummary: RibbonModel;
+    ribbonSummary: IRibbonModel;
     selectGroup: (group_id: any) => Promise<void>;
     /**
      * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
@@ -210,15 +210,7 @@ export namespace Components {
   }
   interface WcRibbonSubject {
     newTab: boolean;
-    subject: {
-      id: string;
-      label: string;
-      taxon_id: string;
-      taxon_label: string;
-      nb_classes: number;
-      nb_annotations: number;
-      groups: [{}];
-    };
+    subject: IRibbonSubject;
     subjectBaseURL: string;
   }
   interface WcRibbonTable {
@@ -627,13 +619,13 @@ declare namespace LocalJSX {
     binaryColor?: boolean;
     classLabels?: string;
     colorBy?: number;
-    group?: RibbonGroup;
+    group?: IRibbonGroup;
     hovered?: boolean;
     maxColor?: string;
     maxHeatLevel?: number;
     minColor?: string;
     selected?: boolean;
-    subject?: RibbonSubject;
+    subject?: IRibbonSubject;
   }
   interface WcRibbonStrips {
     /**
@@ -702,7 +694,7 @@ declare namespace LocalJSX {
      * This event is triggered whenever the mouse leaves a group cell area
      */
     onGroupLeave?: (event: WcRibbonStripsCustomEvent<any>) => void;
-    ribbonSummary?: RibbonModel;
+    ribbonSummary?: IRibbonModel;
     /**
      * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
      */
@@ -735,15 +727,7 @@ declare namespace LocalJSX {
      * This event is triggered whenever a subject label is clicked Can call preventDefault() to avoid the default behavior (opening the linked subject page)
      */
     onSubjectClick?: (event: WcRibbonSubjectCustomEvent<any>) => void;
-    subject?: {
-      id: string;
-      label: string;
-      taxon_id: string;
-      taxon_label: string;
-      nb_classes: number;
-      nb_annotations: number;
-      groups: [{}];
-    };
+    subject?: IRibbonSubject;
     subjectBaseURL?: string;
   }
   interface WcRibbonTable {

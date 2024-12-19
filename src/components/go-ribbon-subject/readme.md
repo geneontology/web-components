@@ -4,11 +4,11 @@
 
 ## Properties
 
-| Property         | Attribute            | Description | Type                                                                                                                              | Default     |
-| ---------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `newTab`         | `new-tab`            |             | `boolean`                                                                                                                         | `undefined` |
-| `subject`        | --                   |             | `{ id: string; label: string; taxon_id: string; taxon_label: string; nb_classes: number; nb_annotations: number; groups: [{}]; }` | `undefined` |
-| `subjectBaseURL` | `subject-base-u-r-l` |             | `string`                                                                                                                          | `undefined` |
+| Property         | Attribute            | Description | Type             | Default     |
+| ---------------- | -------------------- | ----------- | ---------------- | ----------- |
+| `newTab`         | `new-tab`            |             | `boolean`        | `undefined` |
+| `subject`        | --                   |             | `IRibbonSubject` | `undefined` |
+| `subjectBaseURL` | `subject-base-u-r-l` |             | `string`         | `undefined` |
 
 ## Events
 

@@ -1,57 +1,57 @@
-export class RibbonGroup {
+export interface IRibbonGroup {
   id: string;
   label: string;
   description: string;
   type: string;
 }
 
-export class RibbonCategory {
+export interface IRibbonCategory {
   id: string;
   label: string;
   description: string;
-  groups: [RibbonGroup];
+  groups: IRibbonGroup[];
 }
 
-export class RibbonSubject {
+export interface IRibbonSubject {
   id: string;
   label: string;
   taxon_id: string;
   taxon_label: string;
   nb_classes: number;
   nb_annotations: number;
-  groups: [{}];
+  groups: Record<string, never>;
 }
 
-export class RibbonModel {
-  categories: [RibbonCategory];
-  subjects: [RibbonSubject];
+export interface IRibbonModel {
+  categories: IRibbonCategory[];
+  subjects: IRibbonSubject[];
 }
 
-export class RibbonCellEvent {
-  subjects: [RibbonSubject];
-  group: RibbonGroup;
+export interface IRibbonCellEvent {
+  subjects: IRibbonSubject[];
+  group: IRibbonGroup;
 }
 
-export class RibbonGroupEvent {
-  subjects: [RibbonSubject];
-  category: RibbonCategory;
-  group: RibbonGroup;
+export interface IRibbonGroupEvent {
+  subjects: IRibbonSubject[];
+  category: IRibbonCategory;
+  group: IRibbonGroup;
 }
 
-export class RibbonCellClick extends RibbonCellEvent {
+export interface IRibbonCellClick extends IRibbonCellEvent {
   selected: boolean[];
 }
 
-export class SuperCell {
+export interface ISuperCell {
   id?: string;
   headerId: string;
   clickable?: boolean;
   selectable?: boolean;
   foldable?: boolean;
-  values: Cell[];
+  values: ICell[];
 }
 
-export class Cell {
+export interface ICell {
   id?: string;
   label: string;
   description?: string;
@@ -62,7 +62,7 @@ export class Cell {
   selectable?: boolean;
 }
 
-export class HeaderCell extends Cell {
+export interface IHeaderCell extends ICell {
   sortable?: boolean;
   searchable?: boolean;
   baseURL?: string; // if defined, convert cell URL to use this baseURL
@@ -70,18 +70,14 @@ export class HeaderCell extends Cell {
   hide?: boolean; // if true, won't show the column that would be considered only for treatment (eg grouping)
 }
 
-// export class RowCell extends Cell {
-//     headerId: string;
-// }
-
-export class Row {
+export interface IRow {
   foldable?: boolean;
   // id?: string;
-  cells: SuperCell[];
+  cells: ISuperCell[];
 }
 
-export class Table {
-  header: HeaderCell[];
-  rows: Row[];
+export interface ITable {
+  header: IHeaderCell[];
+  rows: IRow[];
   newTab?: boolean;
 }

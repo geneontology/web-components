@@ -4,6 +4,7 @@ import { Component, Prop, State, Element } from "@stencil/core";
 
 import { formatTaxonLabel } from "./utils";
 import { EventEmitter, Event } from "@stencil/core";
+import { IRibbonSubject } from "../../globals/models";
 
 @Component({
   tag: "wc-ribbon-subject",
@@ -13,15 +14,7 @@ import { EventEmitter, Event } from "@stencil/core";
 export class RibbonSubject {
   @Element() el: HTMLElement;
 
-  @Prop() subject: {
-    id: string;
-    label: string;
-    taxon_id: string;
-    taxon_label: string;
-    nb_classes: number;
-    nb_annotations: number;
-    groups: [{}];
-  };
+  @Prop() subject: IRibbonSubject;
 
   @Prop() subjectBaseURL: string;
   @Prop() newTab: boolean;

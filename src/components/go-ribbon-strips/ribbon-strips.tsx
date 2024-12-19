@@ -12,13 +12,13 @@ import {
 import { truncate, groupKey, subjectGroupKey } from "./utils";
 import { sameArray } from "../../globals/utils";
 import {
-  RibbonModel,
-  RibbonCategory,
-  RibbonGroup,
-  RibbonSubject,
-  RibbonCellEvent,
-  RibbonCellClick,
-  RibbonGroupEvent,
+  IRibbonModel,
+  IRibbonCategory,
+  IRibbonGroup,
+  IRibbonSubject,
+  IRibbonCellEvent,
+  IRibbonCellClick,
+  IRibbonGroupEvent,
 } from "../../globals/models";
 
 import {
@@ -190,7 +190,7 @@ export class RibbonStrips {
     }
   }
 
-  @State() selectedGroup: RibbonGroup;
+  @State() selectedGroup: IRibbonGroup;
 
   /**
    * This event is triggered whenever a ribbon cell is clicked
@@ -228,12 +228,12 @@ export class RibbonStrips {
   @Event({ eventName: "groupLeave", cancelable: true, bubbles: true })
   groupLeave: EventEmitter;
 
-  @Prop() ribbonSummary: RibbonModel;
+  @Prop() ribbonSummary: IRibbonModel;
 
   loading = true;
   onlyExperimental = false;
 
-  groupAll: RibbonGroup = {
+  groupAll: IRibbonGroup = {
     id: "all",
     label: "all annotations",
     description: "Show all annotations for all categories",
@@ -386,7 +386,7 @@ export class RibbonStrips {
         el.classList.add("selected");
       }
     }
-    const event: RibbonCellEvent = { subjects: subjects, group: group };
+    const event: IRibbonCellEvent = { subjects: subjects, group: group };
     this.cellEnter.emit(event);
   }
 
@@ -414,7 +414,7 @@ export class RibbonStrips {
       el = this.ribbonElement.querySelector("#" + groupKey(group));
       el.classList.remove("selected");
     }
-    const event: RibbonCellEvent = { subjects: subjects, group: group };
+    const event: IRibbonCellEvent = { subjects: subjects, group: group };
     this.cellLeave.emit(event);
   }
 
@@ -527,7 +527,7 @@ export class RibbonStrips {
 
     const selected = this.selectCells(subjects, group);
 
-    const event: RibbonCellClick = {
+    const event: IRibbonCellClick = {
       subjects: subjects,
       group: group,
       selected: selected,
@@ -543,7 +543,7 @@ export class RibbonStrips {
 
   onGroupEnter(category, group) {
     this.overCells(this.ribbonSummary.subjects, group);
-    const event: RibbonGroupEvent = {
+    const event: IRibbonGroupEvent = {
       subjects: this.ribbonSummary.subjects,
       category: category,
       group: group,
@@ -553,7 +553,7 @@ export class RibbonStrips {
 
   onGroupLeave(category, group) {
     this.overCells(this.ribbonSummary.subjects, group);
-    const event: RibbonGroupEvent = {
+    const event: IRibbonGroupEvent = {
       subjects: this.ribbonSummary.subjects,
       category: category,
       group: group,
@@ -675,10 +675,10 @@ export class RibbonStrips {
           ""
         )}
 
-        {this.ribbonSummary.categories.map((category: RibbonCategory) => {
+        {this.ribbonSummary.categories.map((category: IRibbonCategory) => {
           return [
             <th class="ribbon__category--separator"></th>,
-            category.groups.map((group: RibbonGroup) => {
+            category.groups.map((group: IRibbonGroup) => {
               if (group.type == CELL_TYPES.OTHER && !this.showOtherGroup) {
                 return;
               }
@@ -724,7 +724,7 @@ export class RibbonStrips {
   }
 
   renderSubjects() {
-    return this.ribbonSummary.subjects.map((subject: RibbonSubject) => {
+    return this.ribbonSummary.subjects.map((subject: IRibbonSubject) => {
       const subjects =
         this.selectionMode == SELECTION.CELL
           ? subject
@@ -763,10 +763,10 @@ export class RibbonStrips {
             ""
           )}
 
-          {this.ribbonSummary.categories.map((category: RibbonCategory) => {
+          {this.ribbonSummary.categories.map((category: IRibbonCategory) => {
             return [
               <td class="ribbon__subject--separator"></td>,
-              category.groups.map((group: RibbonGroup) => {
+              category.groups.map((group: IRibbonGroup) => {
                 const cellid =
                   group.id + (group.type == CELL_TYPES.OTHER ? "-other" : "");
                 const cell =

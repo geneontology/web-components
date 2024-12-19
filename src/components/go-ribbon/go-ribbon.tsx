@@ -1,6 +1,6 @@
 import { Component, Element, h, Prop, Watch, State } from "@stencil/core";
 
-import { RibbonGroup } from "../../globals/models";
+import { IRibbonGroup } from "../../globals/models";
 
 import {
   COLOR_BY,
@@ -201,7 +201,7 @@ export class GORibbon {
    */
   @Prop() data: string;
 
-  @State() selectedGroup: RibbonGroup;
+  @State() selectedGroup: IRibbonGroup;
 
   onlyExperimental = false;
 
