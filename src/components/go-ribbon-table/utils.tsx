@@ -6,15 +6,15 @@
  * @param table
  */
 export function addEmptyCells(table) {
-  for (let row of table.rows) {
+  for (const row of table.rows) {
     let nbMax = 0;
-    for (let header of table.header) {
-      let eqcell = row.cells.filter((elt) => elt.headerId == header.id)[0];
+    for (const header of table.header) {
+      const eqcell = row.cells.filter((elt) => elt.headerId == header.id)[0];
       // console.log("R: ", row , "H: ", header , "E:", eqcell);
       nbMax = Math.max(nbMax, eqcell.values.length);
     }
-    for (let header of table.header) {
-      let eqcell = row.cells.filter((elt) => elt.headerId == header.id)[0];
+    for (const header of table.header) {
+      const eqcell = row.cells.filter((elt) => elt.headerId == header.id)[0];
       while (eqcell.values.length < nbMax) {
         eqcell.values.push({ label: "" });
       }
@@ -35,7 +35,7 @@ export function aspectShortLabel(txt) {
 }
 
 export function bioLinkToTable(data, getURL) {
-  let table = {
+  const table = {
     newTab: true,
     header: [
       {
@@ -88,9 +88,9 @@ export function bioLinkToTable(data, getURL) {
     rows: [],
   };
 
-  for (let subject of data) {
+  for (const subject of data) {
     // console.log("S:", subject);
-    for (let assoc of subject.assocs) {
+    for (const assoc of subject.assocs) {
       table.rows.push({
         cells: [
           {

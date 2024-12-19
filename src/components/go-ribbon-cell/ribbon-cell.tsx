@@ -96,7 +96,7 @@ export class RibbonCell {
   @Prop() hovered = false;
 
   cellColor(nbClasses, nbAnnotations) {
-    var levels =
+    const levels =
       this.colorBy == COLOR_BY.CLASS_COUNT ? nbClasses : nbAnnotations;
     let newColor = heatColor(
       levels,
@@ -106,8 +106,8 @@ export class RibbonCell {
       this.binaryColor,
     );
     if (this.hovered) {
-      let tmp = newColor.replace(/[^\d,]/g, "").split(",");
-      let val = darken(tmp, 0.4);
+      const tmp = newColor.replace(/[^\d,]/g, "").split(",");
+      const val = darken(tmp, 0.4);
       newColor = "rgb(" + val.join(",") + ")";
     }
     return newColor;
@@ -117,9 +117,9 @@ export class RibbonCell {
     if (this.group.type == "GlobalAll") {
       return this.subject.nb_classes;
     }
-    let cellid =
+    const cellid =
       this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
-    let cell =
+    const cell =
       cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
     return cell ? cell["ALL"]["nb_classes"] : 0;
   }
@@ -128,9 +128,9 @@ export class RibbonCell {
     if (this.group.type == "GlobalAll") {
       return this.subject.nb_annotations;
     }
-    let cellid =
+    const cellid =
       this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
-    let cell =
+    const cell =
       cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
     return cell ? cell["ALL"]["nb_annotations"] : 0;
   }
@@ -151,9 +151,9 @@ export class RibbonCell {
 
   render() {
     if (!this.available) {
-      let title =
+      const title =
         this.subject.label + " can not have data for " + this.group.label;
-      let classes = "ribbon__subject--cell unavailable";
+      const classes = "ribbon__subject--cell unavailable";
       return (
         <td title={title} class={classes}>
           {" "}
@@ -161,8 +161,8 @@ export class RibbonCell {
       );
     }
 
-    let nbClasses = this.getNbClasses();
-    let nbAnnotations = this.getNbAnnotations();
+    const nbClasses = this.getNbClasses();
+    const nbAnnotations = this.getNbAnnotations();
 
     let title =
       "Subject: " +

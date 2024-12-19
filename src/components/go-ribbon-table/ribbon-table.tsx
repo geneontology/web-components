@@ -178,8 +178,8 @@ export class RibbonTable {
       if (this.groupBy && this.groupBy != "") {
         // multiple steps grouping
         if (this.groupBy.includes(";")) {
-          let split = this.groupBy.split(";");
-          for (let groups of split) {
+          const split = this.groupBy.split(";");
+          for (const groups of split) {
             tempTable = this.groupByColumns(
               tempTable,
               groups.split(","),
@@ -200,8 +200,8 @@ export class RibbonTable {
       if (this.orderBy && this.orderBy != "") {
         tempTable.rows.sort((a, b) => {
           // console.log("sort(", a, b, ")");
-          let eqa = a.cells.filter((elt) => elt.headerId == this.orderBy)[0];
-          let eqb = b.cells.filter((elt) => elt.headerId == this.orderBy)[0];
+          const eqa = a.cells.filter((elt) => elt.headerId == this.orderBy)[0];
+          const eqb = b.cells.filter((elt) => elt.headerId == this.orderBy)[0];
           return eqa.values[0].label.localeCompare(eqb.values[0].label);
         });
       }
@@ -210,8 +210,8 @@ export class RibbonTable {
       if (this.filterBy && this.filterBy != "") {
         // multiple steps grouping
         if (this.filterBy.includes(";")) {
-          let split = this.filterBy.split(";");
-          for (let filters of split) {
+          const split = this.filterBy.split(";");
+          for (const filters of split) {
             tempTable = this.filterByColumns(tempTable, filters);
           }
           // single step grouping
@@ -222,10 +222,10 @@ export class RibbonTable {
 
       // step-4: hide columns based on provided hideColumns parameter
       if (this.hideColumns && this.hideColumns != "") {
-        let cols = this.hideColumns.includes(",")
+        const cols = this.hideColumns.includes(",")
           ? this.hideColumns.split(",")
           : [this.hideColumns];
-        for (let header of tempTable.header) {
+        for (const header of tempTable.header) {
           header.hide = cols.includes(header.id);
         }
       }
@@ -253,7 +253,7 @@ export class RibbonTable {
 
   createHeaderMap() {
     this.headerMap = new Map();
-    for (let header of this.table.header) {
+    for (const header of this.table.header) {
       this.headerMap.set(header.id, header);
     }
   }
@@ -271,21 +271,21 @@ export class RibbonTable {
   groupByColumns(table, keyColumns, filterRedudancy = true) {
     // console.log("groupByColumns(", table , keyColumns, filterRedudancy , ")");
 
-    var firstRow = table.rows[0].cells;
-    var otherCells = firstRow.filter(
+    const firstRow = table.rows[0].cells;
+    const otherCells = firstRow.filter(
       (elt) => !keyColumns.includes(elt.headerId),
     );
-    var otherColumns = otherCells.map((elt) => elt.headerId);
+    const otherColumns = otherCells.map((elt) => elt.headerId);
     // console.log("other cols: ", otherColumns);
 
     // building the list of unique rows
-    var uRows = new Map();
+    const uRows = new Map();
     for (let i = 0; i < table.rows.length; i++) {
-      let row = table.rows[i];
-      let keyCells = row.cells.filter((elt) =>
+      const row = table.rows[i];
+      const keyCells = row.cells.filter((elt) =>
         keyColumns.includes(elt.headerId),
       );
-      let key = keyCells.map((elt) => elt.values[0].label).join("-");
+      const key = keyCells.map((elt) => elt.values[0].label).join("-");
 
       let rows = [];
       if (uRows.has(key)) {
@@ -297,21 +297,21 @@ export class RibbonTable {
     }
     // console.log("unique rows: ", uRows);
 
-    var newTable = { newTab: table.newTab, header: table.header, rows: [] };
+    const newTable = { newTab: table.newTab, header: table.header, rows: [] };
 
     // this was required either by stenciljs or web component
     // for an integration in alliance REACT project
     // somehow more recent iterators on Map were not working !
-    var akeys = Array.from(uRows.keys());
+    const akeys = Array.from(uRows.keys());
 
     // going through each set of unique rows
     // for(let rrows of uRows.values()) {
     for (let i = 0; i < akeys.length; i++) {
-      let key = akeys[i];
-      let rrows = uRows.get(key);
+      const key = akeys[i];
+      const rrows = uRows.get(key);
       // console.log("Uniq.Row ("  , key , "): ", rrows);
-      let row = { cells: [] };
-      for (let header of table.header) {
+      const row = { cells: [] };
+      for (const header of table.header) {
         // console.log(" --- header: ", header);
         let eqcell: SuperCell = undefined;
         if (keyColumns.includes(header.id)) {
@@ -322,8 +322,8 @@ export class RibbonTable {
             values: [],
           };
 
-          for (let eqrow of rrows) {
-            let otherCell = eqrow.cells.filter(
+          for (const eqrow of rrows) {
+            const otherCell = eqrow.cells.filter(
               (elt) => elt.headerId == header.id,
             )[0];
             eqcell.headerId = otherCell.headerId;
@@ -333,9 +333,7 @@ export class RibbonTable {
             eqcell.selectable = otherCell.selectable;
 
             // TODO: can include test here for filder redudancy
-            for (let val of otherCell.values) {
-              if (filterRedudancy) {
-              }
+            for (const val of otherCell.values) {
               eqcell.values.push(val);
             }
           }
@@ -352,8 +350,8 @@ export class RibbonTable {
   }
 
   filterByColumns(table, filters) {
-    let split = filters.split(":");
-    let key = split[0];
+    const split = filters.split(":");
+    const key = split[0];
     let values = split[1];
     if (values.includes(",")) {
       values = values.split(",");
@@ -362,10 +360,10 @@ export class RibbonTable {
     }
 
     table.rows = table.rows.filter((row) => {
-      let eqcell = row.cells.filter((elt) => {
+      const eqcell = row.cells.filter((elt) => {
         return elt.headerId == key;
       })[0];
-      let hasValue = eqcell.values.some((elt) => {
+      const hasValue = eqcell.values.some((elt) => {
         // return (elt.label && values.includes(elt.label)) || (elt.id && values.includes(elt.id));
         return (
           (elt.label && values.some((val) => elt.label.includes(val))) ||
@@ -424,7 +422,7 @@ export class RibbonTable {
             if (!this.headerMap) {
               return "";
             }
-            let header = this.headerMap.get(superCell.headerId);
+            const header = this.headerMap.get(superCell.headerId);
             if (header.hide) {
               return "";
             }

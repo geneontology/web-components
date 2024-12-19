@@ -47,7 +47,7 @@ export class RibbonSubject {
   subjectClick: EventEmitter;
 
   onSubjectClick(event, subject) {
-    let ev = { originalEvent: event, subject: subject };
+    const ev = { originalEvent: event, subject: subject };
     this.subjectClick.emit(ev);
   }
 

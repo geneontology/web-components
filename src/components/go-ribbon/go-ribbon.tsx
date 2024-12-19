@@ -305,7 +305,7 @@ export class GORibbon {
   }
 
   applyFilterReference(data) {
-    let filters = this.filterReference.includes(",")
+    const filters = this.filterReference.includes(",")
       ? this.filterReference.split(",")
       : [this.filterReference.trim()];
 
@@ -330,13 +330,13 @@ export class GORibbon {
   }
 
   applyFilterCrossAspect(data, group) {
-    let aspect = getCategoryIdLabel(
+    const aspect = getCategoryIdLabel(
       group,
       this.ribbonStrips.ribbonSummary.categories,
     );
     for (let i = 0; i < data.length; i++) {
       data[i].assocs = data[i].assocs.filter((assoc) => {
-        let cat =
+        const cat =
           assoc.object.category[0] == "molecular_activity"
             ? "molecular_function"
             : assoc.object.category[0];
@@ -350,10 +350,10 @@ export class GORibbon {
     if (!this.previousSelection) {
       return false;
     }
-    let sameGroupID = selection.group.id == this.previousSelection.group.id;
-    let sameGroupType =
+    const sameGroupID = selection.group.id == this.previousSelection.group.id;
+    const sameGroupType =
       selection.group.type == this.previousSelection.group.type;
-    let sameSubject = sameArray(
+    const sameSubject = sameArray(
       selection.subjects,
       this.previousSelection.subjects,
     );
@@ -366,8 +366,8 @@ export class GORibbon {
     console.log("Cell Clicked", e.detail);
     this.loadingTable = true;
 
-    let selection = e.detail;
-    let group = selection.group;
+    const selection = e.detail;
+    const group = selection.group;
     let group_ids = group.id;
     let subject_ids = selection.subjects.map((elt) => elt.id);
 
@@ -390,7 +390,7 @@ export class GORibbon {
 
     const goApiUrl = "https://api.geneontology.org/api/";
     subject_ids = subject_ids.join("&subject=");
-    let query =
+    const query =
       goApiUrl +
       "bioentityset/slimmer/function?slim=" +
       group_ids +
@@ -408,7 +408,7 @@ export class GORibbon {
         data = this.applyTableFilters(data, group);
 
         if (group.type == "Other") {
-          let aspect = getCategory(
+          const aspect = getCategory(
             group,
             this.ribbonStrips.ribbonSummary.categories,
           );
@@ -420,7 +420,7 @@ export class GORibbon {
           });
           terms = terms.join("&slim=");
 
-          let query_terms =
+          const query_terms =
             goApiUrl +
             "bioentityset/slimmer/function?slim=" +
             terms +
@@ -438,11 +438,11 @@ export class GORibbon {
               data_terms = this.applyTableFilters(data_terms, group);
 
               let concat_assocs = [];
-              for (let array of data_terms) {
+              for (const array of data_terms) {
                 concat_assocs = concat_assocs.concat(array.assocs);
               }
 
-              let other_assocs = diffAssociations(
+              const other_assocs = diffAssociations(
                 data[0].assocs,
                 concat_assocs,
               );

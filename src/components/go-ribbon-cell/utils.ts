@@ -1,5 +1,5 @@
 export function darken(color, factor) {
-  var newColor = [...color];
+  const newColor = [...color];
   for (let i = 0; i < newColor.length; i++) {
     if (newColor[i] < 255) {
       newColor[i] = Math.round(Math.max(0, newColor[i] * (1 - factor)));
@@ -34,11 +34,11 @@ export function heatColor(
 
   // this is the log version for interpolation (better highlight the most annotated classes)
   // note: safari needs integer and not float for rgb function
-  let fraction =
+  const fraction =
     Math.min(10 * Math.log(level + 1), maxHeatLevel) / maxHeatLevel;
 
   // there are some annotations and we want a continuous color (r, g, b)
-  let itemColor = []; // [r,g,b]
+  const itemColor = []; // [r,g,b]
   itemColor[0] = Math.round(
     minColor[0] + fraction * (maxColor[0] - minColor[0]),
   );

@@ -90,7 +90,7 @@ export class LightModal {
   // }
 
   render() {
-    let classes = "modal-card";
+    const classes = "modal-card";
     let styles = {};
     if (this.x != -1 && this.y != -1) {
       styles = { top: this.y + "px", left: this.x + "px" };

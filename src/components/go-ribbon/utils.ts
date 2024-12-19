@@ -3,7 +3,7 @@
  * @param {*} group group object (eg ontology term)
  */
 export function getCategory(group, categories) {
-  let cat = categories.filter((cat) => {
+  const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);
   });
   return cat.length > 0 ? cat[0] : undefined;
@@ -14,7 +14,7 @@ export function getCategory(group, categories) {
  * @param {*} group group object (eg ontology term)
  */
 export function getCategoryIdLabel(group, categories) {
-  let cat = categories.filter((cat) => {
+  const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);
   });
   return cat.length > 0 ? [cat[0].id, cat[0].label] : undefined;
@@ -36,7 +36,7 @@ export function associationKey(assoc) {
 }
 
 export function fullAssociationKey(assoc) {
-  var key =
+  const key =
     associationKey(assoc) +
     "@" +
     assoc.evidence_type +
@@ -48,12 +48,12 @@ export function fullAssociationKey(assoc) {
 }
 
 export function diffAssociations(assocs_all, assocs_exclude) {
-  var list = [];
-  for (let assoc of assocs_all) {
+  const list = [];
+  for (const assoc of assocs_all) {
     let found = false;
-    let key_all = fullAssociationKey(assoc);
-    for (let exclude of assocs_exclude) {
-      let key_exclude = fullAssociationKey(exclude);
+    const key_all = fullAssociationKey(assoc);
+    for (const exclude of assocs_exclude) {
+      const key_exclude = fullAssociationKey(exclude);
       if (key_all == key_exclude) {
         found = true;
         break;

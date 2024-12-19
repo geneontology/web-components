@@ -260,8 +260,8 @@ export class RibbonStrips {
   getGroup(group_id) {
     if (!this.ribbonSummary) return null;
     if (group_id == "all") return this.groupAll;
-    for (let cat of this.ribbonSummary.categories) {
-      for (let gp of cat.groups) {
+    for (const cat of this.ribbonSummary.categories) {
+      for (const gp of cat.groups) {
         if (gp.id == group_id) return gp;
       }
     }
@@ -346,11 +346,11 @@ export class RibbonStrips {
       this.formerColors = new Map();
 
       // change header style
-      let el = this.ribbonElement.querySelector("#" + groupKey(group));
+      const el = this.ribbonElement.querySelector("#" + groupKey(group));
       el.classList.add("selected");
 
-      for (let subject of subjects) {
-        let el = this.ribbonElement.querySelector(
+      for (const subject of subjects) {
+        const el = this.ribbonElement.querySelector(
           "#" + subjectGroupKey(subject, group),
         );
         el.hovered = true;
@@ -386,18 +386,18 @@ export class RibbonStrips {
         el.classList.add("selected");
       }
     }
-    let event: RibbonCellEvent = { subjects: subjects, group: group };
+    const event: RibbonCellEvent = { subjects: subjects, group: group };
     this.cellEnter.emit(event);
   }
 
   onCellLeave(subjects, group) {
     if (subjects instanceof Array) {
       // change the header style
-      let el = this.ribbonElement.querySelector("#" + groupKey(group));
+      const el = this.ribbonElement.querySelector("#" + groupKey(group));
       el.classList.remove("selected");
 
-      for (let subject of subjects) {
-        let el = this.ribbonElement.querySelector(
+      for (const subject of subjects) {
+        const el = this.ribbonElement.querySelector(
           "#" + subjectGroupKey(subject, group),
         );
         el.hovered = false;
@@ -414,7 +414,7 @@ export class RibbonStrips {
       el = this.ribbonElement.querySelector("#" + groupKey(group));
       el.classList.remove("selected");
     }
-    let event: RibbonCellEvent = { subjects: subjects, group: group };
+    const event: RibbonCellEvent = { subjects: subjects, group: group };
     this.cellLeave.emit(event);
   }
 
@@ -424,24 +424,24 @@ export class RibbonStrips {
       subjects = [subjects];
     }
 
-    let subs = subjects.map(
+    const subs = subjects.map(
       (elt) => elt.id + "@" + group.id + "@" + group.type,
     );
-    let prevSubs = this.previouslyHovered.map(
+    const prevSubs = this.previouslyHovered.map(
       (elt) => elt.subject.id + "@" + elt.group.id + "@" + elt.group.type,
     );
-    let same = sameArray(subs, prevSubs);
+    const same = sameArray(subs, prevSubs);
 
     if (!same) {
-      for (let cell of this.previouslyHovered) {
+      for (const cell of this.previouslyHovered) {
         cell.hovered = false;
       }
     }
     this.previouslyHovered = [];
 
-    let hovered: boolean[] = [];
-    for (let subject of subjects) {
-      let cell = this.ribbonElement.querySelector(
+    const hovered: boolean[] = [];
+    for (const subject of subjects) {
+      const cell = this.ribbonElement.querySelector(
         "#" + subjectGroupKey(subject, group),
       );
       cell.hovered = !cell.hovered;
@@ -457,25 +457,25 @@ export class RibbonStrips {
       subjects = [subjects];
     }
 
-    let subs = subjects.map(
+    const subs = subjects.map(
       (elt) => elt.id + "@" + group.id + "@" + group.type,
     );
-    let prevSubs = this.previouslySelected.map(
+    const prevSubs = this.previouslySelected.map(
       (elt) => elt.subject.id + "@" + elt.group.id + "@" + elt.group.type,
     );
-    let same = sameArray(subs, prevSubs);
+    const same = sameArray(subs, prevSubs);
 
     if (!same) {
-      for (let cell of this.previouslySelected) {
+      for (const cell of this.previouslySelected) {
         cell.selected = false;
       }
     }
     this.previouslySelected = [];
 
-    let selected: boolean[] = [];
+    const selected: boolean[] = [];
     let lastCell;
-    for (let subject of subjects) {
-      let cell = this.ribbonElement.querySelector(
+    for (const subject of subjects) {
+      const cell = this.ribbonElement.querySelector(
         "#" + subjectGroupKey(subject, group),
       );
       cell.selected = toggle ? !cell.selected : true;
@@ -501,15 +501,15 @@ export class RibbonStrips {
       let hasAnnotations = false;
       // if single cell selection, check if it has annotations
       if (this.selectionMode == SELECTION.CELL) {
-        let keys = Object.keys(subjects[0].groups);
-        for (let key of keys) {
+        const keys = Object.keys(subjects[0].groups);
+        for (const key of keys) {
           if (subjects[0].groups[key]["ALL"].nb_annotations > 0)
             hasAnnotations = true;
         }
 
         // if multiple cells selection, check if at least one has annotations
       } else {
-        for (let sub of subjects) {
+        for (const sub of subjects) {
           if (group.id == "all") {
             hasAnnotations = hasAnnotations || sub.nb_annotations > 0;
           } else {
@@ -525,9 +525,9 @@ export class RibbonStrips {
       }
     }
 
-    let selected = this.selectCells(subjects, group);
+    const selected = this.selectCells(subjects, group);
 
-    let event: RibbonCellClick = {
+    const event: RibbonCellClick = {
       subjects: subjects,
       group: group,
       selected: selected,
@@ -537,13 +537,13 @@ export class RibbonStrips {
 
   onGroupClick(category, group) {
     this.selectCells(this.ribbonSummary.subjects, group);
-    let event = { category: category, group: group };
+    const event = { category: category, group: group };
     this.groupClick.emit(event);
   }
 
   onGroupEnter(category, group) {
     this.overCells(this.ribbonSummary.subjects, group);
-    let event: RibbonGroupEvent = {
+    const event: RibbonGroupEvent = {
       subjects: this.ribbonSummary.subjects,
       category: category,
       group: group,
@@ -553,7 +553,7 @@ export class RibbonStrips {
 
   onGroupLeave(category, group) {
     this.overCells(this.ribbonSummary.subjects, group);
-    let event: RibbonGroupEvent = {
+    const event: RibbonGroupEvent = {
       subjects: this.ribbonSummary.subjects,
       category: category,
       group: group,
@@ -562,14 +562,14 @@ export class RibbonStrips {
   }
 
   applyCategoryStyling(category) {
-    let cc0 = truncate(category, this.groupMaxLabelSize, "...");
-    let cc1 = this.applyCategoryCase(cc0);
-    let cc2 = this.applyCategoryBold(cc1);
+    const cc0 = truncate(category, this.groupMaxLabelSize, "...");
+    const cc1 = this.applyCategoryCase(cc0);
+    const cc2 = this.applyCategoryBold(cc1);
     return cc2;
   }
 
   applyCategoryBold(category) {
-    let lc = category.toLowerCase();
+    const lc = category.toLowerCase();
     if (lc.startsWith("all") && this.categoryAllStyle == FONT_STYLE.BOLD) {
       return <b>{category}</b>;
     }
@@ -592,7 +592,7 @@ export class RibbonStrips {
   async selectGroup(group_id) {
     setTimeout(() => {
       if (group_id && this.ribbonSummary) {
-        let gp = this.getGroup(group_id);
+        const gp = this.getGroup(group_id);
         if (gp) {
           this.selectCells(this.ribbonSummary.subjects, gp, false);
         } else {
@@ -623,7 +623,7 @@ export class RibbonStrips {
     }
 
     // API request done but not subject retrieved
-    let nbSubjects: number = this.ribbonSummary.subjects.length;
+    const nbSubjects: number = this.ribbonSummary.subjects.length;
     if (nbSubjects == 0) {
       return <div>Must provide at least one subject</div>;
     }
@@ -683,7 +683,7 @@ export class RibbonStrips {
                 return;
               }
 
-              let classes = this.groupClickable
+              const classes = this.groupClickable
                 ? "ribbon__category--cell clickable"
                 : "ribbon__category--cell";
               return (
@@ -725,7 +725,7 @@ export class RibbonStrips {
 
   renderSubjects() {
     return this.ribbonSummary.subjects.map((subject: RibbonSubject) => {
-      let subjects =
+      const subjects =
         this.selectionMode == SELECTION.CELL
           ? subject
           : this.ribbonSummary.subjects;
@@ -767,18 +767,21 @@ export class RibbonStrips {
             return [
               <td class="ribbon__subject--separator"></td>,
               category.groups.map((group: RibbonGroup) => {
-                let cellid =
+                const cellid =
                   group.id + (group.type == CELL_TYPES.OTHER ? "-other" : "");
-                let cell =
+                const cell =
                   cellid in subject.groups ? subject.groups[cellid] : undefined;
 
-                let nbAnnotations = cell ? cell["ALL"]["nb_annotations"] : 0;
+                const nbAnnotations = cell ? cell["ALL"]["nb_annotations"] : 0;
 
                 // by default the group should be available
                 let available = true;
 
                 // if a value was given, then override the default value
-                if (cell && cell.hasOwnProperty("available")) {
+                if (
+                  cell &&
+                  Object.prototype.hasOwnProperty.call(cell, "available")
+                ) {
                   available = cell.available;
                 }
 
