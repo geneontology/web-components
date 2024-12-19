@@ -6,185 +6,211 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-  interface WcGoAutocomplete {
-    /**
-     * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-     */
-    category: string;
-    /**
-     * Maximum number of results to show
-     */
-    maxResults: number;
-    /**
-     * Default placeholder for the autocomplete
-     */
-    placeholder: string;
-    value: string;
-  }
-  interface WcLightModal {
-    close: () => Promise<void>;
-    modalAnchor: string;
-    modalContent: string;
-    modalTitle: string;
-    open: () => Promise<void>;
-    toggle: () => Promise<void>;
-    x: number;
-    y: number;
-  }
-  interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle: string;
-  }
+    interface WcGoAutocomplete {
+        /**
+          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+         */
+        "category": string;
+        /**
+          * Maximum number of results to show
+         */
+        "maxResults": number;
+        /**
+          * Default placeholder for the autocomplete
+         */
+        "placeholder": string;
+        "value": string;
+    }
+    interface WcLightModal {
+        "close": () => Promise<void>;
+        "modalAnchor": string;
+        "modalContent": string;
+        "modalTitle": string;
+        "open": () => Promise<void>;
+        "toggle": () => Promise<void>;
+        "x": number;
+        "y": number;
+    }
+    interface WcRibbonTable {
+        "baseApiUrl": string;
+        /**
+          * Reading biolink data. This will trigger a render of the table as would changing data
+         */
+        "bioLinkData": string;
+        /**
+          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
+         */
+        "data": string;
+        /**
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+         */
+        "filterBy": string;
+        "groupBaseUrl": string;
+        /**
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+         */
+        "groupBy": string;
+        /**
+          * Used to hide specific column of the table
+         */
+        "hideColumns": string;
+        /**
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+         */
+        "orderBy": string;
+        "showCurie": () => Promise<void>;
+        "showDBXrefs": () => Promise<void>;
+        "showOriginalTable": () => Promise<void>;
+        "showTable": () => Promise<void>;
+        "subjectBaseUrl": string;
+    }
+    interface WcSpinner {
+        /**
+          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+         */
+        "spinnerColor": string;
+        /**
+          * Define the size of the spinner (TO DO).
+         */
+        "spinnerSize": number;
+        /**
+          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+         */
+        "spinnerStyle": string;
+    }
 }
 export interface WcGoAutocompleteCustomEvent<T> extends CustomEvent<T> {
-  detail: T;
-  target: HTMLWcGoAutocompleteElement;
+    detail: T;
+    target: HTMLWcGoAutocompleteElement;
 }
 declare global {
-  interface HTMLWcGoAutocompleteElementEventMap {
-    itemSelected: any;
-  }
-  interface HTMLWcGoAutocompleteElement
-    extends Components.WcGoAutocomplete,
-      HTMLStencilElement {
-    addEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(
-      type: K,
-      listener: (
-        this: HTMLWcGoAutocompleteElement,
-        ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>,
-      ) => any,
-      options?: boolean | AddEventListenerOptions,
-    ): void;
-    addEventListener<K extends keyof DocumentEventMap>(
-      type: K,
-      listener: (this: Document, ev: DocumentEventMap[K]) => any,
-      options?: boolean | AddEventListenerOptions,
-    ): void;
-    addEventListener<K extends keyof HTMLElementEventMap>(
-      type: K,
-      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-      options?: boolean | AddEventListenerOptions,
-    ): void;
-    addEventListener(
-      type: string,
-      listener: EventListenerOrEventListenerObject,
-      options?: boolean | AddEventListenerOptions,
-    ): void;
-    removeEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(
-      type: K,
-      listener: (
-        this: HTMLWcGoAutocompleteElement,
-        ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>,
-      ) => any,
-      options?: boolean | EventListenerOptions,
-    ): void;
-    removeEventListener<K extends keyof DocumentEventMap>(
-      type: K,
-      listener: (this: Document, ev: DocumentEventMap[K]) => any,
-      options?: boolean | EventListenerOptions,
-    ): void;
-    removeEventListener<K extends keyof HTMLElementEventMap>(
-      type: K,
-      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-      options?: boolean | EventListenerOptions,
-    ): void;
-    removeEventListener(
-      type: string,
-      listener: EventListenerOrEventListenerObject,
-      options?: boolean | EventListenerOptions,
-    ): void;
-  }
-  var HTMLWcGoAutocompleteElement: {
-    prototype: HTMLWcGoAutocompleteElement;
-    new (): HTMLWcGoAutocompleteElement;
-  };
-  interface HTMLWcLightModalElement
-    extends Components.WcLightModal,
-      HTMLStencilElement {}
-  var HTMLWcLightModalElement: {
-    prototype: HTMLWcLightModalElement;
-    new (): HTMLWcLightModalElement;
-  };
-  interface HTMLWcSpinnerElement
-    extends Components.WcSpinner,
-      HTMLStencilElement {}
-  var HTMLWcSpinnerElement: {
-    prototype: HTMLWcSpinnerElement;
-    new (): HTMLWcSpinnerElement;
-  };
-  interface HTMLElementTagNameMap {
-    "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
-    "wc-light-modal": HTMLWcLightModalElement;
-    "wc-spinner": HTMLWcSpinnerElement;
-  }
+    interface HTMLWcGoAutocompleteElementEventMap {
+        "itemSelected": any;
+    }
+    interface HTMLWcGoAutocompleteElement extends Components.WcGoAutocomplete, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLWcGoAutocompleteElement: {
+        prototype: HTMLWcGoAutocompleteElement;
+        new (): HTMLWcGoAutocompleteElement;
+    };
+    interface HTMLWcLightModalElement extends Components.WcLightModal, HTMLStencilElement {
+    }
+    var HTMLWcLightModalElement: {
+        prototype: HTMLWcLightModalElement;
+        new (): HTMLWcLightModalElement;
+    };
+    interface HTMLWcRibbonTableElement extends Components.WcRibbonTable, HTMLStencilElement {
+    }
+    var HTMLWcRibbonTableElement: {
+        prototype: HTMLWcRibbonTableElement;
+        new (): HTMLWcRibbonTableElement;
+    };
+    interface HTMLWcSpinnerElement extends Components.WcSpinner, HTMLStencilElement {
+    }
+    var HTMLWcSpinnerElement: {
+        prototype: HTMLWcSpinnerElement;
+        new (): HTMLWcSpinnerElement;
+    };
+    interface HTMLElementTagNameMap {
+        "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
+        "wc-light-modal": HTMLWcLightModalElement;
+        "wc-ribbon-table": HTMLWcRibbonTableElement;
+        "wc-spinner": HTMLWcSpinnerElement;
+    }
 }
 declare namespace LocalJSX {
-  interface WcGoAutocomplete {
-    /**
-     * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-     */
-    category?: string;
-    /**
-     * Maximum number of results to show
-     */
-    maxResults?: number;
-    /**
-     * Event triggered whenever an item is selected from the autocomplete
-     */
-    onItemSelected?: (event: WcGoAutocompleteCustomEvent<any>) => void;
-    /**
-     * Default placeholder for the autocomplete
-     */
-    placeholder?: string;
-    value?: string;
-  }
-  interface WcLightModal {
-    modalAnchor?: string;
-    modalContent?: string;
-    modalTitle?: string;
-    x?: number;
-    y?: number;
-  }
-  interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor?: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize?: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle?: string;
-  }
-  interface IntrinsicElements {
-    "wc-go-autocomplete": WcGoAutocomplete;
-    "wc-light-modal": WcLightModal;
-    "wc-spinner": WcSpinner;
-  }
+    interface WcGoAutocomplete {
+        /**
+          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+         */
+        "category"?: string;
+        /**
+          * Maximum number of results to show
+         */
+        "maxResults"?: number;
+        /**
+          * Event triggered whenever an item is selected from the autocomplete
+         */
+        "onItemSelected"?: (event: WcGoAutocompleteCustomEvent<any>) => void;
+        /**
+          * Default placeholder for the autocomplete
+         */
+        "placeholder"?: string;
+        "value"?: string;
+    }
+    interface WcLightModal {
+        "modalAnchor"?: string;
+        "modalContent"?: string;
+        "modalTitle"?: string;
+        "x"?: number;
+        "y"?: number;
+    }
+    interface WcRibbonTable {
+        "baseApiUrl"?: string;
+        /**
+          * Reading biolink data. This will trigger a render of the table as would changing data
+         */
+        "bioLinkData"?: string;
+        /**
+          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
+         */
+        "data"?: string;
+        /**
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+         */
+        "filterBy"?: string;
+        "groupBaseUrl"?: string;
+        /**
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+         */
+        "groupBy"?: string;
+        /**
+          * Used to hide specific column of the table
+         */
+        "hideColumns"?: string;
+        /**
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+         */
+        "orderBy"?: string;
+        "subjectBaseUrl"?: string;
+    }
+    interface WcSpinner {
+        /**
+          * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
+         */
+        "spinnerColor"?: string;
+        /**
+          * Define the size of the spinner (TO DO).
+         */
+        "spinnerSize"?: number;
+        /**
+          * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
+         */
+        "spinnerStyle"?: string;
+    }
+    interface IntrinsicElements {
+        "wc-go-autocomplete": WcGoAutocomplete;
+        "wc-light-modal": WcLightModal;
+        "wc-ribbon-table": WcRibbonTable;
+        "wc-spinner": WcSpinner;
+    }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
-  export namespace JSX {
-    interface IntrinsicElements {
-      "wc-go-autocomplete": LocalJSX.WcGoAutocomplete &
-        JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
-      "wc-light-modal": LocalJSX.WcLightModal &
-        JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
-      "wc-spinner": LocalJSX.WcSpinner &
-        JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
+    export namespace JSX {
+        interface IntrinsicElements {
+            "wc-go-autocomplete": LocalJSX.WcGoAutocomplete & JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
+            "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
+            "wc-ribbon-table": LocalJSX.WcRibbonTable & JSXBase.HTMLAttributes<HTMLWcRibbonTableElement>;
+            "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
+        }
     }
-  }
 }

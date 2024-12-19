@@ -1,0 +1,84 @@
+$table__border: 0px solid black !default;
+$table__border--radius: 5px !default;
+
+$table__header--bgcolor: rgb(255, 255, 255) !default;
+$table__header--color: rgb(0, 0, 0) !default;
+$table__header__cell--padding: 2px !default;
+$table__header__cell--font-weight: 800 !default;
+
+$table__row--bgcolor: white !default;
+$table__row__cell--padding: 2px !default;
+$table__row__cell--height: 20px !default;
+
+$table__header__divider: 2px solid #ddd !default;
+$table__divider: 1px solid #ddd !default;
+
+$table__row__supercell__cell__link--decoration: none !default;
+$table__row__supercell__cell__link--color: rgb(73, 101, 194) !default;
+
+.table {
+  &,
+  & * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-weight: normal;
+  }
+
+  width: 100%;
+  border: $table__border;
+  border-radius: $table__border--radius;
+
+  &__header {
+    background-color: $table__header--bgcolor;
+    border-bottom: 1px solid black;
+    color: $table__header--color;
+    // text-shadow: 3px 3px 2px #474747;
+    // box-shadow: 1px 1px 3px 0px black;
+    text-align: left;
+    border-top: $table__header__divider;
+    border-bottom: $table__header__divider;
+    cursor: help;
+
+    &__cell {
+      padding: $table__header__cell--padding;
+      font-weight: $table__header__cell--font-weight;
+      border-top: $table__header__divider;
+      border-bottom: $table__header__divider;
+    }
+  }
+
+  &__row {
+    background-color: $table__row--bgcolor;
+    border-bottom: $table__divider;
+
+    &__supercell {
+      vertical-align: top !important;
+      border-bottom: $table__divider;
+
+      &__list {
+        list-style: none;
+      }
+
+      &__cell {
+        height: $table__row__cell--height;
+        padding: $table__row__cell--padding;
+        white-space: nowrap;
+
+        &__link {
+          text-decoration: $table__row__supercell__cell__link--decoration;
+          color: $table__row__supercell__cell__link--color;
+        }
+
+        &--not {
+          color: red;
+          text-transform: uppercase;
+          font-weight: 700;
+          border: 1px solid red;
+          padding: 0px 2px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
