@@ -227,3 +227,10 @@ wc-gocam-legend {
 wc-genes-panel {
   --height: var(--graph-height);
 }
+
+wc-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

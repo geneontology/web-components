@@ -290,18 +290,7 @@ export namespace Components {
     subjectBaseUrl: string;
   }
   interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle: string;
+    message: string;
   }
 }
 export interface WcGenesPanelCustomEvent<T> extends CustomEvent<T> {
@@ -968,18 +957,7 @@ declare namespace LocalJSX {
     subjectBaseUrl?: string;
   }
   interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor?: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize?: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle?: string;
+    message?: string;
   }
   interface IntrinsicElements {
     "wc-genes-panel": WcGenesPanel;

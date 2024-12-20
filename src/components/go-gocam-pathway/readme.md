@@ -148,6 +148,7 @@ Type: `Promise<void>`
 
 ### Depends on
 
+- [wc-spinner](../go-spinner)
 - [wc-genes-panel](../go-gocam-genes-panel)
 - [wc-gocam-legend](../go-gocam-legend)
 
@@ -155,6 +156,7 @@ Type: `Promise<void>`
 
 ```mermaid
 graph TD;
+  wc-gocam-viz --> wc-spinner
   wc-gocam-viz --> wc-genes-panel
   wc-gocam-viz --> wc-gocam-legend
   style wc-gocam-viz fill:#f9f,stroke:#333,stroke-width:4px

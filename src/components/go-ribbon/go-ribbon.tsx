@@ -504,7 +504,7 @@ export class GORibbon {
       ),
 
       this.loadingTable ? (
-        <wc-spinner spinner-style="default" spinner-color="blue"></wc-spinner>
+        <wc-spinner></wc-spinner>
       ) : (
         <wc-ribbon-table
           id="wc-go-ribbon-table"
