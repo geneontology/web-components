@@ -1,0 +1,128 @@
+@import "../../scss/mixins";
+
+:host {
+  /**
+   * @prop --height: Height of the panel
+   * 
+   * @prop --process-background: Background of process containers
+   * @prop --process-border-color: Border color of process containers
+   * @prop --process-border-width: Border width of process containers
+   * @prop --process-color: Text color of process containers
+   * @prop --process-padding: Padding of process containers
+   *
+   * @prop --process-label-background: Background of process labels
+   * @prop --process-label-border-color: Border color of process labels
+   * @prop --process-label-border-width: Border width of process labels
+   * @prop --process-label-color: Text color of process labels
+   * @prop --process-label-padding: Padding of process labels
+   *
+   * @prop --activity-background: Background of activity containers
+   * @prop --activity-background-active: Background of activity containers when highlighted
+   * @prop --activity-border-color: Border color of activity containers
+   * @prop --activity-border-width: Border width of activity containers
+   * @prop --activity-color: Text color of activity containers
+   * @prop --activity-color-active: Text color of activity containers when highlighted
+   * @prop --activity-padding: Padding of activity containers
+   *
+   * @prop --gene-product-background: Background of gene product labels
+   * @prop --gene-product-border-color: Border color of gene product labels
+   * @prop --gene-product-border-width: Border width of gene product labels
+   * @prop --gene-product-color: Text color of gene product labels
+   * @prop --gene-product-padding: Padding of gene product labels
+   *
+   * @prop --function-label-background: Background of molecular function term labels
+   * @prop --function-label-border-color: Border color of molecular function term labels
+   * @prop --function-label-border-width: Border width of molecular function term labels
+   * @prop --function-label-color: Text color of molecular function term labels
+   * @prop --function-label-padding: Padding of molecular function term labels
+   *
+   * @prop --node-background: Background of related node info
+   * @prop --node-border-color: Border color of related node info
+   * @prop --node-border-width: Border width of related node info
+   * @prop --node-color: Text color of related node info
+   * @prop --node-padding: Padding of related node info
+   *
+   * @prop --function-nodes-padding: Padding of related nodes container
+   */
+  --height: auto;
+
+  display: block;
+  scroll-behavior: smooth;
+  height: var(--height);
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.process {
+  @include standard-var-styles(process);
+  margin-bottom: 3em;
+}
+
+.process:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.process-label {
+  @include standard-var-styles(process-label);
+}
+
+.activity {
+  @include standard-var-styles(activity);
+
+  a {
+    color: var(--activity-color);
+    text-decoration: none;
+  }
+
+  &.active {
+    background-color: var(--activity-background-active);
+    color: var(--activity-color-active);
+
+    a {
+      color: var(--activity-color-active);
+    }
+  }
+}
+
+.activity:last-child {
+  border-bottom: none;
+}
+
+.gene-product {
+  @include standard-var-styles(gene-product);
+}
+
+.function-label {
+  @include standard-var-styles(function-label);
+}
+
+.function-nodes {
+  padding: var(--function-nodes-padding);
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.175em;
+  @include standard-var-styles(node);
+}
+
+.node:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.node-relation {
+  font-size: 0.625em;
+  @include deep-width(8em);
+}
+
+.node-term {
+  font-size: 0.75em;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.node-evidence {
+}

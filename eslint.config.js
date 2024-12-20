@@ -18,4 +18,7 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    ignores: ["src/globals/@noctua.form/*"],
+  },
 );
