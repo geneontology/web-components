@@ -26,18 +26,3 @@ export const CELL_TYPES = { ALL: "All", TERM: "Term", OTHER: "Other" };
 export const FONT_CASE = { UNCHANGED: 0, LOWER_CASE: 1, UPPER_CASE: 2 };
 
 export const FONT_STYLE = { NORMAL: 0, BOLD: 1 };
-
-export const SPINNER_STYLE = {
-  CIRCLE: "circle",
-  DUAL_RING: "dual-ring",
-  FACEBOOK: "facebook",
-  HEART: "heart",
-  RING: "ring",
-  ROLLER: "roller",
-  DEFAULT: "default",
-  ELLIPSIS: "ellipsis",
-  GRID: "grid",
-  HOURGLASS: "hourglass",
-  RIPPLE: "ripple",
-  SPINNER: "spinner",
-};

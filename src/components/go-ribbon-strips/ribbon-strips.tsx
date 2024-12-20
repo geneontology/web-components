@@ -608,9 +608,7 @@ export class RibbonStrips {
     // Still loading (executing fetch)
     if (this.loading) {
       // return ( "Loading Ribbon..." );
-      return (
-        <wc-spinner spinner-style="default" spinner-color="blue"></wc-spinner>
-      );
+      return <wc-spinner></wc-spinner>;
     }
 
     if (!this.subjects && !this.ribbonSummary) {

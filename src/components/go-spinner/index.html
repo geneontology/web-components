@@ -12,16 +12,25 @@
     <script nomodule src="/build/web-components.js"></script>
 
     <style>
-      html {
-        --color-primary: black;
+      wc-spinner.orange {
+        --color: orange;
+      }
+      wc-spinner.small {
+        --size: 20px;
       }
     </style>
   </head>
   <body>
-    <wc-spinner
-      spinner-style="ripple"
-      spinner-color="blue"
-      spinner-size="80"
-    ></wc-spinner>
+    <h1>Default</h1>
+    <wc-spinner></wc-spinner>
+
+    <h1>With Message</h1>
+    <wc-spinner message="Loading..."></wc-spinner>
+
+    <h1>Override <kbd>--color</kbd></h1>
+    <wc-spinner class="orange"></wc-spinner>
+
+    <h1>Override <kbd>--size</kbd></h1>
+    <wc-spinner class="small"></wc-spinner>
   </body>
 </html>

@@ -5,9 +5,22 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Cam } from "./globals/@noctua.form";
 import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
+export { Cam } from "./globals/@noctua.form";
 export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export namespace Components {
+  interface WcGenesPanel {
+    /**
+     * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+     */
+    cam: Cam;
+    highlightActivity: (nodeId: any) => Promise<void>;
+    /**
+     * Passed by the parent to highlight & clear highlight nodes
+     */
+    parentCy: any;
+  }
   interface WcGoAutocomplete {
     /**
      * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -109,6 +122,36 @@ export namespace Components {
      */
     subjects: string;
     subset: string;
+  }
+  interface WcGocamLegend {}
+  interface WcGocamViz {
+    /**
+     * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+     */
+    apiUrl: string;
+    /**
+     * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
+     */
+    gocamId: string;
+    /**
+     * Center the cytoscape graph to fit the whole graph
+     */
+    resetView: () => Promise<void>;
+    /**
+     * Define if the GO-CAM viz should capture the mouse scroll
+     * @param shouldAF set to true if you want a mouse scroll to be captured by the component
+     */
+    setAutoFocus: (shouldAF: any) => Promise<void>;
+    /**
+     * Manually supply GO-CAM data to be rendered. This will overwrite any data previously fetched using the gocamId and apiUrl props, if they were provided.
+     * @param model GO-CAM object
+     */
+    setModelData: (model: any) => Promise<void>;
+    /**
+     * Show/hide default legend
+     */
+    showLegend: boolean;
+    toggleComplex: () => Promise<void>;
   }
   interface WcLightModal {
     close: () => Promise<void>;
@@ -247,23 +290,20 @@ export namespace Components {
     subjectBaseUrl: string;
   }
   interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle: string;
+    message: string;
   }
+}
+export interface WcGenesPanelCustomEvent<T> extends CustomEvent<T> {
+  detail: T;
+  target: HTMLWcGenesPanelElement;
 }
 export interface WcGoAutocompleteCustomEvent<T> extends CustomEvent<T> {
   detail: T;
   target: HTMLWcGoAutocompleteElement;
+}
+export interface WcGocamVizCustomEvent<T> extends CustomEvent<T> {
+  detail: T;
+  target: HTMLWcGocamVizElement;
 }
 export interface WcRibbonStripsCustomEvent<T> extends CustomEvent<T> {
   detail: T;
@@ -274,6 +314,63 @@ export interface WcRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
   target: HTMLWcRibbonSubjectElement;
 }
 declare global {
+  interface HTMLWcGenesPanelElementEventMap {
+    selectChanged: any;
+  }
+  interface HTMLWcGenesPanelElement
+    extends Components.WcGenesPanel,
+      HTMLStencilElement {
+    addEventListener<K extends keyof HTMLWcGenesPanelElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGenesPanelElement,
+        ev: WcGenesPanelCustomEvent<HTMLWcGenesPanelElementEventMap[K]>,
+      ) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLWcGenesPanelElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGenesPanelElement,
+        ev: WcGenesPanelCustomEvent<HTMLWcGenesPanelElementEventMap[K]>,
+      ) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions,
+    ): void;
+  }
+  var HTMLWcGenesPanelElement: {
+    prototype: HTMLWcGenesPanelElement;
+    new (): HTMLWcGenesPanelElement;
+  };
   interface HTMLWcGoAutocompleteElementEventMap {
     itemSelected: any;
   }
@@ -337,6 +434,73 @@ declare global {
   var HTMLWcGoRibbonElement: {
     prototype: HTMLWcGoRibbonElement;
     new (): HTMLWcGoRibbonElement;
+  };
+  interface HTMLWcGocamLegendElement
+    extends Components.WcGocamLegend,
+      HTMLStencilElement {}
+  var HTMLWcGocamLegendElement: {
+    prototype: HTMLWcGocamLegendElement;
+    new (): HTMLWcGocamLegendElement;
+  };
+  interface HTMLWcGocamVizElementEventMap {
+    nodeOver: any;
+    nodeOut: any;
+    nodeClick: any;
+    layoutChange: any;
+  }
+  interface HTMLWcGocamVizElement
+    extends Components.WcGocamViz,
+      HTMLStencilElement {
+    addEventListener<K extends keyof HTMLWcGocamVizElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGocamVizElement,
+        ev: WcGocamVizCustomEvent<HTMLWcGocamVizElementEventMap[K]>,
+      ) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLWcGocamVizElementEventMap>(
+      type: K,
+      listener: (
+        this: HTMLWcGocamVizElement,
+        ev: WcGocamVizCustomEvent<HTMLWcGocamVizElementEventMap[K]>,
+      ) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof DocumentEventMap>(
+      type: K,
+      listener: (this: Document, ev: DocumentEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener<K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | EventListenerOptions,
+    ): void;
+    removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions,
+    ): void;
+  }
+  var HTMLWcGocamVizElement: {
+    prototype: HTMLWcGocamVizElement;
+    new (): HTMLWcGocamVizElement;
   };
   interface HTMLWcLightModalElement
     extends Components.WcLightModal,
@@ -486,8 +650,11 @@ declare global {
     new (): HTMLWcSpinnerElement;
   };
   interface HTMLElementTagNameMap {
+    "wc-genes-panel": HTMLWcGenesPanelElement;
     "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
     "wc-go-ribbon": HTMLWcGoRibbonElement;
+    "wc-gocam-legend": HTMLWcGocamLegendElement;
+    "wc-gocam-viz": HTMLWcGocamVizElement;
     "wc-light-modal": HTMLWcLightModalElement;
     "wc-ribbon-cell": HTMLWcRibbonCellElement;
     "wc-ribbon-strips": HTMLWcRibbonStripsElement;
@@ -497,6 +664,17 @@ declare global {
   }
 }
 declare namespace LocalJSX {
+  interface WcGenesPanel {
+    /**
+     * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+     */
+    cam?: Cam;
+    onSelectChanged?: (event: WcGenesPanelCustomEvent<any>) => void;
+    /**
+     * Passed by the parent to highlight & clear highlight nodes
+     */
+    parentCy?: any;
+  }
   interface WcGoAutocomplete {
     /**
      * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -602,6 +780,25 @@ declare namespace LocalJSX {
      */
     subjects?: string;
     subset?: string;
+  }
+  interface WcGocamLegend {}
+  interface WcGocamViz {
+    /**
+     * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+     */
+    apiUrl?: string;
+    /**
+     * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
+     */
+    gocamId?: string;
+    onLayoutChange?: (event: WcGocamVizCustomEvent<any>) => void;
+    onNodeClick?: (event: WcGocamVizCustomEvent<any>) => void;
+    onNodeOut?: (event: WcGocamVizCustomEvent<any>) => void;
+    onNodeOver?: (event: WcGocamVizCustomEvent<any>) => void;
+    /**
+     * Show/hide default legend
+     */
+    showLegend?: boolean;
   }
   interface WcLightModal {
     modalAnchor?: string;
@@ -760,22 +957,14 @@ declare namespace LocalJSX {
     subjectBaseUrl?: string;
   }
   interface WcSpinner {
-    /**
-     * Define the color of the spinner. This parameter is optional and will override any declared CSS variable
-     */
-    spinnerColor?: string;
-    /**
-     * Define the size of the spinner (TO DO).
-     */
-    spinnerSize?: number;
-    /**
-     * Define the style of the spinner. Accepted values: default, spinner, circle, ring, dual-ring, roller, ellipsis, grid, hourglass, ripple, facebook, heart
-     */
-    spinnerStyle?: string;
+    message?: string;
   }
   interface IntrinsicElements {
+    "wc-genes-panel": WcGenesPanel;
     "wc-go-autocomplete": WcGoAutocomplete;
     "wc-go-ribbon": WcGoRibbon;
+    "wc-gocam-legend": WcGocamLegend;
+    "wc-gocam-viz": WcGocamViz;
     "wc-light-modal": WcLightModal;
     "wc-ribbon-cell": WcRibbonCell;
     "wc-ribbon-strips": WcRibbonStrips;
@@ -788,10 +977,16 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
+      "wc-genes-panel": LocalJSX.WcGenesPanel &
+        JSXBase.HTMLAttributes<HTMLWcGenesPanelElement>;
       "wc-go-autocomplete": LocalJSX.WcGoAutocomplete &
         JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
       "wc-go-ribbon": LocalJSX.WcGoRibbon &
         JSXBase.HTMLAttributes<HTMLWcGoRibbonElement>;
+      "wc-gocam-legend": LocalJSX.WcGocamLegend &
+        JSXBase.HTMLAttributes<HTMLWcGocamLegendElement>;
+      "wc-gocam-viz": LocalJSX.WcGocamViz &
+        JSXBase.HTMLAttributes<HTMLWcGocamVizElement>;
       "wc-light-modal": LocalJSX.WcLightModal &
         JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
       "wc-ribbon-cell": LocalJSX.WcRibbonCell &

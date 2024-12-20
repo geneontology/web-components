@@ -1,0 +1,36 @@
+.panel {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel-header {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.panel-body {
+  flex: 1 1 auto;
+}
+
+@media (min-width: 992px) {
+  .panel-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel {
+    &.w-8 {
+      flex: 0 0 auto;
+      width: 66.66666667%;
+    }
+    &.w-4 {
+      flex: 0 0 auto;
+      width: 33.33333333%;
+    }
+  }
+}
