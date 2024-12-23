@@ -3,6 +3,18 @@
   "version": "0.0.1",
   "description": "Web components for display of Gene Ontology annotations",
   "type": "module",
+  "author": {
+    "name": "The Gene Ontology Consortium",
+    "url": "https://geneontology.org",
+    "email": "help@geneontology.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geneontology/web-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geneontology/web-components/issues"
+  },
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -11,18 +23,19 @@
   "unpkg": "dist/web-components/web-components.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/web-components/web-components.esm.js",
-      "require": "./dist/web-components/web-components.cjs.js"
+      "require": "./dist/web-components/web-components.js"
+    },
+    "./*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.js"
     },
     "./loader": {
+      "types": "./loader/index.d.ts",
       "import": "./loader/index.js",
-      "require": "./loader/index.cjs",
-      "types": "./loader/index.d.ts"
+      "require": "./loader/index.cjs"
     }
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ionic-team/stencil-component-starter.git"
   },
   "files": [
     "dist/",
