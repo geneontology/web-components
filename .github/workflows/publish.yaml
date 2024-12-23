@@ -1,0 +1,61 @@
+name: Publish package
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: |
+          Release type, determines how the version number is incremented. Note: premajor, preminor,
+          and prepatch will increment the version number **and** add a `-beta.0` suffix. If the
+          current version number already has a `-beta` suffix, use the prerelease option to
+          increment the beta number **without** changing the version number.
+        required: true
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+        # This git user config is recommended by the actions/checkout documentation
+        # https://github.com/actions/checkout/tree/v4.2.2?tab=readme-ov-file#push-a-commit-using-the-built-in-token
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Increment version
+        run: |
+          echo "NEW_VERSION=$(npm --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+
+      - name: Publish to NPM
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          generate_release_notes: true
+          prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
