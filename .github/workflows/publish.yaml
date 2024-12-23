@@ -49,6 +49,7 @@ jobs:
       - name: Increment version
         run: |
           echo "NEW_VERSION=$(npm --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          git push --follow-tags
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
