@@ -9,6 +9,7 @@ on:
           current version number already has a `-beta` suffix, use the prerelease option to
           increment the beta number **without** changing the version number.
         required: true
+        type: choice
         options:
           - patch
           - minor
