@@ -40,3 +40,6 @@ jobs:
             echo -e "\033[1;31m3. Compare and validate the differences before proceeding.\033[0m"
             exit 1
           }
+
+      - name: Run tests
+        run: npm test
