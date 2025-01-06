@@ -83,3 +83,77 @@ The `wc-gocam-viz` component displays a GO-CAM model as a network diagram along 
 #### Documentation
 
 https://github.com/geneontology/web-components/blob/main/src/components/go-gocam-pathway/readme.md
+
+## Development
+
+### Requirements
+
+- [Node.js](https://nodejs.org/) >= 20.0.0
+
+<!-- prettier-ignore-start -->
+> [!TIP]
+> [nvm](https://github.com/nvm-sh/nvm) can be used to install and manage multiple versions of Node.js.
+<!-- prettier-ignore-end -->
+
+### Setup
+
+1. Clone the repository
+2. Install project dependencies
+
+   ```bash
+   npm install
+   ```
+
+3. (Optional) Configure your IDE to automatically format code with [Prettier](https://prettier.io/docs/en/editors). If you do not do this, you can run the formatter manually before pushing changes:
+
+   ```bash
+   npm run format
+   ```
+
+### Making changes
+
+The development server can be started by running:
+
+```bash
+npm start
+```
+
+By default, this will start a server on `http://localhost:3333`. From the index page you can navigate to a subpage for the component you are working on. The server will watch for changes to the source files and automatically reload the browser when changes are made.
+
+When updating existing components, it is recommended to add to or update the examples in HTML file(s) alongside the component source code in order to exercise your changes. This will allow you to see the changes in the browser as you work.
+
+To create a new component, create a new directory in `src/components` with the component name. Within that directory, add a `tsx` file which defines the components itself. **Note**: this file should only define **one** component. Also add an `index.html` file which demonstrates the component usage. Add a link to this HTML file in the top-level `index.html` file. If necessary, add a CSS or SCSS file to the component directory.
+
+```text
+src/
+  components/
+    my-component/
+      my-component.tsx    # Component source code
+      my-component.scss   # Component styles
+      index.html          # Component usage example
+```
+
+A `readme.md` file will be automatically generated the next time the project is built. This file does not need to be created or edited manually, but it should be committed with your changes.
+
+```bash
+npm run build
+```
+
+### Testing
+
+To run the test suite, use the following command:
+
+```bash
+npm test
+```
+
+See the [Stencil documentation](https://stenciljs.com/docs/unit-testing) for more information on writing unit tests for Stencil components.
+
+### Contributing changes
+
+Before opening a pull request, ensure that the following steps have been taken:
+
+- Format code with Prettier (`npm run format`).
+- Address any linting errors (`npm run lint`).
+- Ensure all tests pass (`npm test`).
+- Regenerate any automatically generated files (`npm run build`). **Commit these changes along with your source changes**.
