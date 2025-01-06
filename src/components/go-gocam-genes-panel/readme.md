@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property   | Attribute   | Description                                                           | Type  | Default     |
@@ -9,15 +10,19 @@
 | `cam`      | --          | BBOP Graph Handler -> GO-CAM Must be provided to build the side panel | `Cam` | `undefined` |
 | `parentCy` | `parent-cy` | Passed by the parent to highlight & clear highlight nodes             | `any` | `undefined` |
 
+
 ## Events
 
 | Event           | Description | Type               |
 | --------------- | ----------- | ------------------ |
 | `selectChanged` |             | `CustomEvent<any>` |
 
+
 ## Methods
 
 ### `highlightActivity(nodeId: any) => Promise<void>`
+
+
 
 #### Parameters
 
@@ -29,6 +34,9 @@
 
 Type: `Promise<void>`
 
+
+
+
 ## Shadow Parts
 
 | Part               | Description               |
@@ -37,6 +45,7 @@ Type: `Promise<void>`
 | `"function-label"` | Molecular function labels |
 | `"gene-product"`   | Gene product labels       |
 | `"process"`        | Process containers        |
+
 
 ## CSS Custom Properties
 
@@ -77,20 +86,20 @@ Type: `Promise<void>`
 | `--process-label-padding`       | Padding of process labels                          |
 | `--process-padding`             | Padding of process containers                      |
 
+
 ## Dependencies
 
 ### Used by
 
-- [wc-gocam-viz](../go-gocam-pathway)
+ - [wc-gocam-viz](../go-gocam-pathway)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-gocam-viz --> wc-genes-panel
   style wc-genes-panel fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

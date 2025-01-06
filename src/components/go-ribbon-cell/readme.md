@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property           | Attribute           | Description                                                                                                                                     | Type             | Default                    |
@@ -19,20 +20,20 @@
 | `selected`         | `selected`          |                                                                                                                                                 | `boolean`        | `false`                    |
 | `subject`          | --                  |                                                                                                                                                 | `IRibbonSubject` | `undefined`                |
 
+
 ## Dependencies
 
 ### Used by
 
-- [wc-ribbon-strips](../go-ribbon-strips)
+ - [wc-ribbon-strips](../go-ribbon-strips)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-ribbon-strips --> wc-ribbon-cell
   style wc-ribbon-cell fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

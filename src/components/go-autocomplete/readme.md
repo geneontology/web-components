@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property      | Attribute     | Description                                                                                                                                                                                                                                                                                                                                                                                                                      | Type     | Default     |
@@ -11,12 +12,14 @@
 | `placeholder` | `placeholder` | Default placeholder for the autocomplete                                                                                                                                                                                                                                                                                                                                                                                         | `string` | `""`        |
 | `value`       | `value`       |                                                                                                                                                                                                                                                                                                                                                                                                                                  | `string` | `undefined` |
 
+
 ## Events
 
 | Event          | Description                                                        | Type               |
 | -------------- | ------------------------------------------------------------------ | ------------------ |
 | `itemSelected` | Event triggered whenever an item is selected from the autocomplete | `CustomEvent<any>` |
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*

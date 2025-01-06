@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                | Attribute                   | Description                                                                                                                                                                                                                                                              | Type      | Default                                               |
@@ -41,6 +42,7 @@
 | `subjects`              | `subjects`                  | provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])                                                                                                                                                                                      | `string`  | `undefined`                                           |
 | `subset`                | `subset`                    |                                                                                                                                                                                                                                                                          | `string`  | `"goslim_agr"`                                        |
 
+
 ## Dependencies
 
 ### Depends on
@@ -50,7 +52,6 @@
 - [wc-ribbon-table](../go-ribbon-table)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-go-ribbon --> wc-ribbon-strips
@@ -62,6 +63,6 @@ graph TD;
   style wc-go-ribbon fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

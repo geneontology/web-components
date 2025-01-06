@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property         | Attribute          | Description                                                                                                                                                                                                                                                              | Type     | Default                                               |
@@ -16,46 +17,63 @@
 | `orderBy`        | `order-by`         | This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering                                                                                            | `string` | `undefined`                                           |
 | `subjectBaseUrl` | `subject-base-url` |                                                                                                                                                                                                                                                                          | `string` | `"http://amigo.geneontology.org/amigo/gene_product/"` |
 
+
 ## Methods
 
 ### `showCurie() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `showDBXrefs() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `showOriginalTable() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `showTable() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
+
 
 ## Dependencies
 
 ### Used by
 
-- [wc-go-ribbon](../go-ribbon)
+ - [wc-go-ribbon](../go-ribbon)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-go-ribbon --> wc-ribbon-table
   style wc-ribbon-table fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

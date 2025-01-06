@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                | Attribute                   | Description                                                                                                                                                                                                                                                      | Type           | Default                                               |
@@ -36,6 +37,7 @@
 | `subset`                | `subset`                    |                                                                                                                                                                                                                                                                  | `string`       | `"goslim_agr"`                                        |
 | `updateOnSubjectChange` | `update-on-subject-change`  | When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism                                                       | `boolean`      | `true`                                                |
 
+
 ## Events
 
 | Event        | Description                                                         | Type               |
@@ -47,9 +49,12 @@
 | `groupEnter` | This event is triggered whenever the mouse enters a group cell area | `CustomEvent<any>` |
 | `groupLeave` | This event is triggered whenever the mouse leaves a group cell area | `CustomEvent<any>` |
 
+
 ## Methods
 
 ### `selectGroup(group_id: any) => Promise<void>`
+
+
 
 #### Parameters
 
@@ -61,11 +66,14 @@
 
 Type: `Promise<void>`
 
+
+
+
 ## Dependencies
 
 ### Used by
 
-- [wc-go-ribbon](../go-ribbon)
+ - [wc-go-ribbon](../go-ribbon)
 
 ### Depends on
 
@@ -74,7 +82,6 @@ Type: `Promise<void>`
 - [wc-ribbon-cell](../go-ribbon-cell)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-ribbon-strips --> wc-spinner
@@ -84,6 +91,6 @@ graph TD;
   style wc-ribbon-strips fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

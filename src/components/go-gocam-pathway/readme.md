@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property     | Attribute     | Description                                                                                                                                                                                                                                                                                                                   | Type      | Default                                         |
@@ -9,6 +10,7 @@
 | `apiUrl`     | `api-url`     | The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.                                                                                                                                                                                                                   | `string`  | `"https://api.geneontology.org/api/go-cam/%ID"` |
 | `gocamId`    | `gocam-id`    | ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data. | `string`  | `undefined`                                     |
 | `showLegend` | `show-legend` | Show/hide default legend                                                                                                                                                                                                                                                                                                      | `boolean` | `true`                                          |
+
 
 ## Events
 
@@ -19,6 +21,7 @@
 | `nodeOut`      |             | `CustomEvent<any>` |
 | `nodeOver`     |             | `CustomEvent<any>` |
 
+
 ## Methods
 
 ### `resetView() => Promise<void>`
@@ -28,6 +31,8 @@ Center the cytoscape graph to fit the whole graph
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `setAutoFocus(shouldAF: any) => Promise<void>`
 
@@ -42,6 +47,8 @@ Define if the GO-CAM viz should capture the mouse scroll
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `setModelData(model: any) => Promise<void>`
 
@@ -58,11 +65,18 @@ fetched using the gocamId and apiUrl props, if they were provided.
 
 Type: `Promise<void>`
 
+
+
 ### `toggleComplex() => Promise<void>`
+
+
 
 #### Returns
 
 Type: `Promise<void>`
+
+
+
 
 ## Shadow Parts
 
@@ -79,6 +93,7 @@ Type: `Promise<void>`
 | `"legend-section"`   | An individual legend entry                           |
 | `"legend-sections"`  | A group of entries in the legend                     |
 | `"process"`          | A process group in the process and activities list   |
+
 
 ## CSS Custom Properties
 
@@ -144,6 +159,7 @@ Type: `Promise<void>`
 | `--process-label-padding`       | Padding of process labels in processes and activities panel                          |
 | `--process-padding`             | Padding of process containers in processes and activities panel                      |
 
+
 ## Dependencies
 
 ### Depends on
@@ -153,7 +169,6 @@ Type: `Promise<void>`
 - [wc-gocam-legend](../go-gocam-legend)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-gocam-viz --> wc-spinner
@@ -162,6 +177,6 @@ graph TD;
   style wc-gocam-viz fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*
