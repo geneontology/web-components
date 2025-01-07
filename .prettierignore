@@ -2,4 +2,9 @@
 # It inherits from `.gitignore` automatically.
 # Reference: https://prettier.io/docs/en/ignore
 
+# Stencil-generated files
+src/components.d.ts
+src/components/**/readme.md
+
+# Files copied from other projects
 src/globals/@noctua.form/

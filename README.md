@@ -83,3 +83,7 @@ The `wc-gocam-viz` component displays a GO-CAM model as a network diagram along 
 #### Documentation
 
 https://github.com/geneontology/web-components/blob/main/src/components/go-gocam-pathway/readme.md
+
+## Development
+
+For instructions on how to build and develop these components, please see [CONTRIBUTING.md](CONTRIBUTING.md).

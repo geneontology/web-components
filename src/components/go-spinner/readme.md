@@ -2,11 +2,13 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property  | Attribute | Description | Type     | Default     |
 | --------- | --------- | ----------- | -------- | ----------- |
 | `message` | `message` |             | `string` | `undefined` |
+
 
 ## CSS Custom Properties
 
@@ -15,16 +17,16 @@
 | `--color` | Color of the spinner |
 | `--size`  | Size of the spinner  |
 
+
 ## Dependencies
 
 ### Used by
 
-- [wc-go-ribbon](../go-ribbon)
-- [wc-gocam-viz](../go-gocam-pathway)
-- [wc-ribbon-strips](../go-ribbon-strips)
+ - [wc-go-ribbon](../go-ribbon)
+ - [wc-gocam-viz](../go-gocam-pathway)
+ - [wc-ribbon-strips](../go-ribbon-strips)
 
 ### Graph
-
 ```mermaid
 graph TD;
   wc-go-ribbon --> wc-spinner
@@ -33,6 +35,6 @@ graph TD;
   style wc-spinner fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

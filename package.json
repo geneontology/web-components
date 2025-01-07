@@ -42,13 +42,13 @@
     "loader/"
   ],
   "scripts": {
-    "build": "stencil build && npm run format",
+    "build": "stencil build",
     "format": "prettier --write --log-level warn .",
     "lint": "eslint src",
     "start": "stencil build --dev --watch --serve --no-open",
     "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
-    "generate": "stencil generate"
+    "test.unit": "stencil test --spec",
+    "test.watch": "stencil test --spec --e2e --watchAll"
   },
   "dependencies": {
     "@geneontology/dbxrefs": "^1.0.16",
