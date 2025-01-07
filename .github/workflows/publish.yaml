@@ -4,10 +4,7 @@ on:
     inputs:
       release-type:
         description: |
-          Release type, determines how the version number is incremented. Note: premajor, preminor,
-          and prepatch will increment the version number **and** add a `-beta.0` suffix. If the
-          current version number already has a `-beta` suffix, use the prerelease option to
-          increment the beta number **without** changing the version number.
+          Release Type
         required: true
         type: choice
         options:
