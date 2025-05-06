@@ -15,7 +15,7 @@ import {
   Activity,
   ActivityType,
   Cam,
-  ActivityNodeType,
+  noctuaFormConfig,
   NoctuaFormConfigService,
   NoctuaGraphService,
   Triple,
@@ -23,7 +23,7 @@ import {
 import { glyph } from "../../globals/relations";
 import { DBXrefService } from "../../globals/dbxref.service";
 
-// cytoscape.use(dagre);
+cytoscape.use(dagre);
 
 const GOMODEL_PREFIX = "gomodel:";
 
@@ -33,6 +33,7 @@ const GOMODEL_PREFIX = "gomodel:";
  * @part gocam-graph - The GO-CAM graph container
  * @part activities-panel - The panel containing the process and activities list
  * @part process - A process group in the process and activities list
+ * @part process-label - A process label in the process and activities list
  * @part activity - An activity in the process and activities list
  * @part gene-product - A gene product name in process and activities list
  * @part function-label - A function term name in process and activities list
@@ -117,7 +118,7 @@ export class GoCamViz {
     "min-zoomed-font-size": 1, //10,
     "text-valign": "center",
     color: "black",
-    shape: "rectangle",
+    shape: "data(shape)",
     "text-wrap": "wrap",
     // 'text-overflow-wrap': "anywhere",
     "text-max-width": "data(textwidth)",
@@ -396,6 +397,7 @@ export class GoCamViz {
         // parent: ??
         "text-valign": "top",
         "text-halign": "left",
+        shape: "rectangle",
         backgroundColor: activity.backgroundColor || "white",
         // degree: (child * 10 + parent)
       },
@@ -406,22 +408,24 @@ export class GoCamViz {
 
   createComplex(activity: Activity, expandComplex = false) {
     const label = activity.gpNode?.term.label || activity.label || "";
-
     let el;
-    // result.push(el)
-    if (expandComplex) {
-      const edges = activity.getEdges(
-        ActivityNodeType.GoProteinContainingComplex,
-      );
+    const edges = activity.getEdges(activity.pccNode?.id);
 
-      const gps = edges.map((edge) => {
-        const geneShorthand = this.configService.getGeneShorthand(
-          edge.object.term?.label,
-        );
-        return geneShorthand;
-      });
+    if (expandComplex && edges) {
+      const gps = edges
+        .filter(
+          (edge) =>
+            edge.predicate?.edge?.id === noctuaFormConfig.edge.hasPart.id,
+        )
+        .map((edge) => {
+          const geneShorthand = this.configService.getGeneShorthand(
+            edge.object.term?.label,
+          );
+          return geneShorthand;
+        });
+
       const truncatedGps = gps.slice(0, 3);
-      let geneString = gps.join(", ");
+      let geneString = truncatedGps.join(", ");
 
       if (gps.length > truncatedGps.length) {
         geneString +=
@@ -435,8 +439,8 @@ export class GoCamViz {
           height: 200,
           width: Math.max(115, geneString.length * 11),
           textwidth: Math.max(115, geneString.length * 9),
+          shape: "rectangle",
           backgroundColor: activity.backgroundColor || "white",
-          // degree: (child * 10 + parent)
         },
       };
     } else {
@@ -447,12 +451,11 @@ export class GoCamViz {
           label: label,
           width: Math.max(115, label.length * 11),
           textwidth: Math.max(115, label.length * 9),
+          shape: "rectangle",
           backgroundColor: activity.backgroundColor || "white",
-          // degree: (child * 10 + parent)
         },
       };
     }
-    // result.push(...gps)
     return [el];
   }
 
@@ -464,6 +467,7 @@ export class GoCamViz {
     const el = {
       group: "nodes",
       data: {
+        shape: "ellipse",
         id: activity.id,
         label: geneShorthand,
         width: Math.max(115, geneShorthand.length * 11),
@@ -797,7 +801,7 @@ export class GoCamViz {
             <div class="panel-body">
               <wc-genes-panel
                 cam={this.cam}
-                exportparts="process, activity, gene-product, function-label"
+                exportparts="process, process-label, activity, gene-product, function-label"
                 ref={(el) => (this.genesPanel = el)}
               ></wc-genes-panel>
             </div>

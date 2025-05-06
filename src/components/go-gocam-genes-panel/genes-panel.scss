@@ -22,6 +22,7 @@
    * @prop --activity-border-width: Border width of activity containers
    * @prop --activity-color: Text color of activity containers
    * @prop --activity-color-active: Text color of activity containers when highlighted
+   * @prop --activity-color-active-link-hover: Hover anchor link color within activity containers when highlighted
    * @prop --activity-padding: Padding of activity containers
    *
    * @prop --gene-product-background: Background of gene product labels
@@ -41,6 +42,7 @@
    * @prop --node-border-width: Border width of related node info
    * @prop --node-color: Text color of related node info
    * @prop --node-padding: Padding of related node info
+   * @prop --node-align-items: Align-items of related node info
    *
    * @prop --function-nodes-padding: Padding of related nodes container
    */
@@ -73,6 +75,10 @@
   a {
     color: var(--activity-color);
     text-decoration: none;
+
+    &:hover {
+      color: var(--activity-color-link-hover);
+    }
   }
 
   &.active {
@@ -95,6 +101,10 @@
 
 .function-label {
   @include standard-var-styles(function-label);
+  display: flex;
+  .node-term {
+    font-size: 1em;
+  }
 }
 
 .function-nodes {
@@ -103,8 +113,9 @@
 
 .node {
   display: flex;
-  align-items: center;
+  align-items: var(--node-align-items, center);
   margin-bottom: 0.175em;
+  width: 100%;
   @include standard-var-styles(node);
 }
 
@@ -114,6 +125,7 @@
 }
 
 .node-relation {
+  cursor: default;
   font-size: 0.625em;
   @include deep-width(8em);
 }
@@ -125,4 +137,10 @@
 }
 
 .node-evidence {
+  text-align: right;
+  .icon {
+    margin-left: 0.25em;
+    height: 1em;
+    width: 1em;
+  }
 }
