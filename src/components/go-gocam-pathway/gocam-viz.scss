@@ -1,10 +1,6 @@
 @import "../../scss/panel";
 @import "../../scss/mixins";
 
-* {
-  box-sizing: border-box;
-}
-
 :host {
   /**
    * @prop --border-color: Default color of various borders used in the widget
@@ -57,6 +53,7 @@
    * @prop --activity-border-color: Border color of activity containers in processes and activities panel
    * @prop --activity-border-width: Border width of activity containers in processes and activities panel
    * @prop --activity-color: Text color of activity containers in processes and activities panel
+   * @prop --activity-color-link-hover: Anchor link hover color in processes and activities panel
    * @prop --activity-color-active: Text color of activity containers in processes and activities panel when highlighted
    * @prop --activity-padding: Padding of activity containers in processes and activities panel
    *
@@ -77,6 +74,7 @@
    * @prop --node-border-width: Border width of related node info in processes and activities panel
    * @prop --node-color: Text color of related node info in processes and activities panel
    * @prop --node-padding: Padding of related node info in processes and activities panel
+   * @prop --node-align-items: Align-items of related node info
    *
    * @prop --function-nodes-padding: Padding of related nodes container in processes and activities panel
    */
@@ -103,8 +101,8 @@
 
   --legend-border-width: 0;
   --legend-border-color: var(--border-color);
-  --legend-padding: 1rem 0 0 0;
-  --legend-margin: 0;
+  --legend-padding: 0;
+  --legend-margin: 1rem 0 0 0;
 
   @include standard-var-declarations(
     legend-header,
@@ -142,11 +140,7 @@
     $border-color: var(--border-color)
   );
 
-  @include standard-var-declarations(
-    node,
-    $border-color: var(--border-color),
-    $padding: 0 1em 0 0
-  );
+  @include standard-var-declarations(node, $border-color: var(--border-color));
 
   --function-nodes-padding: 0;
 }
@@ -226,11 +220,4 @@ wc-gocam-legend {
 
 wc-genes-panel {
   --height: var(--graph-height);
-}
-
-wc-spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
 }

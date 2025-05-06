@@ -19,6 +19,7 @@ import {
 
 /**
  * @part process - Process containers
+ * @part process-label - Process label
  * @part activity - Activity containers
  * @part gene-product - Gene product labels
  * @part function-label - Molecular function labels
@@ -112,29 +113,20 @@ export class GenesPanel {
     }
   }
 
-  /**
-   * Render the references of a GP but does not display "with" field for the moment
-   * @param gp a gene product object (see graphHandler)
-   */
-  renderGeneReferences(gp) {
+  renderReferenceIcon() {
+    // SVG originally from https://icons.getbootstrap.com/icons/newspaper/
+    // Modified to remove the width and height attributes in order to allow the size to be
+    // controlled via CSS
     return (
-      <span>
-        {gp.evidences.map((evidence) => {
-          return (
-            <a
-              class="far fa-newspaper"
-              href={evidence.url}
-              target="_blank"
-              title={
-                "Source: " +
-                evidence.source +
-                "\nEvidence: " +
-                evidence.evidences.map((ev) => ev.label).join(",")
-              }
-            ></a>
-          );
-        })}
-      </span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        class="bi bi-newspaper icon"
+        viewBox="0 0 16 16"
+      >
+        <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5z" />
+        <path d="M2 3h10v2H2zm0 3h4v3H2zm0 4h4v1H2zm0 2h4v1H2zm5-6h2v1H7zm3 0h2v1h-2zM7 8h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2z" />
+      </svg>
     );
   }
 
@@ -146,21 +138,29 @@ export class GenesPanel {
     return (
       <span>
         {evidences.map((evidence) => {
-          return (
-            <a
-              class="far fa-newspaper"
-              href={evidence.evidence.url}
-              target="_blank"
-              title={
-                "Source: " +
-                evidence.reference +
-                "\nEvidence: " +
-                evidence.evidence.label
-              }
-            >
-              E
-            </a>
-          );
+          if (!evidence.reference) {
+            return null; // for extreme case
+          }
+          const elementTitle =
+            "Source: " +
+            evidence.reference +
+            "\nEvidence: " +
+            evidence.evidence.label;
+          if (evidence.referenceEntity?.url) {
+            return (
+              <a
+                href={evidence.referenceEntity.url}
+                target="_blank"
+                title={elementTitle}
+              >
+                {this.renderReferenceIcon()}
+              </a>
+            );
+          } else {
+            return (
+              <span title={elementTitle}>{this.renderReferenceIcon()}</span>
+            );
+          }
         })}
       </span>
     );
@@ -187,7 +187,9 @@ export class GenesPanel {
   renderProcess(process) {
     return (
       <div class="process" part="process">
-        <div class="process-label">{process}</div>
+        <div class="process-label" part="process-label">
+          {process}
+        </div>
         <div class="process-activities">
           {this.groupedActivities[process].map((activity) => {
             return this.renderActivity(activity);
@@ -221,18 +223,21 @@ export class GenesPanel {
         {activity.rootNode && (
           <div class="function">
             <div class="function-label" part="function-label">
-              <a href={activity.rootNode?.term.url} target="_blank">
-                {activity.rootNode?.term.label}
-              </a>
+              <div class="node-term">
+                <a href={activity.rootNode?.term.url} target="_blank">
+                  {activity.rootNode?.term.label}
+                </a>
+              </div>
+              <div class="node-evidence">
+                {this.renderReferences(activity.rootNode.predicate.evidence)}
+              </div>
             </div>
             <div class="function-nodes">
               {nodes.map((node: ActivityNode) => {
                 return (
                   <div class="node">
                     <div class="node-relation">
-                      <a target="_blank" href="">
-                        {node.predicate?.edge.label}
-                      </a>
+                      {node.predicate?.edge.label}
                     </div>
                     <div class="node-term">
                       <a target="_blank" href={node.term.url}>
