@@ -809,7 +809,7 @@ export class GocamViewer {
         </div>
         {this.showLegend && (
           <div class="panel">
-            <wc-gocam-legend exportparts="header : legend-header, sections : legend-sections, section : legend-section" />
+            <go-gocam-viewer-legend exportparts="header : legend-header, sections : legend-sections, section : legend-section" />
           </div>
         )}
       </Host>

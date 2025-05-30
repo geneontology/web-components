@@ -31,11 +31,11 @@ const LEGEND_COLUMNS = {
  * @part section - An individual legend entry
  */
 @Component({
-  tag: "wc-gocam-legend",
-  styleUrl: "gocam-legend.scss",
+  tag: "go-gocam-viewer-legend",
+  styleUrl: "gocam-viewer-legend.scss",
   shadow: true,
 })
-export class GocamLegend {
+export class GocamViewerLegend {
   render() {
     return (
       <Host>

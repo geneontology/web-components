@@ -1,4 +1,4 @@
-# wc-gocam-legend
+# go-gocam-viewer-legend
 
 <!-- Auto Generated Below -->
 
@@ -36,8 +36,8 @@
 ### Graph
 ```mermaid
 graph TD;
-  go-gocam-viewer --> wc-gocam-legend
-  style wc-gocam-legend fill:#f9f,stroke:#333,stroke-width:4px
+  go-gocam-viewer --> go-gocam-viewer-legend
+  style go-gocam-viewer-legend fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

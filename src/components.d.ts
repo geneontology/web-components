@@ -54,6 +54,8 @@ export namespace Components {
         "showLegend": boolean;
         "toggleComplex": () => Promise<void>;
     }
+    interface GoGocamViewerLegend {
+    }
     interface GoGocamViewerSidebar {
         /**
           * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
@@ -151,8 +153,6 @@ export namespace Components {
          */
         "subjects": string;
         "subset": string;
-    }
-    interface WcGocamLegend {
     }
     interface WcLightModal {
         "close": () => Promise<void>;
@@ -352,6 +352,12 @@ declare global {
         prototype: HTMLGoGocamViewerElement;
         new (): HTMLGoGocamViewerElement;
     };
+    interface HTMLGoGocamViewerLegendElement extends Components.GoGocamViewerLegend, HTMLStencilElement {
+    }
+    var HTMLGoGocamViewerLegendElement: {
+        prototype: HTMLGoGocamViewerLegendElement;
+        new (): HTMLGoGocamViewerLegendElement;
+    };
     interface HTMLGoGocamViewerSidebarElementEventMap {
         "selectChanged": any;
     }
@@ -374,12 +380,6 @@ declare global {
     var HTMLWcGoRibbonElement: {
         prototype: HTMLWcGoRibbonElement;
         new (): HTMLWcGoRibbonElement;
-    };
-    interface HTMLWcGocamLegendElement extends Components.WcGocamLegend, HTMLStencilElement {
-    }
-    var HTMLWcGocamLegendElement: {
-        prototype: HTMLWcGocamLegendElement;
-        new (): HTMLWcGocamLegendElement;
     };
     interface HTMLWcLightModalElement extends Components.WcLightModal, HTMLStencilElement {
     }
@@ -447,9 +447,9 @@ declare global {
     interface HTMLElementTagNameMap {
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
+        "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-go-ribbon": HTMLWcGoRibbonElement;
-        "wc-gocam-legend": HTMLWcGocamLegendElement;
         "wc-light-modal": HTMLWcLightModalElement;
         "wc-ribbon-cell": HTMLWcRibbonCellElement;
         "wc-ribbon-strips": HTMLWcRibbonStripsElement;
@@ -495,6 +495,8 @@ declare namespace LocalJSX {
           * Show/hide default legend
          */
         "showLegend"?: boolean;
+    }
+    interface GoGocamViewerLegend {
     }
     interface GoGocamViewerSidebar {
         /**
@@ -593,8 +595,6 @@ declare namespace LocalJSX {
          */
         "subjects"?: string;
         "subset"?: string;
-    }
-    interface WcGocamLegend {
     }
     interface WcLightModal {
         "modalAnchor"?: string;
@@ -758,9 +758,9 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
+        "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-go-ribbon": WcGoRibbon;
-        "wc-gocam-legend": WcGocamLegend;
         "wc-light-modal": WcLightModal;
         "wc-ribbon-cell": WcRibbonCell;
         "wc-ribbon-strips": WcRibbonStrips;
@@ -775,9 +775,9 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
+            "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-go-ribbon": LocalJSX.WcGoRibbon & JSXBase.HTMLAttributes<HTMLWcGoRibbonElement>;
-            "wc-gocam-legend": LocalJSX.WcGocamLegend & JSXBase.HTMLAttributes<HTMLWcGocamLegendElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
             "wc-ribbon-cell": LocalJSX.WcRibbonCell & JSXBase.HTMLAttributes<HTMLWcRibbonCellElement>;
             "wc-ribbon-strips": LocalJSX.WcRibbonStrips & JSXBase.HTMLAttributes<HTMLWcRibbonStripsElement>;
