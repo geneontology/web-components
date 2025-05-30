@@ -3,11 +3,11 @@ import { Component, Prop, State, Event, EventEmitter, h } from "@stencil/core";
 import * as dbxrefs from "@geneontology/dbxrefs";
 
 @Component({
-  tag: "wc-go-autocomplete",
-  styleUrl: "go-autocomplete.css",
+  tag: "go-entity-autocomplete",
+  styleUrl: "entity-autocomplete.css",
   shadow: false,
 })
-export class GOAutocomplete {
+export class EntityAutocomplete {
   searchBox: HTMLInputElement;
 
   @Prop() value: string;

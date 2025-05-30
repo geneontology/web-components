@@ -10,18 +10,7 @@ import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export namespace Components {
-    interface WcGenesPanel {
-        /**
-          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
-         */
-        "cam": Cam;
-        "highlightActivity": (nodeId: any) => Promise<void>;
-        /**
-          * Passed by the parent to highlight & clear highlight nodes
-         */
-        "parentCy": any;
-    }
-    interface WcGoAutocomplete {
+    interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
          */
@@ -35,6 +24,17 @@ export namespace Components {
          */
         "placeholder": string;
         "value": string;
+    }
+    interface WcGenesPanel {
+        /**
+          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+         */
+        "cam": Cam;
+        "highlightActivity": (nodeId: any) => Promise<void>;
+        /**
+          * Passed by the parent to highlight & clear highlight nodes
+         */
+        "parentCy": any;
     }
     interface WcGoRibbon {
         /**
@@ -294,13 +294,13 @@ export namespace Components {
         "message": string;
     }
 }
+export interface GoEntityAutocompleteCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLGoEntityAutocompleteElement;
+}
 export interface WcGenesPanelCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLWcGenesPanelElement;
-}
-export interface WcGoAutocompleteCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLWcGoAutocompleteElement;
 }
 export interface WcGocamVizCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -315,6 +315,23 @@ export interface WcRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
     target: HTMLWcRibbonSubjectElement;
 }
 declare global {
+    interface HTMLGoEntityAutocompleteElementEventMap {
+        "itemSelected": any;
+    }
+    interface HTMLGoEntityAutocompleteElement extends Components.GoEntityAutocomplete, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLGoEntityAutocompleteElementEventMap>(type: K, listener: (this: HTMLGoEntityAutocompleteElement, ev: GoEntityAutocompleteCustomEvent<HTMLGoEntityAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLGoEntityAutocompleteElementEventMap>(type: K, listener: (this: HTMLGoEntityAutocompleteElement, ev: GoEntityAutocompleteCustomEvent<HTMLGoEntityAutocompleteElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLGoEntityAutocompleteElement: {
+        prototype: HTMLGoEntityAutocompleteElement;
+        new (): HTMLGoEntityAutocompleteElement;
+    };
     interface HTMLWcGenesPanelElementEventMap {
         "selectChanged": any;
     }
@@ -331,23 +348,6 @@ declare global {
     var HTMLWcGenesPanelElement: {
         prototype: HTMLWcGenesPanelElement;
         new (): HTMLWcGenesPanelElement;
-    };
-    interface HTMLWcGoAutocompleteElementEventMap {
-        "itemSelected": any;
-    }
-    interface HTMLWcGoAutocompleteElement extends Components.WcGoAutocomplete, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLWcGoAutocompleteElementEventMap>(type: K, listener: (this: HTMLWcGoAutocompleteElement, ev: WcGoAutocompleteCustomEvent<HTMLWcGoAutocompleteElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLWcGoAutocompleteElement: {
-        prototype: HTMLWcGoAutocompleteElement;
-        new (): HTMLWcGoAutocompleteElement;
     };
     interface HTMLWcGoRibbonElement extends Components.WcGoRibbon, HTMLStencilElement {
     }
@@ -445,8 +445,8 @@ declare global {
         new (): HTMLWcSpinnerElement;
     };
     interface HTMLElementTagNameMap {
+        "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "wc-genes-panel": HTMLWcGenesPanelElement;
-        "wc-go-autocomplete": HTMLWcGoAutocompleteElement;
         "wc-go-ribbon": HTMLWcGoRibbonElement;
         "wc-gocam-legend": HTMLWcGocamLegendElement;
         "wc-gocam-viz": HTMLWcGocamVizElement;
@@ -459,18 +459,7 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface WcGenesPanel {
-        /**
-          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
-         */
-        "cam"?: Cam;
-        "onSelectChanged"?: (event: WcGenesPanelCustomEvent<any>) => void;
-        /**
-          * Passed by the parent to highlight & clear highlight nodes
-         */
-        "parentCy"?: any;
-    }
-    interface WcGoAutocomplete {
+    interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
          */
@@ -482,12 +471,23 @@ declare namespace LocalJSX {
         /**
           * Event triggered whenever an item is selected from the autocomplete
          */
-        "onItemSelected"?: (event: WcGoAutocompleteCustomEvent<any>) => void;
+        "onItemSelected"?: (event: GoEntityAutocompleteCustomEvent<any>) => void;
         /**
           * Default placeholder for the autocomplete
          */
         "placeholder"?: string;
         "value"?: string;
+    }
+    interface WcGenesPanel {
+        /**
+          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+         */
+        "cam"?: Cam;
+        "onSelectChanged"?: (event: WcGenesPanelCustomEvent<any>) => void;
+        /**
+          * Passed by the parent to highlight & clear highlight nodes
+         */
+        "parentCy"?: any;
     }
     interface WcGoRibbon {
         /**
@@ -756,8 +756,8 @@ declare namespace LocalJSX {
         "message"?: string;
     }
     interface IntrinsicElements {
+        "go-entity-autocomplete": GoEntityAutocomplete;
         "wc-genes-panel": WcGenesPanel;
-        "wc-go-autocomplete": WcGoAutocomplete;
         "wc-go-ribbon": WcGoRibbon;
         "wc-gocam-legend": WcGocamLegend;
         "wc-gocam-viz": WcGocamViz;
@@ -773,8 +773,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "wc-genes-panel": LocalJSX.WcGenesPanel & JSXBase.HTMLAttributes<HTMLWcGenesPanelElement>;
-            "wc-go-autocomplete": LocalJSX.WcGoAutocomplete & JSXBase.HTMLAttributes<HTMLWcGoAutocompleteElement>;
             "wc-go-ribbon": LocalJSX.WcGoRibbon & JSXBase.HTMLAttributes<HTMLWcGoRibbonElement>;
             "wc-gocam-legend": LocalJSX.WcGocamLegend & JSXBase.HTMLAttributes<HTMLWcGocamLegendElement>;
             "wc-gocam-viz": LocalJSX.WcGocamViz & JSXBase.HTMLAttributes<HTMLWcGocamVizElement>;
