@@ -1,4 +1,4 @@
-# wc-genes-panel
+# go-gocam-viewer-sidebar
 
 <!-- Auto Generated Below -->
 
@@ -99,8 +99,8 @@ Type: `Promise<void>`
 ### Graph
 ```mermaid
 graph TD;
-  go-gocam-viewer --> wc-genes-panel
-  style wc-genes-panel fill:#f9f,stroke:#333,stroke-width:4px
+  go-gocam-viewer --> go-gocam-viewer-sidebar
+  style go-gocam-viewer-sidebar fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

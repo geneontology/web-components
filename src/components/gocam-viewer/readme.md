@@ -168,14 +168,14 @@ Type: `Promise<void>`
 ### Depends on
 
 - [wc-spinner](../go-spinner)
-- [wc-genes-panel](../go-gocam-genes-panel)
+- [go-gocam-viewer-sidebar](../gocam-viewer-sidebar)
 - [wc-gocam-legend](../go-gocam-legend)
 
 ### Graph
 ```mermaid
 graph TD;
   go-gocam-viewer --> wc-spinner
-  go-gocam-viewer --> wc-genes-panel
+  go-gocam-viewer --> go-gocam-viewer-sidebar
   go-gocam-viewer --> wc-gocam-legend
   style go-gocam-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```

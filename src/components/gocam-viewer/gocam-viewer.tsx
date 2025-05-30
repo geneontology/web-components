@@ -48,7 +48,7 @@ const GOMODEL_PREFIX = "gomodel:";
 })
 export class GocamViewer {
   @Element() gocamviz;
-  genesPanel: HTMLWcGenesPanelElement;
+  genesPanel: HTMLGoGocamViewerSidebarElement;
   graphDiv: HTMLDivElement;
 
   /**
@@ -92,7 +92,7 @@ export class GocamViewer {
   dbXrefsReady = false; // check if dbxrefs is initialized
 
   /**
-   * This state is updated whenever loading a new graph, in order to trigger a new rendering of genes-panel
+   * This state is updated whenever loading a new graph, in order to trigger a new rendering of go-gocam-viewer-sidebar
    */
   @State() cam: Cam;
 
@@ -237,7 +237,7 @@ export class GocamViewer {
   layoutChange: EventEmitter;
 
   /**
-   * Called whenever an activity has been selected from the genes-panel
+   * Called whenever an activity has been selected from the go-gocam-viewer-sidebar
    */
   @Listen("selectChanged", { target: "body" })
   newSelection(event: CustomEvent) {
@@ -799,11 +799,11 @@ export class GocamViewer {
           <div class="panel w-4" part="activities-panel">
             <div class="panel-header">Processes and Activities</div>
             <div class="panel-body">
-              <wc-genes-panel
+              <go-gocam-viewer-sidebar
                 cam={this.cam}
                 exportparts="process, process-label, activity, gene-product, function-label"
                 ref={(el) => (this.genesPanel = el)}
-              ></wc-genes-panel>
+              ></go-gocam-viewer-sidebar>
             </div>
           </div>
         </div>

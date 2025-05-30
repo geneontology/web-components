@@ -54,7 +54,7 @@ export namespace Components {
         "showLegend": boolean;
         "toggleComplex": () => Promise<void>;
     }
-    interface WcGenesPanel {
+    interface GoGocamViewerSidebar {
         /**
           * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
          */
@@ -302,9 +302,9 @@ export interface GoGocamViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoGocamViewerElement;
 }
-export interface WcGenesPanelCustomEvent<T> extends CustomEvent<T> {
+export interface GoGocamViewerSidebarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLWcGenesPanelElement;
+    target: HTMLGoGocamViewerSidebarElement;
 }
 export interface WcRibbonStripsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -352,22 +352,22 @@ declare global {
         prototype: HTMLGoGocamViewerElement;
         new (): HTMLGoGocamViewerElement;
     };
-    interface HTMLWcGenesPanelElementEventMap {
+    interface HTMLGoGocamViewerSidebarElementEventMap {
         "selectChanged": any;
     }
-    interface HTMLWcGenesPanelElement extends Components.WcGenesPanel, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLWcGenesPanelElementEventMap>(type: K, listener: (this: HTMLWcGenesPanelElement, ev: WcGenesPanelCustomEvent<HTMLWcGenesPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLGoGocamViewerSidebarElement extends Components.GoGocamViewerSidebar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLGoGocamViewerSidebarElementEventMap>(type: K, listener: (this: HTMLGoGocamViewerSidebarElement, ev: GoGocamViewerSidebarCustomEvent<HTMLGoGocamViewerSidebarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLWcGenesPanelElementEventMap>(type: K, listener: (this: HTMLWcGenesPanelElement, ev: WcGenesPanelCustomEvent<HTMLWcGenesPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLGoGocamViewerSidebarElementEventMap>(type: K, listener: (this: HTMLGoGocamViewerSidebarElement, ev: GoGocamViewerSidebarCustomEvent<HTMLGoGocamViewerSidebarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLWcGenesPanelElement: {
-        prototype: HTMLWcGenesPanelElement;
-        new (): HTMLWcGenesPanelElement;
+    var HTMLGoGocamViewerSidebarElement: {
+        prototype: HTMLGoGocamViewerSidebarElement;
+        new (): HTMLGoGocamViewerSidebarElement;
     };
     interface HTMLWcGoRibbonElement extends Components.WcGoRibbon, HTMLStencilElement {
     }
@@ -447,7 +447,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
-        "wc-genes-panel": HTMLWcGenesPanelElement;
+        "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-go-ribbon": HTMLWcGoRibbonElement;
         "wc-gocam-legend": HTMLWcGocamLegendElement;
         "wc-light-modal": HTMLWcLightModalElement;
@@ -496,12 +496,12 @@ declare namespace LocalJSX {
          */
         "showLegend"?: boolean;
     }
-    interface WcGenesPanel {
+    interface GoGocamViewerSidebar {
         /**
           * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
          */
         "cam"?: Cam;
-        "onSelectChanged"?: (event: WcGenesPanelCustomEvent<any>) => void;
+        "onSelectChanged"?: (event: GoGocamViewerSidebarCustomEvent<any>) => void;
         /**
           * Passed by the parent to highlight & clear highlight nodes
          */
@@ -758,7 +758,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
-        "wc-genes-panel": WcGenesPanel;
+        "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-go-ribbon": WcGoRibbon;
         "wc-gocam-legend": WcGocamLegend;
         "wc-light-modal": WcLightModal;
@@ -775,7 +775,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
-            "wc-genes-panel": LocalJSX.WcGenesPanel & JSXBase.HTMLAttributes<HTMLWcGenesPanelElement>;
+            "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-go-ribbon": LocalJSX.WcGoRibbon & JSXBase.HTMLAttributes<HTMLWcGoRibbonElement>;
             "wc-gocam-legend": LocalJSX.WcGocamLegend & JSXBase.HTMLAttributes<HTMLWcGocamLegendElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;

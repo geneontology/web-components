@@ -25,11 +25,11 @@ import {
  * @part function-label - Molecular function labels
  */
 @Component({
-  tag: "wc-genes-panel",
-  styleUrl: "genes-panel.scss",
+  tag: "go-gocam-viewer-sidebar",
+  styleUrl: "gocam-viewer-sidebar.scss",
   shadow: true,
 })
-export class GenesPanel {
+export class GocamViewerSidebar {
   @Element() hostElement;
 
   @Event({ bubbles: true, composed: true }) selectChanged: EventEmitter;
