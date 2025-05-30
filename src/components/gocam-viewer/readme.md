@@ -1,4 +1,4 @@
-# wc-gocam-viz
+# go-gocam-viewer
 
 <!-- Auto Generated Below -->
 
@@ -174,10 +174,10 @@ Type: `Promise<void>`
 ### Graph
 ```mermaid
 graph TD;
-  wc-gocam-viz --> wc-spinner
-  wc-gocam-viz --> wc-genes-panel
-  wc-gocam-viz --> wc-gocam-legend
-  style wc-gocam-viz fill:#f9f,stroke:#333,stroke-width:4px
+  go-gocam-viewer --> wc-spinner
+  go-gocam-viewer --> wc-genes-panel
+  go-gocam-viewer --> wc-gocam-legend
+  style go-gocam-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

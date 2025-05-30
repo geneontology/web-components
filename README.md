@@ -70,14 +70,17 @@ The `wc-go-ribbon` component displays a ribbon of GO terms associated with one o
 
 https://github.com/geneontology/web-components/blob/main/src/components/go-ribbon/readme.md
 
-### `wc-gocam-viz`
+### `go-gocam-viewer`
 
-The `wc-gocam-viz` component displays a GO-CAM model as a network diagram along with a list of processes and activities in the model.
+The `go-gocam-viewer` component displays a GO-CAM model as a network diagram along with a list of processes and activities in the model.
 
 #### Example
 
 ```html
-<wc-gocam-viz gocam-id="635b1e3e00001811" show-legend="true"></wc-gocam-viz>
+<go-gocam-viewer
+  gocam-id="635b1e3e00001811"
+  show-legend="true"
+></go-gocam-viewer>
 ```
 
 #### Documentation

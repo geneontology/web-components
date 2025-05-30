@@ -31,12 +31,12 @@
 
 ### Used by
 
- - [wc-gocam-viz](../go-gocam-pathway)
+ - [go-gocam-viewer](../gocam-viewer)
 
 ### Graph
 ```mermaid
 graph TD;
-  wc-gocam-viz --> wc-gocam-legend
+  go-gocam-viewer --> wc-gocam-legend
   style wc-gocam-legend fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script type="module" src="/build/web-components.esm.js"></script>
     <script nomodule src="/build/web-components.js"></script>
-    <title>wc-gocam-viz -- styled</title>
+    <title>go-gocam-viewer -- styled</title>
     <style>
-      wc-gocam-viz {
+      go-gocam-viewer {
         --panel-border-width: 1px;
         --panel-header-background: rgba(0, 0, 0, 0.03);
         --panel-header-padding: 0.5rem 1rem;
@@ -33,16 +33,16 @@
         --graph-padding: 1rem;
       }
 
-      wc-gocam-viz::part(gene-product) {
+      go-gocam-viewer::part(gene-product) {
         font-size: 1.125rem;
         font-weight: bold;
       }
 
-      wc-gocam-viz::part(legend-header) {
+      go-gocam-viewer::part(legend-header) {
         text-align: center;
       }
 
-      wc-gocam-viz::part(gocam-title) {
+      go-gocam-viewer::part(gocam-title) {
         font-weight: bold;
       }
     </style>
@@ -50,8 +50,8 @@
 
   <body>
     <div style="max-width: 1200px; margin: 0 auto">
-      <wc-gocam-viz id="gocam-1" gocam-id="568b0f9600000284" show-legend="true">
-      </wc-gocam-viz>
+      <go-gocam-viewer id="gocam-1" gocam-id="568b0f9600000284" show-legend="true">
+      </go-gocam-viewer>
     </div>
 
     <!-- OPTIONAL: SPECIAL HANDLING OF EVENTS -->

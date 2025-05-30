@@ -94,12 +94,12 @@ Type: `Promise<void>`
 
 ### Used by
 
- - [wc-gocam-viz](../go-gocam-pathway)
+ - [go-gocam-viewer](../gocam-viewer)
 
 ### Graph
 ```mermaid
 graph TD;
-  wc-gocam-viz --> wc-genes-panel
+  go-gocam-viewer --> wc-genes-panel
   style wc-genes-panel fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

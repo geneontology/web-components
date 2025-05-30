@@ -42,11 +42,11 @@ const GOMODEL_PREFIX = "gomodel:";
  * @part legend-section - An individual legend entry
  */
 @Component({
-  tag: "wc-gocam-viz",
-  styleUrl: "gocam-viz.scss",
+  tag: "go-gocam-viewer",
+  styleUrl: "gocam-viewer.scss",
   shadow: true,
 })
-export class GoCamViz {
+export class GocamViewer {
   @Element() gocamviz;
   genesPanel: HTMLWcGenesPanelElement;
   graphDiv: HTMLDivElement;

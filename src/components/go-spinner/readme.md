@@ -22,15 +22,15 @@
 
 ### Used by
 
+ - [go-gocam-viewer](../gocam-viewer)
  - [wc-go-ribbon](../go-ribbon)
- - [wc-gocam-viz](../go-gocam-pathway)
  - [wc-ribbon-strips](../go-ribbon-strips)
 
 ### Graph
 ```mermaid
 graph TD;
+  go-gocam-viewer --> wc-spinner
   wc-go-ribbon --> wc-spinner
-  wc-gocam-viz --> wc-spinner
   wc-ribbon-strips --> wc-spinner
   style wc-spinner fill:#f9f,stroke:#333,stroke-width:4px
 ```
