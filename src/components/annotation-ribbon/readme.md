@@ -1,4 +1,4 @@
-# wc-go-ribbon
+# go-annotation-ribbon
 
 <!-- Auto Generated Below -->
 
@@ -54,13 +54,13 @@
 ### Graph
 ```mermaid
 graph TD;
-  wc-go-ribbon --> wc-ribbon-strips
-  wc-go-ribbon --> wc-spinner
-  wc-go-ribbon --> wc-ribbon-table
+  go-annotation-ribbon --> wc-ribbon-strips
+  go-annotation-ribbon --> wc-spinner
+  go-annotation-ribbon --> wc-ribbon-table
   wc-ribbon-strips --> wc-spinner
   wc-ribbon-strips --> wc-ribbon-subject
   wc-ribbon-strips --> wc-ribbon-cell
-  style wc-go-ribbon fill:#f9f,stroke:#333,stroke-width:4px
+  style go-annotation-ribbon fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

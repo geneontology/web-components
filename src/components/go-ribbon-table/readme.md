@@ -65,12 +65,12 @@ Type: `Promise<void>`
 
 ### Used by
 
- - [wc-go-ribbon](../go-ribbon)
+ - [go-annotation-ribbon](../annotation-ribbon)
 
 ### Graph
 ```mermaid
 graph TD;
-  wc-go-ribbon --> wc-ribbon-table
+  go-annotation-ribbon --> wc-ribbon-table
   style wc-ribbon-table fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

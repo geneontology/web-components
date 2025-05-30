@@ -35,10 +35,10 @@ import "@geneontology/web-components";
 
 This will allow you to use all custom elements provided by this package. The necessary code for each component is fetched on demand when it is first used.
 
-The second method is to import the individual component or components directly. For example, to use only `wc-go-ribbon` component:
+The second method is to import the individual component or components directly. For example, to use only `go-annotation-ribbon` component:
 
 ```javascript
-import "@geneontology/web-components/wc-go-ribbon";
+import "@geneontology/web-components/go-annotation-ribbon";
 ```
 
 In this case, no dynamic code fetching happens at runtime. This can lead to a more performant final application, but it requires you manage the imports for each component you use.
@@ -56,14 +56,14 @@ If your application does not use a build system or package manager, you can incl
 
 ## Usage
 
-### `wc-go-ribbon`
+### `go-annotation-ribbon`
 
-The `wc-go-ribbon` component displays a ribbon of GO terms associated with one or more gene products.
+The `go-annotation-ribbon` component displays a ribbon of GO terms associated with one or more gene products.
 
 #### Example
 
 ```html
-<wc-go-ribbon subjects="RGD:620474,RGD:3889"></wc-go-ribbon>
+<go-annotation-ribbon subjects="RGD:620474,RGD:3889"></go-annotation-ribbon>
 ```
 
 #### Documentation

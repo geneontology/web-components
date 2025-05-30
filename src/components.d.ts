@@ -10,64 +10,7 @@ import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export namespace Components {
-    interface GoEntityAutocomplete {
-        /**
-          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-         */
-        "category": string;
-        /**
-          * Maximum number of results to show
-         */
-        "maxResults": number;
-        /**
-          * Default placeholder for the autocomplete
-         */
-        "placeholder": string;
-        "value": string;
-    }
-    interface GoGocamViewer {
-        /**
-          * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
-         */
-        "apiUrl": string;
-        /**
-          * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
-         */
-        "gocamId": string;
-        /**
-          * Center the cytoscape graph to fit the whole graph
-         */
-        "resetView": () => Promise<void>;
-        /**
-          * Define if the GO-CAM viz should capture the mouse scroll
-          * @param shouldAF set to true if you want a mouse scroll to be captured by the component
-         */
-        "setAutoFocus": (shouldAF: any) => Promise<void>;
-        /**
-          * Manually supply GO-CAM data to be rendered. This will overwrite any data previously fetched using the gocamId and apiUrl props, if they were provided.
-          * @param model GO-CAM object
-         */
-        "setModelData": (model: any) => Promise<void>;
-        /**
-          * Show/hide default legend
-         */
-        "showLegend": boolean;
-        "toggleComplex": () => Promise<void>;
-    }
-    interface GoGocamViewerLegend {
-    }
-    interface GoGocamViewerSidebar {
-        /**
-          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
-         */
-        "cam": Cam;
-        "highlightActivity": (nodeId: any) => Promise<void>;
-        /**
-          * Passed by the parent to highlight & clear highlight nodes
-         */
-        "parentCy": any;
-    }
-    interface WcGoRibbon {
+    interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
          */
@@ -153,6 +96,63 @@ export namespace Components {
          */
         "subjects": string;
         "subset": string;
+    }
+    interface GoEntityAutocomplete {
+        /**
+          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+         */
+        "category": string;
+        /**
+          * Maximum number of results to show
+         */
+        "maxResults": number;
+        /**
+          * Default placeholder for the autocomplete
+         */
+        "placeholder": string;
+        "value": string;
+    }
+    interface GoGocamViewer {
+        /**
+          * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+         */
+        "apiUrl": string;
+        /**
+          * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
+         */
+        "gocamId": string;
+        /**
+          * Center the cytoscape graph to fit the whole graph
+         */
+        "resetView": () => Promise<void>;
+        /**
+          * Define if the GO-CAM viz should capture the mouse scroll
+          * @param shouldAF set to true if you want a mouse scroll to be captured by the component
+         */
+        "setAutoFocus": (shouldAF: any) => Promise<void>;
+        /**
+          * Manually supply GO-CAM data to be rendered. This will overwrite any data previously fetched using the gocamId and apiUrl props, if they were provided.
+          * @param model GO-CAM object
+         */
+        "setModelData": (model: any) => Promise<void>;
+        /**
+          * Show/hide default legend
+         */
+        "showLegend": boolean;
+        "toggleComplex": () => Promise<void>;
+    }
+    interface GoGocamViewerLegend {
+    }
+    interface GoGocamViewerSidebar {
+        /**
+          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+         */
+        "cam": Cam;
+        "highlightActivity": (nodeId: any) => Promise<void>;
+        /**
+          * Passed by the parent to highlight & clear highlight nodes
+         */
+        "parentCy": any;
     }
     interface WcLightModal {
         "close": () => Promise<void>;
@@ -315,6 +315,12 @@ export interface WcRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
     target: HTMLWcRibbonSubjectElement;
 }
 declare global {
+    interface HTMLGoAnnotationRibbonElement extends Components.GoAnnotationRibbon, HTMLStencilElement {
+    }
+    var HTMLGoAnnotationRibbonElement: {
+        prototype: HTMLGoAnnotationRibbonElement;
+        new (): HTMLGoAnnotationRibbonElement;
+    };
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
     }
@@ -374,12 +380,6 @@ declare global {
     var HTMLGoGocamViewerSidebarElement: {
         prototype: HTMLGoGocamViewerSidebarElement;
         new (): HTMLGoGocamViewerSidebarElement;
-    };
-    interface HTMLWcGoRibbonElement extends Components.WcGoRibbon, HTMLStencilElement {
-    }
-    var HTMLWcGoRibbonElement: {
-        prototype: HTMLWcGoRibbonElement;
-        new (): HTMLWcGoRibbonElement;
     };
     interface HTMLWcLightModalElement extends Components.WcLightModal, HTMLStencilElement {
     }
@@ -445,11 +445,11 @@ declare global {
         new (): HTMLWcSpinnerElement;
     };
     interface HTMLElementTagNameMap {
+        "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
-        "wc-go-ribbon": HTMLWcGoRibbonElement;
         "wc-light-modal": HTMLWcLightModalElement;
         "wc-ribbon-cell": HTMLWcRibbonCellElement;
         "wc-ribbon-strips": HTMLWcRibbonStripsElement;
@@ -459,57 +459,7 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface GoEntityAutocomplete {
-        /**
-          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
-         */
-        "category"?: string;
-        /**
-          * Maximum number of results to show
-         */
-        "maxResults"?: number;
-        /**
-          * Event triggered whenever an item is selected from the autocomplete
-         */
-        "onItemSelected"?: (event: GoEntityAutocompleteCustomEvent<any>) => void;
-        /**
-          * Default placeholder for the autocomplete
-         */
-        "placeholder"?: string;
-        "value"?: string;
-    }
-    interface GoGocamViewer {
-        /**
-          * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
-         */
-        "apiUrl"?: string;
-        /**
-          * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
-         */
-        "gocamId"?: string;
-        "onLayoutChange"?: (event: GoGocamViewerCustomEvent<any>) => void;
-        "onNodeClick"?: (event: GoGocamViewerCustomEvent<any>) => void;
-        "onNodeOut"?: (event: GoGocamViewerCustomEvent<any>) => void;
-        "onNodeOver"?: (event: GoGocamViewerCustomEvent<any>) => void;
-        /**
-          * Show/hide default legend
-         */
-        "showLegend"?: boolean;
-    }
-    interface GoGocamViewerLegend {
-    }
-    interface GoGocamViewerSidebar {
-        /**
-          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
-         */
-        "cam"?: Cam;
-        "onSelectChanged"?: (event: GoGocamViewerSidebarCustomEvent<any>) => void;
-        /**
-          * Passed by the parent to highlight & clear highlight nodes
-         */
-        "parentCy"?: any;
-    }
-    interface WcGoRibbon {
+    interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
          */
@@ -595,6 +545,56 @@ declare namespace LocalJSX {
          */
         "subjects"?: string;
         "subset"?: string;
+    }
+    interface GoEntityAutocomplete {
+        /**
+          * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+         */
+        "category"?: string;
+        /**
+          * Maximum number of results to show
+         */
+        "maxResults"?: number;
+        /**
+          * Event triggered whenever an item is selected from the autocomplete
+         */
+        "onItemSelected"?: (event: GoEntityAutocompleteCustomEvent<any>) => void;
+        /**
+          * Default placeholder for the autocomplete
+         */
+        "placeholder"?: string;
+        "value"?: string;
+    }
+    interface GoGocamViewer {
+        /**
+          * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+         */
+        "apiUrl"?: string;
+        /**
+          * ID of the GO-CAM to be shown in this widget. If provided, the GO-CAM will automatically be fetched using this ID and the value of the `api-url` prop. If omitted, data will not automatically be fetched, but can be provided via the `setModelData` method. This may be useful if the host page already has the GO-CAM data.
+         */
+        "gocamId"?: string;
+        "onLayoutChange"?: (event: GoGocamViewerCustomEvent<any>) => void;
+        "onNodeClick"?: (event: GoGocamViewerCustomEvent<any>) => void;
+        "onNodeOut"?: (event: GoGocamViewerCustomEvent<any>) => void;
+        "onNodeOver"?: (event: GoGocamViewerCustomEvent<any>) => void;
+        /**
+          * Show/hide default legend
+         */
+        "showLegend"?: boolean;
+    }
+    interface GoGocamViewerLegend {
+    }
+    interface GoGocamViewerSidebar {
+        /**
+          * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
+         */
+        "cam"?: Cam;
+        "onSelectChanged"?: (event: GoGocamViewerSidebarCustomEvent<any>) => void;
+        /**
+          * Passed by the parent to highlight & clear highlight nodes
+         */
+        "parentCy"?: any;
     }
     interface WcLightModal {
         "modalAnchor"?: string;
@@ -756,11 +756,11 @@ declare namespace LocalJSX {
         "message"?: string;
     }
     interface IntrinsicElements {
+        "go-annotation-ribbon": GoAnnotationRibbon;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
-        "wc-go-ribbon": WcGoRibbon;
         "wc-light-modal": WcLightModal;
         "wc-ribbon-cell": WcRibbonCell;
         "wc-ribbon-strips": WcRibbonStrips;
@@ -773,11 +773,11 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
-            "wc-go-ribbon": LocalJSX.WcGoRibbon & JSXBase.HTMLAttributes<HTMLWcGoRibbonElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
             "wc-ribbon-cell": LocalJSX.WcRibbonCell & JSXBase.HTMLAttributes<HTMLWcRibbonCellElement>;
             "wc-ribbon-strips": LocalJSX.WcRibbonStrips & JSXBase.HTMLAttributes<HTMLWcRibbonStripsElement>;

@@ -15,11 +15,11 @@ import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
 import { sameArray } from "../../globals/utils";
 
 @Component({
-  tag: "wc-go-ribbon",
-  styleUrl: "./go-ribbon.css",
+  tag: "go-annotation-ribbon",
+  styleUrl: "annotation-ribbon.css",
   shadow: false,
 })
-export class GORibbon {
+export class AnnotationRibbon {
   @Element() GORibbon;
 
   ribbonStrips: HTMLWcRibbonStripsElement;
