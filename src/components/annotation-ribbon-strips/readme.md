@@ -1,4 +1,4 @@
-# wc-ribbon-strips
+# go-annotation-ribbon-strips
 
 <!-- Auto Generated Below -->
 
@@ -84,11 +84,11 @@ Type: `Promise<void>`
 ### Graph
 ```mermaid
 graph TD;
-  wc-ribbon-strips --> wc-spinner
-  wc-ribbon-strips --> wc-ribbon-subject
-  wc-ribbon-strips --> wc-ribbon-cell
-  go-annotation-ribbon --> wc-ribbon-strips
-  style wc-ribbon-strips fill:#f9f,stroke:#333,stroke-width:4px
+  go-annotation-ribbon-strips --> wc-spinner
+  go-annotation-ribbon-strips --> wc-ribbon-subject
+  go-annotation-ribbon-strips --> wc-ribbon-cell
+  go-annotation-ribbon --> go-annotation-ribbon-strips
+  style go-annotation-ribbon-strips fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

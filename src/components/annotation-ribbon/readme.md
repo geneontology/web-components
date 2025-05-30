@@ -47,19 +47,19 @@
 
 ### Depends on
 
-- [wc-ribbon-strips](../go-ribbon-strips)
+- [go-annotation-ribbon-strips](../annotation-ribbon-strips)
 - [wc-spinner](../go-spinner)
 - [wc-ribbon-table](../go-ribbon-table)
 
 ### Graph
 ```mermaid
 graph TD;
-  go-annotation-ribbon --> wc-ribbon-strips
+  go-annotation-ribbon --> go-annotation-ribbon-strips
   go-annotation-ribbon --> wc-spinner
   go-annotation-ribbon --> wc-ribbon-table
-  wc-ribbon-strips --> wc-spinner
-  wc-ribbon-strips --> wc-ribbon-subject
-  wc-ribbon-strips --> wc-ribbon-cell
+  go-annotation-ribbon-strips --> wc-spinner
+  go-annotation-ribbon-strips --> wc-ribbon-subject
+  go-annotation-ribbon-strips --> wc-ribbon-cell
   style go-annotation-ribbon fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -25,12 +25,12 @@
 
 ### Used by
 
- - [wc-ribbon-strips](../go-ribbon-strips)
+ - [go-annotation-ribbon-strips](../annotation-ribbon-strips)
 
 ### Graph
 ```mermaid
 graph TD;
-  wc-ribbon-strips --> wc-ribbon-cell
+  go-annotation-ribbon-strips --> wc-ribbon-cell
   style wc-ribbon-cell fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

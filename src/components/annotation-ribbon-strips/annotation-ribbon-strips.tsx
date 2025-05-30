@@ -33,11 +33,11 @@ import {
 import { Method } from "@stencil/core";
 
 @Component({
-  tag: "wc-ribbon-strips",
-  styleUrl: "./ribbon-strips.scss",
+  tag: "go-annotation-ribbon-strips",
+  styleUrl: "annotation-ribbon-strips.scss",
   shadow: false,
 })
-export class RibbonStrips {
+export class AnnotationRibbonStrips {
   @Element() ribbonElement;
 
   @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";

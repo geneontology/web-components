@@ -22,7 +22,7 @@ import { sameArray } from "../../globals/utils";
 export class AnnotationRibbon {
   @Element() GORibbon;
 
-  ribbonStrips: HTMLWcRibbonStripsElement;
+  ribbonStrips: HTMLGoAnnotationRibbonStripsElement;
   ribbonTable: HTMLWcRibbonTableElement;
 
   @State() loadingTable = false;
@@ -463,7 +463,7 @@ export class AnnotationRibbon {
 
   render() {
     return [
-      <wc-ribbon-strips
+      <go-annotation-ribbon-strips
         id="wc-go-ribbon-strips"
         ref={(el) => (this.ribbonStrips = el)}
         base-api-url={this.baseApiUrl}

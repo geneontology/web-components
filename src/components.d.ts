@@ -5,10 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Cam } from "./globals/@noctua.form";
 import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
-export { Cam } from "./globals/@noctua.form";
+import { Cam } from "./globals/@noctua.form";
 export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
+export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     interface GoAnnotationRibbon {
         /**
@@ -97,6 +97,77 @@ export namespace Components {
         "subjects": string;
         "subset": string;
     }
+    interface GoAnnotationRibbonStrips {
+        /**
+          * add a cell at the beginning of each row/subject to show all annotations
+         */
+        "addCellAll": boolean;
+        "annotationLabels": string;
+        "baseApiUrl": string;
+        /**
+          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+         */
+        "binaryColor": boolean;
+        /**
+          * 0 = Normal 1 = Bold
+         */
+        "categoryAllStyle": number;
+        /**
+          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+         */
+        "categoryCase": number;
+        /**
+          * 0 = Normal 1 = Bold
+         */
+        "categoryOtherStyle": number;
+        "classLabels": string;
+        /**
+          * Which value to base the cell color on 0 = class count 1 = annotation count
+         */
+        "colorBy": number;
+        /**
+          * if provided, will override any value provided in subjects and subset
+         */
+        "data": string;
+        /**
+          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+         */
+        "fireEventOnEmptyCells": boolean;
+        "groupBaseUrl": string;
+        "groupClickable": boolean;
+        "groupMaxLabelSize": number;
+        "groupNewTab": boolean;
+        "maxColor": string;
+        "maxHeatLevel": number;
+        "minColor": string;
+        "ribbonSummary": IRibbonModel;
+        "selectGroup": (group_id: any) => Promise<void>;
+        /**
+          * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
+         */
+        "selected": any;
+        /**
+          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+         */
+        "selectionMode": number;
+        "showOtherGroup": boolean;
+        "subjectBaseUrl": string;
+        "subjectOpenNewTab": boolean;
+        /**
+          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+         */
+        "subjectPosition": number;
+        "subjectUseTaxonIcon": boolean;
+        /**
+          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+         */
+        "subjects": string;
+        "subset": string;
+        /**
+          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
+         */
+        "updateOnSubjectChange": boolean;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -181,77 +252,6 @@ export namespace Components {
         "selected": boolean;
         "subject": IRibbonSubject;
     }
-    interface WcRibbonStrips {
-        /**
-          * add a cell at the beginning of each row/subject to show all annotations
-         */
-        "addCellAll": boolean;
-        "annotationLabels": string;
-        "baseApiUrl": string;
-        /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
-         */
-        "binaryColor": boolean;
-        /**
-          * 0 = Normal 1 = Bold
-         */
-        "categoryAllStyle": number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-         */
-        "categoryCase": number;
-        /**
-          * 0 = Normal 1 = Bold
-         */
-        "categoryOtherStyle": number;
-        "classLabels": string;
-        /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
-         */
-        "colorBy": number;
-        /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data": string;
-        /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-         */
-        "fireEventOnEmptyCells": boolean;
-        "groupBaseUrl": string;
-        "groupClickable": boolean;
-        "groupMaxLabelSize": number;
-        "groupNewTab": boolean;
-        "maxColor": string;
-        "maxHeatLevel": number;
-        "minColor": string;
-        "ribbonSummary": IRibbonModel;
-        "selectGroup": (group_id: any) => Promise<void>;
-        /**
-          * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
-         */
-        "selected": any;
-        /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-         */
-        "selectionMode": number;
-        "showOtherGroup": boolean;
-        "subjectBaseUrl": string;
-        "subjectOpenNewTab": boolean;
-        /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-         */
-        "subjectPosition": number;
-        "subjectUseTaxonIcon": boolean;
-        /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-         */
-        "subjects": string;
-        "subset": string;
-        /**
-          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
-         */
-        "updateOnSubjectChange": boolean;
-    }
     interface WcRibbonSubject {
         "newTab": boolean;
         "subject": IRibbonSubject;
@@ -294,6 +294,10 @@ export namespace Components {
         "message": string;
     }
 }
+export interface GoAnnotationRibbonStripsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLGoAnnotationRibbonStripsElement;
+}
 export interface GoEntityAutocompleteCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoEntityAutocompleteElement;
@@ -306,10 +310,6 @@ export interface GoGocamViewerSidebarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoGocamViewerSidebarElement;
 }
-export interface WcRibbonStripsCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLWcRibbonStripsElement;
-}
 export interface WcRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLWcRibbonSubjectElement;
@@ -320,6 +320,28 @@ declare global {
     var HTMLGoAnnotationRibbonElement: {
         prototype: HTMLGoAnnotationRibbonElement;
         new (): HTMLGoAnnotationRibbonElement;
+    };
+    interface HTMLGoAnnotationRibbonStripsElementEventMap {
+        "cellClick": any;
+        "cellEnter": any;
+        "cellLeave": any;
+        "groupClick": any;
+        "groupEnter": any;
+        "groupLeave": any;
+    }
+    interface HTMLGoAnnotationRibbonStripsElement extends Components.GoAnnotationRibbonStrips, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLGoAnnotationRibbonStripsElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonStripsElement, ev: GoAnnotationRibbonStripsCustomEvent<HTMLGoAnnotationRibbonStripsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLGoAnnotationRibbonStripsElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonStripsElement, ev: GoAnnotationRibbonStripsCustomEvent<HTMLGoAnnotationRibbonStripsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLGoAnnotationRibbonStripsElement: {
+        prototype: HTMLGoAnnotationRibbonStripsElement;
+        new (): HTMLGoAnnotationRibbonStripsElement;
     };
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
@@ -393,28 +415,6 @@ declare global {
         prototype: HTMLWcRibbonCellElement;
         new (): HTMLWcRibbonCellElement;
     };
-    interface HTMLWcRibbonStripsElementEventMap {
-        "cellClick": any;
-        "cellEnter": any;
-        "cellLeave": any;
-        "groupClick": any;
-        "groupEnter": any;
-        "groupLeave": any;
-    }
-    interface HTMLWcRibbonStripsElement extends Components.WcRibbonStrips, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLWcRibbonStripsElementEventMap>(type: K, listener: (this: HTMLWcRibbonStripsElement, ev: WcRibbonStripsCustomEvent<HTMLWcRibbonStripsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLWcRibbonStripsElementEventMap>(type: K, listener: (this: HTMLWcRibbonStripsElement, ev: WcRibbonStripsCustomEvent<HTMLWcRibbonStripsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLWcRibbonStripsElement: {
-        prototype: HTMLWcRibbonStripsElement;
-        new (): HTMLWcRibbonStripsElement;
-    };
     interface HTMLWcRibbonSubjectElementEventMap {
         "subjectClick": any;
     }
@@ -446,13 +446,13 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
+        "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-light-modal": HTMLWcLightModalElement;
         "wc-ribbon-cell": HTMLWcRibbonCellElement;
-        "wc-ribbon-strips": HTMLWcRibbonStripsElement;
         "wc-ribbon-subject": HTMLWcRibbonSubjectElement;
         "wc-ribbon-table": HTMLWcRibbonTableElement;
         "wc-spinner": HTMLWcSpinnerElement;
@@ -546,6 +546,100 @@ declare namespace LocalJSX {
         "subjects"?: string;
         "subset"?: string;
     }
+    interface GoAnnotationRibbonStrips {
+        /**
+          * add a cell at the beginning of each row/subject to show all annotations
+         */
+        "addCellAll"?: boolean;
+        "annotationLabels"?: string;
+        "baseApiUrl"?: string;
+        /**
+          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+         */
+        "binaryColor"?: boolean;
+        /**
+          * 0 = Normal 1 = Bold
+         */
+        "categoryAllStyle"?: number;
+        /**
+          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+         */
+        "categoryCase"?: number;
+        /**
+          * 0 = Normal 1 = Bold
+         */
+        "categoryOtherStyle"?: number;
+        "classLabels"?: string;
+        /**
+          * Which value to base the cell color on 0 = class count 1 = annotation count
+         */
+        "colorBy"?: number;
+        /**
+          * if provided, will override any value provided in subjects and subset
+         */
+        "data"?: string;
+        /**
+          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+         */
+        "fireEventOnEmptyCells"?: boolean;
+        "groupBaseUrl"?: string;
+        "groupClickable"?: boolean;
+        "groupMaxLabelSize"?: number;
+        "groupNewTab"?: boolean;
+        "maxColor"?: string;
+        "maxHeatLevel"?: number;
+        "minColor"?: string;
+        /**
+          * This event is triggered whenever a ribbon cell is clicked
+         */
+        "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        /**
+          * This event is triggered whenever the mouse enters a cell area
+         */
+        "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        /**
+          * This event is triggered whenever the mouse leaves a cell area
+         */
+        "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        /**
+          * This event is triggered whenever a group cell is clicked
+         */
+        "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        /**
+          * This event is triggered whenever the mouse enters a group cell area
+         */
+        "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        /**
+          * This event is triggered whenever the mouse leaves a group cell area
+         */
+        "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "ribbonSummary"?: IRibbonModel;
+        /**
+          * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
+         */
+        "selected"?: any;
+        /**
+          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+         */
+        "selectionMode"?: number;
+        "showOtherGroup"?: boolean;
+        "subjectBaseUrl"?: string;
+        "subjectOpenNewTab"?: boolean;
+        /**
+          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+         */
+        "subjectPosition"?: number;
+        "subjectUseTaxonIcon"?: boolean;
+        /**
+          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+         */
+        "subjects"?: string;
+        "subset"?: string;
+        /**
+          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
+         */
+        "updateOnSubjectChange"?: boolean;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -620,100 +714,6 @@ declare namespace LocalJSX {
         "selected"?: boolean;
         "subject"?: IRibbonSubject;
     }
-    interface WcRibbonStrips {
-        /**
-          * add a cell at the beginning of each row/subject to show all annotations
-         */
-        "addCellAll"?: boolean;
-        "annotationLabels"?: string;
-        "baseApiUrl"?: string;
-        /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
-         */
-        "binaryColor"?: boolean;
-        /**
-          * 0 = Normal 1 = Bold
-         */
-        "categoryAllStyle"?: number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-         */
-        "categoryCase"?: number;
-        /**
-          * 0 = Normal 1 = Bold
-         */
-        "categoryOtherStyle"?: number;
-        "classLabels"?: string;
-        /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
-         */
-        "colorBy"?: number;
-        /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data"?: string;
-        /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-         */
-        "fireEventOnEmptyCells"?: boolean;
-        "groupBaseUrl"?: string;
-        "groupClickable"?: boolean;
-        "groupMaxLabelSize"?: number;
-        "groupNewTab"?: boolean;
-        "maxColor"?: string;
-        "maxHeatLevel"?: number;
-        "minColor"?: string;
-        /**
-          * This event is triggered whenever a ribbon cell is clicked
-         */
-        "onCellClick"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        /**
-          * This event is triggered whenever the mouse enters a cell area
-         */
-        "onCellEnter"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        /**
-          * This event is triggered whenever the mouse leaves a cell area
-         */
-        "onCellLeave"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        /**
-          * This event is triggered whenever a group cell is clicked
-         */
-        "onGroupClick"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        /**
-          * This event is triggered whenever the mouse enters a group cell area
-         */
-        "onGroupEnter"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        /**
-          * This event is triggered whenever the mouse leaves a group cell area
-         */
-        "onGroupLeave"?: (event: WcRibbonStripsCustomEvent<any>) => void;
-        "ribbonSummary"?: IRibbonModel;
-        /**
-          * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
-         */
-        "selected"?: any;
-        /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-         */
-        "selectionMode"?: number;
-        "showOtherGroup"?: boolean;
-        "subjectBaseUrl"?: string;
-        "subjectOpenNewTab"?: boolean;
-        /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-         */
-        "subjectPosition"?: number;
-        "subjectUseTaxonIcon"?: boolean;
-        /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-         */
-        "subjects"?: string;
-        "subset"?: string;
-        /**
-          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
-         */
-        "updateOnSubjectChange"?: boolean;
-    }
     interface WcRibbonSubject {
         "newTab"?: boolean;
         /**
@@ -757,13 +757,13 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "go-annotation-ribbon": GoAnnotationRibbon;
+        "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-light-modal": WcLightModal;
         "wc-ribbon-cell": WcRibbonCell;
-        "wc-ribbon-strips": WcRibbonStrips;
         "wc-ribbon-subject": WcRibbonSubject;
         "wc-ribbon-table": WcRibbonTable;
         "wc-spinner": WcSpinner;
@@ -774,13 +774,13 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
+            "go-annotation-ribbon-strips": LocalJSX.GoAnnotationRibbonStrips & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonStripsElement>;
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
             "wc-ribbon-cell": LocalJSX.WcRibbonCell & JSXBase.HTMLAttributes<HTMLWcRibbonCellElement>;
-            "wc-ribbon-strips": LocalJSX.WcRibbonStrips & JSXBase.HTMLAttributes<HTMLWcRibbonStripsElement>;
             "wc-ribbon-subject": LocalJSX.WcRibbonSubject & JSXBase.HTMLAttributes<HTMLWcRibbonSubjectElement>;
             "wc-ribbon-table": LocalJSX.WcRibbonTable & JSXBase.HTMLAttributes<HTMLWcRibbonTableElement>;
             "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
