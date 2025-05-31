@@ -504,7 +504,7 @@ export class AnnotationRibbon {
       ),
 
       this.loadingTable ? (
-        <wc-spinner></wc-spinner>
+        <go-spinner></go-spinner>
       ) : (
         <go-annotation-ribbon-table
           id="wc-go-ribbon-table"

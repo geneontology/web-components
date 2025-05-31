@@ -608,7 +608,7 @@ export class AnnotationRibbonStrips {
     // Still loading (executing fetch)
     if (this.loading) {
       // return ( "Loading Ribbon..." );
-      return <wc-spinner></wc-spinner>;
+      return <go-spinner></go-spinner>;
     }
 
     if (!this.subjects && !this.ribbonSummary) {

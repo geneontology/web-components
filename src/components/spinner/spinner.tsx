@@ -1,8 +1,8 @@
 import { Component, Prop, h, Host } from "@stencil/core";
 
 @Component({
-  tag: "wc-spinner",
-  styleUrl: "go-spinner.css",
+  tag: "go-spinner",
+  styleUrl: "spinner.css",
   shadow: true,
 })
 export class Spinner {

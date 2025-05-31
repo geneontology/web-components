@@ -789,9 +789,9 @@ export class GocamViewer {
                 ref={(el) => (this.graphDiv = el)}
               >
                 {this.loading && (
-                  <wc-spinner
+                  <go-spinner
                     message={`Loading GO-CAM ${this.gocamId}`}
-                  ></wc-spinner>
+                  ></go-spinner>
                 )}
               </div>
             </div>

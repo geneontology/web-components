@@ -61,6 +61,19 @@ Type: `Promise<void>`
 
 
 
+## Dependencies
+
+### Used by
+
+ - [go-annotation-ribbon](../annotation-ribbon)
+
+### Graph
+```mermaid
+graph TD;
+  go-annotation-ribbon --> go-annotation-ribbon-table
+  style go-annotation-ribbon-table fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
