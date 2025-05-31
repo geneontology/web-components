@@ -190,6 +190,39 @@ export namespace Components {
         "subject": IRibbonSubject;
         "subjectBaseURL": string;
     }
+    interface GoAnnotationRibbonTable {
+        "baseApiUrl": string;
+        /**
+          * Reading biolink data. This will trigger a render of the table as would changing data
+         */
+        "bioLinkData": string;
+        /**
+          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
+         */
+        "data": string;
+        /**
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+         */
+        "filterBy": string;
+        "groupBaseUrl": string;
+        /**
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+         */
+        "groupBy": string;
+        /**
+          * Used to hide specific column of the table
+         */
+        "hideColumns": string;
+        /**
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+         */
+        "orderBy": string;
+        "showCurie": () => Promise<void>;
+        "showDBXrefs": () => Promise<void>;
+        "showOriginalTable": () => Promise<void>;
+        "showTable": () => Promise<void>;
+        "subjectBaseUrl": string;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -256,39 +289,6 @@ export namespace Components {
         "toggle": () => Promise<void>;
         "x": number;
         "y": number;
-    }
-    interface WcRibbonTable {
-        "baseApiUrl": string;
-        /**
-          * Reading biolink data. This will trigger a render of the table as would changing data
-         */
-        "bioLinkData": string;
-        /**
-          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
-         */
-        "data": string;
-        /**
-          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
-         */
-        "filterBy": string;
-        "groupBaseUrl": string;
-        /**
-          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
-         */
-        "groupBy": string;
-        /**
-          * Used to hide specific column of the table
-         */
-        "hideColumns": string;
-        /**
-          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
-         */
-        "orderBy": string;
-        "showCurie": () => Promise<void>;
-        "showDBXrefs": () => Promise<void>;
-        "showOriginalTable": () => Promise<void>;
-        "showTable": () => Promise<void>;
-        "subjectBaseUrl": string;
     }
     interface WcSpinner {
         "message": string;
@@ -366,6 +366,12 @@ declare global {
         prototype: HTMLGoAnnotationRibbonSubjectElement;
         new (): HTMLGoAnnotationRibbonSubjectElement;
     };
+    interface HTMLGoAnnotationRibbonTableElement extends Components.GoAnnotationRibbonTable, HTMLStencilElement {
+    }
+    var HTMLGoAnnotationRibbonTableElement: {
+        prototype: HTMLGoAnnotationRibbonTableElement;
+        new (): HTMLGoAnnotationRibbonTableElement;
+    };
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
     }
@@ -432,12 +438,6 @@ declare global {
         prototype: HTMLWcLightModalElement;
         new (): HTMLWcLightModalElement;
     };
-    interface HTMLWcRibbonTableElement extends Components.WcRibbonTable, HTMLStencilElement {
-    }
-    var HTMLWcRibbonTableElement: {
-        prototype: HTMLWcRibbonTableElement;
-        new (): HTMLWcRibbonTableElement;
-    };
     interface HTMLWcSpinnerElement extends Components.WcSpinner, HTMLStencilElement {
     }
     var HTMLWcSpinnerElement: {
@@ -449,12 +449,12 @@ declare global {
         "go-annotation-ribbon-cell": HTMLGoAnnotationRibbonCellElement;
         "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
         "go-annotation-ribbon-subject": HTMLGoAnnotationRibbonSubjectElement;
+        "go-annotation-ribbon-table": HTMLGoAnnotationRibbonTableElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-light-modal": HTMLWcLightModalElement;
-        "wc-ribbon-table": HTMLWcRibbonTableElement;
         "wc-spinner": HTMLWcSpinnerElement;
     }
 }
@@ -666,6 +666,35 @@ declare namespace LocalJSX {
         "subject"?: IRibbonSubject;
         "subjectBaseURL"?: string;
     }
+    interface GoAnnotationRibbonTable {
+        "baseApiUrl"?: string;
+        /**
+          * Reading biolink data. This will trigger a render of the table as would changing data
+         */
+        "bioLinkData"?: string;
+        /**
+          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
+         */
+        "data"?: string;
+        /**
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+         */
+        "filterBy"?: string;
+        "groupBaseUrl"?: string;
+        /**
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+         */
+        "groupBy"?: string;
+        /**
+          * Used to hide specific column of the table
+         */
+        "hideColumns"?: string;
+        /**
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+         */
+        "orderBy"?: string;
+        "subjectBaseUrl"?: string;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -723,35 +752,6 @@ declare namespace LocalJSX {
         "x"?: number;
         "y"?: number;
     }
-    interface WcRibbonTable {
-        "baseApiUrl"?: string;
-        /**
-          * Reading biolink data. This will trigger a render of the table as would changing data
-         */
-        "bioLinkData"?: string;
-        /**
-          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
-         */
-        "data"?: string;
-        /**
-          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
-         */
-        "filterBy"?: string;
-        "groupBaseUrl"?: string;
-        /**
-          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
-         */
-        "groupBy"?: string;
-        /**
-          * Used to hide specific column of the table
-         */
-        "hideColumns"?: string;
-        /**
-          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
-         */
-        "orderBy"?: string;
-        "subjectBaseUrl"?: string;
-    }
     interface WcSpinner {
         "message"?: string;
     }
@@ -760,12 +760,12 @@ declare namespace LocalJSX {
         "go-annotation-ribbon-cell": GoAnnotationRibbonCell;
         "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
         "go-annotation-ribbon-subject": GoAnnotationRibbonSubject;
+        "go-annotation-ribbon-table": GoAnnotationRibbonTable;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-light-modal": WcLightModal;
-        "wc-ribbon-table": WcRibbonTable;
         "wc-spinner": WcSpinner;
     }
 }
@@ -777,12 +777,12 @@ declare module "@stencil/core" {
             "go-annotation-ribbon-cell": LocalJSX.GoAnnotationRibbonCell & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonCellElement>;
             "go-annotation-ribbon-strips": LocalJSX.GoAnnotationRibbonStrips & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonStripsElement>;
             "go-annotation-ribbon-subject": LocalJSX.GoAnnotationRibbonSubject & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonSubjectElement>;
+            "go-annotation-ribbon-table": LocalJSX.GoAnnotationRibbonTable & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonTableElement>;
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
-            "wc-ribbon-table": LocalJSX.WcRibbonTable & JSXBase.HTMLAttributes<HTMLWcRibbonTableElement>;
             "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
         }
     }

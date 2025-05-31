@@ -6,11 +6,11 @@ import { bioLinkToTable, addEmptyCells } from "./utils";
 import * as dbxrefs from "@geneontology/dbxrefs";
 
 @Component({
-  tag: "wc-ribbon-table",
-  styleUrl: "./ribbon-table.scss",
+  tag: "go-annotation-ribbon-table",
+  styleUrl: "annotation-ribbon-table.scss",
   shadow: false,
 })
-export class RibbonTable {
+export class AnnotationRibbonTable {
   @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
 
   @Prop() subjectBaseUrl: string =

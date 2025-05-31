@@ -23,7 +23,7 @@ export class AnnotationRibbon {
   @Element() GORibbon;
 
   ribbonStrips: HTMLGoAnnotationRibbonStripsElement;
-  ribbonTable: HTMLWcRibbonTableElement;
+  ribbonTable: HTMLGoAnnotationRibbonTableElement;
 
   @State() loadingTable = false;
 
@@ -506,7 +506,7 @@ export class AnnotationRibbon {
       this.loadingTable ? (
         <wc-spinner></wc-spinner>
       ) : (
-        <wc-ribbon-table
+        <go-annotation-ribbon-table
           id="wc-go-ribbon-table"
           ref={(el) => (this.ribbonTable = el)}
           base-api-url={this.baseApiUrl}

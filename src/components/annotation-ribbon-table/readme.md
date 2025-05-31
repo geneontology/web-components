@@ -1,4 +1,4 @@
-# wc-ribbon-table
+# go-annotation-ribbon-table
 
 <!-- Auto Generated Below -->
 
@@ -60,19 +60,6 @@ Type: `Promise<void>`
 
 
 
-
-## Dependencies
-
-### Used by
-
- - [go-annotation-ribbon](../annotation-ribbon)
-
-### Graph
-```mermaid
-graph TD;
-  go-annotation-ribbon --> wc-ribbon-table
-  style wc-ribbon-table fill:#f9f,stroke:#333,stroke-width:4px
-```
 
 ----------------------------------------------
 

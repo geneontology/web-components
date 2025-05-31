@@ -12,7 +12,6 @@
     <script nomodule src="/build/web-components.js"></script>
   </head>
   <body>
-    <!-- <wc-ribbon-table></wc-ribbon-table> -->
 
     <script>
       let url =
@@ -46,7 +45,7 @@
         // data = [{"subject":"UniProtKB:P04637","slim":"GO:0003723","assocs":[{"id":"556e6950726f744b420950303436333709545035330909474f3a3030303337333009504d49443a3136323133323132094944410909460943656c6c756c61722074756d6f7220616e746967656e20703533095035330970726f7465696e097461786f6e3a393630360932303137303132350943414641090909","subject":{"id":"HGNC:11998","iri":"http://identifiers.org/uniprot/P04637","label":"TP53","taxon":{"id":"NCBITaxon:9606","iri":"http://purl.obolibrary.org/obo/NCBITaxon_9606","label":"Homo sapiens"}},"object":{"id":"GO:0003730","iri":"http://purl.obolibrary.org/obo/GO_0003730","label":"mRNA 3'-UTR binding","category":["molecular_activity"]},"negated":false,"relation":null,"publications":[{"id":"UniProtKB"}],"provided_by":["CAFA"],"reference":["PMID:16213212"],"type":"protein","evidence":"ECO:0000314","evidence_label":"direct assay evidence used in manual assertion","evidence_type":"IDA","evidence_closure":["ECO:0000352","ECO:0000000","ECO:0000002","ECO:0000006","ECO:0000314","ECO:0000269"],"evidence_closure_label":["evidence used in manual assertion","evidence","direct assay evidence","experimental evidence","direct assay evidence used in manual assertion","experimental evidence used in manual assertion"],"evidence_subset_closure":["ECO:0000006","ECO:0000314"],"evidence_subset_closure_label":["experimental evidence","direct assay evidence used in manual assertion"],"evidence_type_closure":["evidence used in manual assertion","evidence","direct assay evidence","experimental evidence","direct assay evidence used in manual assertion","experimental evidence used in manual assertion"],"slim":["GO:0003723"]}]}];
 
         // create the ribbon table element
-        var element = document.createElement("wc-ribbon-table");
+        var element = document.createElement("go-annotation-ribbon-table");
         element.setAttribute("bio-link-data", JSON.stringify(data));
         element.setAttribute("group-by", "term,qualifier");
         // element.setAttribute("data", JSON.stringify(data));
