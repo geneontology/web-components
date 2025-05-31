@@ -9,11 +9,11 @@ import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
 import { Watch } from "@stencil/core";
 
 @Component({
-  tag: "wc-ribbon-cell",
-  styleUrl: "./ribbon-cell.scss",
+  tag: "go-annotation-ribbon-cell",
+  styleUrl: "annotation-ribbon-cell.scss",
   shadow: false,
 })
-export class RibbonCell {
+export class AnnotationRibbonCell {
   @Element() el: HTMLElement;
 
   @Prop() subject: IRibbonSubject;

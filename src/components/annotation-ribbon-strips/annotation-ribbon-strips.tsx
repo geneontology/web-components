@@ -741,7 +741,7 @@ export class AnnotationRibbonStrips {
           )}
 
           {this.addCellAll ? (
-            <wc-ribbon-cell
+            <go-annotation-ribbon-cell
               class="ribbon__subject--cell"
               id={subjectGroupKey(subject, this.groupAll)}
               subject={subject}
@@ -788,7 +788,7 @@ export class AnnotationRibbonStrips {
                 }
 
                 return (
-                  <wc-ribbon-cell
+                  <go-annotation-ribbon-cell
                     class={
                       nbAnnotations == 0
                         ? "ribbon__subject--cell--no-annotation"

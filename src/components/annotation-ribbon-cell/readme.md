@@ -1,4 +1,4 @@
-# wc-ribbon-cell
+# go-annotation-ribbon-cell
 
 <!-- Auto Generated Below -->
 
@@ -20,19 +20,6 @@
 | `selected`         | `selected`          |                                                                                                                                                 | `boolean`        | `false`                    |
 | `subject`          | --                  |                                                                                                                                                 | `IRibbonSubject` | `undefined`                |
 
-
-## Dependencies
-
-### Used by
-
- - [go-annotation-ribbon-strips](../annotation-ribbon-strips)
-
-### Graph
-```mermaid
-graph TD;
-  go-annotation-ribbon-strips --> wc-ribbon-cell
-  style wc-ribbon-cell fill:#f9f,stroke:#333,stroke-width:4px
-```
 
 ----------------------------------------------
 

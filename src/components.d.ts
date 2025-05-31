@@ -97,6 +97,23 @@ export namespace Components {
         "subjects": string;
         "subset": string;
     }
+    interface GoAnnotationRibbonCell {
+        "annotationLabels": string;
+        /**
+          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
+         */
+        "available": boolean;
+        "binaryColor": boolean;
+        "classLabels": string;
+        "colorBy": number;
+        "group": IRibbonGroup;
+        "hovered": boolean;
+        "maxColor": string;
+        "maxHeatLevel": number;
+        "minColor": string;
+        "selected": boolean;
+        "subject": IRibbonSubject;
+    }
     interface GoAnnotationRibbonStrips {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
@@ -235,23 +252,6 @@ export namespace Components {
         "x": number;
         "y": number;
     }
-    interface WcRibbonCell {
-        "annotationLabels": string;
-        /**
-          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
-         */
-        "available": boolean;
-        "binaryColor": boolean;
-        "classLabels": string;
-        "colorBy": number;
-        "group": IRibbonGroup;
-        "hovered": boolean;
-        "maxColor": string;
-        "maxHeatLevel": number;
-        "minColor": string;
-        "selected": boolean;
-        "subject": IRibbonSubject;
-    }
     interface WcRibbonSubject {
         "newTab": boolean;
         "subject": IRibbonSubject;
@@ -320,6 +320,12 @@ declare global {
     var HTMLGoAnnotationRibbonElement: {
         prototype: HTMLGoAnnotationRibbonElement;
         new (): HTMLGoAnnotationRibbonElement;
+    };
+    interface HTMLGoAnnotationRibbonCellElement extends Components.GoAnnotationRibbonCell, HTMLStencilElement {
+    }
+    var HTMLGoAnnotationRibbonCellElement: {
+        prototype: HTMLGoAnnotationRibbonCellElement;
+        new (): HTMLGoAnnotationRibbonCellElement;
     };
     interface HTMLGoAnnotationRibbonStripsElementEventMap {
         "cellClick": any;
@@ -409,12 +415,6 @@ declare global {
         prototype: HTMLWcLightModalElement;
         new (): HTMLWcLightModalElement;
     };
-    interface HTMLWcRibbonCellElement extends Components.WcRibbonCell, HTMLStencilElement {
-    }
-    var HTMLWcRibbonCellElement: {
-        prototype: HTMLWcRibbonCellElement;
-        new (): HTMLWcRibbonCellElement;
-    };
     interface HTMLWcRibbonSubjectElementEventMap {
         "subjectClick": any;
     }
@@ -446,13 +446,13 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
+        "go-annotation-ribbon-cell": HTMLGoAnnotationRibbonCellElement;
         "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-light-modal": HTMLWcLightModalElement;
-        "wc-ribbon-cell": HTMLWcRibbonCellElement;
         "wc-ribbon-subject": HTMLWcRibbonSubjectElement;
         "wc-ribbon-table": HTMLWcRibbonTableElement;
         "wc-spinner": HTMLWcSpinnerElement;
@@ -545,6 +545,23 @@ declare namespace LocalJSX {
          */
         "subjects"?: string;
         "subset"?: string;
+    }
+    interface GoAnnotationRibbonCell {
+        "annotationLabels"?: string;
+        /**
+          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
+         */
+        "available"?: boolean;
+        "binaryColor"?: boolean;
+        "classLabels"?: string;
+        "colorBy"?: number;
+        "group"?: IRibbonGroup;
+        "hovered"?: boolean;
+        "maxColor"?: string;
+        "maxHeatLevel"?: number;
+        "minColor"?: string;
+        "selected"?: boolean;
+        "subject"?: IRibbonSubject;
     }
     interface GoAnnotationRibbonStrips {
         /**
@@ -697,23 +714,6 @@ declare namespace LocalJSX {
         "x"?: number;
         "y"?: number;
     }
-    interface WcRibbonCell {
-        "annotationLabels"?: string;
-        /**
-          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
-         */
-        "available"?: boolean;
-        "binaryColor"?: boolean;
-        "classLabels"?: string;
-        "colorBy"?: number;
-        "group"?: IRibbonGroup;
-        "hovered"?: boolean;
-        "maxColor"?: string;
-        "maxHeatLevel"?: number;
-        "minColor"?: string;
-        "selected"?: boolean;
-        "subject"?: IRibbonSubject;
-    }
     interface WcRibbonSubject {
         "newTab"?: boolean;
         /**
@@ -757,13 +757,13 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "go-annotation-ribbon": GoAnnotationRibbon;
+        "go-annotation-ribbon-cell": GoAnnotationRibbonCell;
         "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-light-modal": WcLightModal;
-        "wc-ribbon-cell": WcRibbonCell;
         "wc-ribbon-subject": WcRibbonSubject;
         "wc-ribbon-table": WcRibbonTable;
         "wc-spinner": WcSpinner;
@@ -774,13 +774,13 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
+            "go-annotation-ribbon-cell": LocalJSX.GoAnnotationRibbonCell & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonCellElement>;
             "go-annotation-ribbon-strips": LocalJSX.GoAnnotationRibbonStrips & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonStripsElement>;
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
-            "wc-ribbon-cell": LocalJSX.WcRibbonCell & JSXBase.HTMLAttributes<HTMLWcRibbonCellElement>;
             "wc-ribbon-subject": LocalJSX.WcRibbonSubject & JSXBase.HTMLAttributes<HTMLWcRibbonSubjectElement>;
             "wc-ribbon-table": LocalJSX.WcRibbonTable & JSXBase.HTMLAttributes<HTMLWcRibbonTableElement>;
             "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;

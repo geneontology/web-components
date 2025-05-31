@@ -59,7 +59,6 @@ graph TD;
   go-annotation-ribbon --> wc-ribbon-table
   go-annotation-ribbon-strips --> wc-spinner
   go-annotation-ribbon-strips --> wc-ribbon-subject
-  go-annotation-ribbon-strips --> wc-ribbon-cell
   style go-annotation-ribbon fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
