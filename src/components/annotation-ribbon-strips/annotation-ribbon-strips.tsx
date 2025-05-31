@@ -730,7 +730,7 @@ export class AnnotationRibbonStrips {
       return (
         <tr class="ribbon__subject">
           {this.subjectPosition == POSITION.LEFT ? (
-            <wc-ribbon-subject
+            <go-annotation-ribbon-subject
               class="ribbon__subject__label--left"
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}
@@ -815,7 +815,7 @@ export class AnnotationRibbonStrips {
           })}
 
           {this.subjectPosition == POSITION.RIGHT ? (
-            <wc-ribbon-subject
+            <go-annotation-ribbon-subject
               class="ribbon__subject__label--right"
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}

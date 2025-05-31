@@ -185,6 +185,11 @@ export namespace Components {
          */
         "updateOnSubjectChange": boolean;
     }
+    interface GoAnnotationRibbonSubject {
+        "newTab": boolean;
+        "subject": IRibbonSubject;
+        "subjectBaseURL": string;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -252,11 +257,6 @@ export namespace Components {
         "x": number;
         "y": number;
     }
-    interface WcRibbonSubject {
-        "newTab": boolean;
-        "subject": IRibbonSubject;
-        "subjectBaseURL": string;
-    }
     interface WcRibbonTable {
         "baseApiUrl": string;
         /**
@@ -298,6 +298,10 @@ export interface GoAnnotationRibbonStripsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoAnnotationRibbonStripsElement;
 }
+export interface GoAnnotationRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLGoAnnotationRibbonSubjectElement;
+}
 export interface GoEntityAutocompleteCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoEntityAutocompleteElement;
@@ -309,10 +313,6 @@ export interface GoGocamViewerCustomEvent<T> extends CustomEvent<T> {
 export interface GoGocamViewerSidebarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLGoGocamViewerSidebarElement;
-}
-export interface WcRibbonSubjectCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLWcRibbonSubjectElement;
 }
 declare global {
     interface HTMLGoAnnotationRibbonElement extends Components.GoAnnotationRibbon, HTMLStencilElement {
@@ -348,6 +348,23 @@ declare global {
     var HTMLGoAnnotationRibbonStripsElement: {
         prototype: HTMLGoAnnotationRibbonStripsElement;
         new (): HTMLGoAnnotationRibbonStripsElement;
+    };
+    interface HTMLGoAnnotationRibbonSubjectElementEventMap {
+        "subjectClick": any;
+    }
+    interface HTMLGoAnnotationRibbonSubjectElement extends Components.GoAnnotationRibbonSubject, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLGoAnnotationRibbonSubjectElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonSubjectElement, ev: GoAnnotationRibbonSubjectCustomEvent<HTMLGoAnnotationRibbonSubjectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLGoAnnotationRibbonSubjectElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonSubjectElement, ev: GoAnnotationRibbonSubjectCustomEvent<HTMLGoAnnotationRibbonSubjectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLGoAnnotationRibbonSubjectElement: {
+        prototype: HTMLGoAnnotationRibbonSubjectElement;
+        new (): HTMLGoAnnotationRibbonSubjectElement;
     };
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
@@ -415,23 +432,6 @@ declare global {
         prototype: HTMLWcLightModalElement;
         new (): HTMLWcLightModalElement;
     };
-    interface HTMLWcRibbonSubjectElementEventMap {
-        "subjectClick": any;
-    }
-    interface HTMLWcRibbonSubjectElement extends Components.WcRibbonSubject, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLWcRibbonSubjectElementEventMap>(type: K, listener: (this: HTMLWcRibbonSubjectElement, ev: WcRibbonSubjectCustomEvent<HTMLWcRibbonSubjectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLWcRibbonSubjectElementEventMap>(type: K, listener: (this: HTMLWcRibbonSubjectElement, ev: WcRibbonSubjectCustomEvent<HTMLWcRibbonSubjectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLWcRibbonSubjectElement: {
-        prototype: HTMLWcRibbonSubjectElement;
-        new (): HTMLWcRibbonSubjectElement;
-    };
     interface HTMLWcRibbonTableElement extends Components.WcRibbonTable, HTMLStencilElement {
     }
     var HTMLWcRibbonTableElement: {
@@ -448,12 +448,12 @@ declare global {
         "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
         "go-annotation-ribbon-cell": HTMLGoAnnotationRibbonCellElement;
         "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
+        "go-annotation-ribbon-subject": HTMLGoAnnotationRibbonSubjectElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "wc-light-modal": HTMLWcLightModalElement;
-        "wc-ribbon-subject": HTMLWcRibbonSubjectElement;
         "wc-ribbon-table": HTMLWcRibbonTableElement;
         "wc-spinner": HTMLWcSpinnerElement;
     }
@@ -657,6 +657,15 @@ declare namespace LocalJSX {
          */
         "updateOnSubjectChange"?: boolean;
     }
+    interface GoAnnotationRibbonSubject {
+        "newTab"?: boolean;
+        /**
+          * This event is triggered whenever a subject label is clicked Can call preventDefault() to avoid the default behavior (opening the linked subject page)
+         */
+        "onSubjectClick"?: (event: GoAnnotationRibbonSubjectCustomEvent<any>) => void;
+        "subject"?: IRibbonSubject;
+        "subjectBaseURL"?: string;
+    }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -714,15 +723,6 @@ declare namespace LocalJSX {
         "x"?: number;
         "y"?: number;
     }
-    interface WcRibbonSubject {
-        "newTab"?: boolean;
-        /**
-          * This event is triggered whenever a subject label is clicked Can call preventDefault() to avoid the default behavior (opening the linked subject page)
-         */
-        "onSubjectClick"?: (event: WcRibbonSubjectCustomEvent<any>) => void;
-        "subject"?: IRibbonSubject;
-        "subjectBaseURL"?: string;
-    }
     interface WcRibbonTable {
         "baseApiUrl"?: string;
         /**
@@ -759,12 +759,12 @@ declare namespace LocalJSX {
         "go-annotation-ribbon": GoAnnotationRibbon;
         "go-annotation-ribbon-cell": GoAnnotationRibbonCell;
         "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
+        "go-annotation-ribbon-subject": GoAnnotationRibbonSubject;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "wc-light-modal": WcLightModal;
-        "wc-ribbon-subject": WcRibbonSubject;
         "wc-ribbon-table": WcRibbonTable;
         "wc-spinner": WcSpinner;
     }
@@ -776,12 +776,12 @@ declare module "@stencil/core" {
             "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
             "go-annotation-ribbon-cell": LocalJSX.GoAnnotationRibbonCell & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonCellElement>;
             "go-annotation-ribbon-strips": LocalJSX.GoAnnotationRibbonStrips & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonStripsElement>;
+            "go-annotation-ribbon-subject": LocalJSX.GoAnnotationRibbonSubject & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonSubjectElement>;
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
-            "wc-ribbon-subject": LocalJSX.WcRibbonSubject & JSXBase.HTMLAttributes<HTMLWcRibbonSubjectElement>;
             "wc-ribbon-table": LocalJSX.WcRibbonTable & JSXBase.HTMLAttributes<HTMLWcRibbonTableElement>;
             "wc-spinner": LocalJSX.WcSpinner & JSXBase.HTMLAttributes<HTMLWcSpinnerElement>;
         }

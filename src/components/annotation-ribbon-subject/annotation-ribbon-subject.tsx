@@ -7,11 +7,11 @@ import { EventEmitter, Event } from "@stencil/core";
 import { IRibbonSubject } from "../../globals/models";
 
 @Component({
-  tag: "wc-ribbon-subject",
-  styleUrl: "./ribbon-subject.scss",
+  tag: "go-annotation-ribbon-subject",
+  styleUrl: "annotation-ribbon-subject.scss",
   shadow: false,
 })
-export class RibbonSubject {
+export class AnnotationRibbonSubject {
   @Element() el: HTMLElement;
 
   @Prop() subject: IRibbonSubject;

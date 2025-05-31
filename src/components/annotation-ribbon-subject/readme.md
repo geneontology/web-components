@@ -1,4 +1,4 @@
-# wc-ribbon-subject
+# go-annotation-ribbon-subject
 
 <!-- Auto Generated Below -->
 
@@ -28,8 +28,8 @@
 ### Graph
 ```mermaid
 graph TD;
-  go-annotation-ribbon-strips --> wc-ribbon-subject
-  style wc-ribbon-subject fill:#f9f,stroke:#333,stroke-width:4px
+  go-annotation-ribbon-strips --> go-annotation-ribbon-subject
+  style go-annotation-ribbon-subject fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

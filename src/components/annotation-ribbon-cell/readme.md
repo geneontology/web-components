@@ -21,6 +21,19 @@
 | `subject`          | --                  |                                                                                                                                                 | `IRibbonSubject` | `undefined`                |
 
 
+## Dependencies
+
+### Used by
+
+ - [go-annotation-ribbon-strips](../annotation-ribbon-strips)
+
+### Graph
+```mermaid
+graph TD;
+  go-annotation-ribbon-strips --> go-annotation-ribbon-cell
+  style go-annotation-ribbon-cell fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

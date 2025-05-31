@@ -78,13 +78,15 @@ Type: `Promise<void>`
 ### Depends on
 
 - [wc-spinner](../go-spinner)
-- [wc-ribbon-subject](../go-ribbon-subject)
+- [go-annotation-ribbon-subject](../annotation-ribbon-subject)
+- [go-annotation-ribbon-cell](../annotation-ribbon-cell)
 
 ### Graph
 ```mermaid
 graph TD;
   go-annotation-ribbon-strips --> wc-spinner
-  go-annotation-ribbon-strips --> wc-ribbon-subject
+  go-annotation-ribbon-strips --> go-annotation-ribbon-subject
+  go-annotation-ribbon-strips --> go-annotation-ribbon-cell
   go-annotation-ribbon --> go-annotation-ribbon-strips
   style go-annotation-ribbon-strips fill:#f9f,stroke:#333,stroke-width:4px
 ```
