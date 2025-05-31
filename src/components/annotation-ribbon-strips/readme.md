@@ -77,12 +77,14 @@ Type: `Promise<void>`
 
 ### Depends on
 
+- [go-spinner](../spinner)
 - [go-annotation-ribbon-subject](../annotation-ribbon-subject)
 - [go-annotation-ribbon-cell](../annotation-ribbon-cell)
 
 ### Graph
 ```mermaid
 graph TD;
+  go-annotation-ribbon-strips --> go-spinner
   go-annotation-ribbon-strips --> go-annotation-ribbon-subject
   go-annotation-ribbon-strips --> go-annotation-ribbon-cell
   go-annotation-ribbon --> go-annotation-ribbon-strips

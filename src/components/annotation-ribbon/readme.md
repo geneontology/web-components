@@ -48,13 +48,16 @@
 ### Depends on
 
 - [go-annotation-ribbon-strips](../annotation-ribbon-strips)
+- [go-spinner](../spinner)
 - [go-annotation-ribbon-table](../annotation-ribbon-table)
 
 ### Graph
 ```mermaid
 graph TD;
   go-annotation-ribbon --> go-annotation-ribbon-strips
+  go-annotation-ribbon --> go-spinner
   go-annotation-ribbon --> go-annotation-ribbon-table
+  go-annotation-ribbon-strips --> go-spinner
   go-annotation-ribbon-strips --> go-annotation-ribbon-subject
   go-annotation-ribbon-strips --> go-annotation-ribbon-cell
   style go-annotation-ribbon fill:#f9f,stroke:#333,stroke-width:4px

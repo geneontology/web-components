@@ -283,16 +283,6 @@ export namespace Components {
     interface GoSpinner {
         "message": string;
     }
-    interface WcLightModal {
-        "close": () => Promise<void>;
-        "modalAnchor": string;
-        "modalContent": string;
-        "modalTitle": string;
-        "open": () => Promise<void>;
-        "toggle": () => Promise<void>;
-        "x": number;
-        "y": number;
-    }
 }
 export interface GoAnnotationRibbonStripsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -438,12 +428,6 @@ declare global {
         prototype: HTMLGoSpinnerElement;
         new (): HTMLGoSpinnerElement;
     };
-    interface HTMLWcLightModalElement extends Components.WcLightModal, HTMLStencilElement {
-    }
-    var HTMLWcLightModalElement: {
-        prototype: HTMLWcLightModalElement;
-        new (): HTMLWcLightModalElement;
-    };
     interface HTMLElementTagNameMap {
         "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
         "go-annotation-ribbon-cell": HTMLGoAnnotationRibbonCellElement;
@@ -455,7 +439,6 @@ declare global {
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
         "go-spinner": HTMLGoSpinnerElement;
-        "wc-light-modal": HTMLWcLightModalElement;
     }
 }
 declare namespace LocalJSX {
@@ -748,13 +731,6 @@ declare namespace LocalJSX {
     interface GoSpinner {
         "message"?: string;
     }
-    interface WcLightModal {
-        "modalAnchor"?: string;
-        "modalContent"?: string;
-        "modalTitle"?: string;
-        "x"?: number;
-        "y"?: number;
-    }
     interface IntrinsicElements {
         "go-annotation-ribbon": GoAnnotationRibbon;
         "go-annotation-ribbon-cell": GoAnnotationRibbonCell;
@@ -766,7 +742,6 @@ declare namespace LocalJSX {
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
         "go-spinner": GoSpinner;
-        "wc-light-modal": WcLightModal;
     }
 }
 export { LocalJSX as JSX };
@@ -783,7 +758,6 @@ declare module "@stencil/core" {
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
             "go-spinner": LocalJSX.GoSpinner & JSXBase.HTMLAttributes<HTMLGoSpinnerElement>;
-            "wc-light-modal": LocalJSX.WcLightModal & JSXBase.HTMLAttributes<HTMLWcLightModalElement>;
         }
     }
 }
