@@ -1,0 +1,36 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Web Component Spinner</title>
+
+    <script type="module" src="/build/web-components.esm.js"></script>
+    <script nomodule src="/build/web-components.js"></script>
+
+    <style>
+      go-spinner.orange {
+        --color: orange;
+      }
+      go-spinner.small {
+        --size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Default</h1>
+    <go-spinner></go-spinner>
+
+    <h1>With Message</h1>
+    <go-spinner message="Loading..."></go-spinner>
+
+    <h1>Override <kbd>--color</kbd></h1>
+    <go-spinner class="orange"></go-spinner>
+
+    <h1>Override <kbd>--size</kbd></h1>
+    <go-spinner class="small"></go-spinner>
+  </body>
+</html>
