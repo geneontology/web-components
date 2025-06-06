@@ -1,7 +1,14 @@
 # go-annotation-ribbon-table
 
+
+
 <!-- Auto Generated Below -->
 
+
+## Overview
+
+The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+fetch data by itself, it expects the data to be provided in the `data` attribute.
 
 ## Properties
 

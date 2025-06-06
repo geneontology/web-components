@@ -8,6 +8,11 @@ import { CELL_TYPES, COLOR_BY } from "../../globals/enums";
 import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
 import { Watch } from "@stencil/core";
 
+/**
+ * An individual cell in the annotation ribbon.
+ *
+ * @internal
+ */
 @Component({
   tag: "go-annotation-ribbon-cell",
   styleUrl: "annotation-ribbon-cell.scss",
