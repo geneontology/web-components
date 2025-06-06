@@ -12,14 +12,13 @@ import { Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { graph as bbopGraph } from 'bbop-graph-noctua';
-import { DBXrefService } from '../../dbxref.service';
+import * as dbxrefs from "@geneontology/dbxrefs";
 
 
 export class NoctuaGraphService {
 
   constructor(
-    public noctuaFormConfigService: NoctuaFormConfigService,
-    private dbXrefService: DBXrefService) {
+    public noctuaFormConfigService: NoctuaFormConfigService) {
   }
 
   getTermURL(id: string) {
@@ -40,7 +39,7 @@ export class NoctuaGraphService {
     } else {
       const dbId = id.split(/:(.+)/, 2);
       if (dbId.length > 1) {
-        return this.dbXrefService.getURL(dbId[0], undefined, dbId[1]);
+        return dbxrefs.getURL(dbId[0], undefined, dbId[1]);
       }
     }
   }
