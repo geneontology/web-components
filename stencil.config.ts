@@ -42,9 +42,6 @@ export const config: Config = {
       copy: [{ src: "**/*.html" }, { src: "*.css" }],
     },
   ],
-  testing: {
-    browserHeadless: "new",
-  },
   extras: {
     enableImportInjection: true,
   },

@@ -12,13 +12,13 @@
 | `binaryColor`      | `binary-color`      |                                                                                                                                                 | `boolean`        | `false`                    |
 | `classLabels`      | `class-labels`      |                                                                                                                                                 | `string`         | `"term,terms"`             |
 | `colorBy`          | `color-by`          |                                                                                                                                                 | `number`         | `COLOR_BY.CLASS_COUNT`     |
-| `group`            | --                  |                                                                                                                                                 | `IRibbonGroup`   | `undefined`                |
+| `group`            | `group`             |                                                                                                                                                 | `IRibbonGroup`   | `undefined`                |
 | `hovered`          | `hovered`           |                                                                                                                                                 | `boolean`        | `false`                    |
 | `maxColor`         | `max-color`         |                                                                                                                                                 | `string`         | `"24,73,180"`              |
 | `maxHeatLevel`     | `max-heat-level`    |                                                                                                                                                 | `number`         | `48`                       |
 | `minColor`         | `min-color`         |                                                                                                                                                 | `string`         | `"255,255,255"`            |
 | `selected`         | `selected`          |                                                                                                                                                 | `boolean`        | `false`                    |
-| `subject`          | --                  |                                                                                                                                                 | `IRibbonSubject` | `undefined`                |
+| `subject`          | `subject`           |                                                                                                                                                 | `IRibbonSubject` | `undefined`                |
 
 
 ## Dependencies
