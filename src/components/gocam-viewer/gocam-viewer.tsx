@@ -1,3 +1,4 @@
+import * as dbxrefs from "@geneontology/dbxrefs";
 import {
   Component,
   Host,
@@ -21,7 +22,6 @@ import {
   Triple,
 } from "../../globals/@noctua.form";
 import { glyph } from "../../globals/relations";
-import { DBXrefService } from "../../globals/dbxref.service";
 
 cytoscape.use(dagre);
 
@@ -80,10 +80,9 @@ export class GocamViewer {
    */
   @State() error: boolean = false;
 
-  dbxrefService = new DBXrefService();
   configService = new NoctuaFormConfigService();
 
-  graphService = new NoctuaGraphService(this.configService, this.dbxrefService);
+  graphService = new NoctuaGraphService(this.configService);
   // variables for bbop graph
   currentGraph = undefined;
 
@@ -278,19 +277,8 @@ export class GocamViewer {
    * Init the GO dbxrefs.yaml, in order to build URL meta
    */
   async initDBXrefs() {
-    try {
-      await this.dbxrefService.init();
-      while (!this.dbxrefService.isReady()) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-      if (this.dbxrefService.hasError()) {
-        throw new Error("Failed to initialize dbxrefs");
-      }
-      this.dbXrefsReady = true;
-    } catch (error) {
-      console.error("Failed to initialize dbxrefs:", error);
-      this.dbXrefsReady = false;
-    }
+    await dbxrefs.init();
+    this.dbXrefsReady = true;
   }
 
   /**

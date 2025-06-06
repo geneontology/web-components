@@ -8,7 +8,7 @@
 | Property         | Attribute            | Description | Type             | Default     |
 | ---------------- | -------------------- | ----------- | ---------------- | ----------- |
 | `newTab`         | `new-tab`            |             | `boolean`        | `undefined` |
-| `subject`        | --                   |             | `IRibbonSubject` | `undefined` |
+| `subject`        | `subject`            |             | `IRibbonSubject` | `undefined` |
 | `subjectBaseURL` | `subject-base-u-r-l` |             | `string`         | `undefined` |
 
 

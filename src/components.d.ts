@@ -13,63 +13,112 @@ export namespace Components {
     interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
+          * @default true
          */
         "addCellAll": boolean;
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels": string;
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl": string;
         /**
           * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * @default false
          */
         "binaryColor": boolean;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryAllStyle": number;
         /**
           * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+          * @default FONT_CASE.LOWER_CASE
          */
         "categoryCase": number;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryOtherStyle": number;
+        /**
+          * @default "term,terms"
+         */
         "classLabels": string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
+          * @default COLOR_BY.ANNOTATION_COUNT
          */
         "colorBy": number;
         /**
           * if provided, will override any value provided in subjects and subset
          */
         "data": string;
+        /**
+          * @default true
+         */
         "excludePB": boolean;
         /**
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy": string;
+        /**
+          * @default true
+         */
         "filterCrossAspect": boolean;
+        /**
+          * @default "PMID:,DOI:,GO_REF:,Reactome:"
+         */
         "filterReference": string;
         /**
           * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+          * @default false
          */
         "fireEventOnEmptyCells": boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl": string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+          * @default "term,qualifier"
          */
         "groupBy": string;
+        /**
+          * @default true
+         */
         "groupClickable": boolean;
+        /**
+          * @default 60
+         */
         "groupMaxLabelSize": number;
+        /**
+          * @default true
+         */
         "groupNewTab": boolean;
         /**
           * Used to hide specific column of the table
+          * @default "qualifier"
          */
         "hideColumns": string;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor": string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel": number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor": string;
         /**
           * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+          * @default "term"
          */
         "orderBy": string;
         /**
@@ -78,68 +127,124 @@ export namespace Components {
         "selected": any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * @default SELECTION.CELL
          */
         "selectionMode": number;
         /**
           * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+          * @default true
          */
         "showOtherGroup": boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl": string;
+        /**
+          * @default true
+         */
         "subjectOpenNewTab": boolean;
         /**
           * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+          * @default POSITION.LEFT
          */
         "subjectPosition": number;
         "subjectUseTaxonIcon": boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+          * @default undefined
          */
         "subjects": string;
+        /**
+          * @default "goslim_agr"
+         */
         "subset": string;
     }
     interface GoAnnotationRibbonCell {
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels": string;
         /**
           * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
+          * @default true
          */
         "available": boolean;
+        /**
+          * @default false
+         */
         "binaryColor": boolean;
+        /**
+          * @default "term,terms"
+         */
         "classLabels": string;
+        /**
+          * @default COLOR_BY.CLASS_COUNT
+         */
         "colorBy": number;
         "group": IRibbonGroup;
+        /**
+          * @default false
+         */
         "hovered": boolean;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor": string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel": number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor": string;
+        /**
+          * @default false
+         */
         "selected": boolean;
         "subject": IRibbonSubject;
     }
     interface GoAnnotationRibbonStrips {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
+          * @default true
          */
         "addCellAll": boolean;
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels": string;
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl": string;
         /**
           * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * @default false
          */
         "binaryColor": boolean;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryAllStyle": number;
         /**
           * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+          * @default FONT_CASE.LOWER_CASE
          */
         "categoryCase": number;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryOtherStyle": number;
+        /**
+          * @default "term,terms"
+         */
         "classLabels": string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
+          * @default COLOR_BY.ANNOTATION_COUNT
          */
         "colorBy": number;
         /**
@@ -148,14 +253,36 @@ export namespace Components {
         "data": string;
         /**
           * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+          * @default false
          */
         "fireEventOnEmptyCells": boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl": string;
+        /**
+          * @default true
+         */
         "groupClickable": boolean;
+        /**
+          * @default 60
+         */
         "groupMaxLabelSize": number;
+        /**
+          * @default true
+         */
         "groupNewTab": boolean;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor": string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel": number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor": string;
         "ribbonSummary": IRibbonModel;
         "selectGroup": (group_id: any) => Promise<void>;
@@ -165,23 +292,39 @@ export namespace Components {
         "selected": any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * @default SELECTION.CELL
          */
         "selectionMode": number;
+        /**
+          * @default false
+         */
         "showOtherGroup": boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl": string;
+        /**
+          * @default true
+         */
         "subjectOpenNewTab": boolean;
         /**
           * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+          * @default POSITION.LEFT
          */
         "subjectPosition": number;
         "subjectUseTaxonIcon": boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+          * @default undefined
          */
         "subjects": string;
+        /**
+          * @default "goslim_agr"
+         */
         "subset": string;
         /**
           * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
+          * @default true
          */
         "updateOnSubjectChange": boolean;
     }
@@ -191,6 +334,9 @@ export namespace Components {
         "subjectBaseURL": string;
     }
     interface GoAnnotationRibbonTable {
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl": string;
         /**
           * Reading biolink data. This will trigger a render of the table as would changing data
@@ -204,6 +350,9 @@ export namespace Components {
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy": string;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl": string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
@@ -221,19 +370,25 @@ export namespace Components {
         "showDBXrefs": () => Promise<void>;
         "showOriginalTable": () => Promise<void>;
         "showTable": () => Promise<void>;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl": string;
     }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+          * @default "gene"
          */
         "category": string;
         /**
           * Maximum number of results to show
+          * @default 100
          */
         "maxResults": number;
         /**
           * Default placeholder for the autocomplete
+          * @default ""
          */
         "placeholder": string;
         "value": string;
@@ -241,6 +396,7 @@ export namespace Components {
     interface GoGocamViewer {
         /**
           * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+          * @default "https://api.geneontology.org/api/go-cam/%ID"
          */
         "apiUrl": string;
         /**
@@ -263,6 +419,7 @@ export namespace Components {
         "setModelData": (model: any) => Promise<void>;
         /**
           * Show/hide default legend
+          * @default true
          */
         "showLegend": boolean;
         "toggleComplex": () => Promise<void>;
@@ -445,63 +602,112 @@ declare namespace LocalJSX {
     interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
+          * @default true
          */
         "addCellAll"?: boolean;
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels"?: string;
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl"?: string;
         /**
           * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * @default false
          */
         "binaryColor"?: boolean;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryAllStyle"?: number;
         /**
           * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+          * @default FONT_CASE.LOWER_CASE
          */
         "categoryCase"?: number;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryOtherStyle"?: number;
+        /**
+          * @default "term,terms"
+         */
         "classLabels"?: string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
+          * @default COLOR_BY.ANNOTATION_COUNT
          */
         "colorBy"?: number;
         /**
           * if provided, will override any value provided in subjects and subset
          */
         "data"?: string;
+        /**
+          * @default true
+         */
         "excludePB"?: boolean;
         /**
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy"?: string;
+        /**
+          * @default true
+         */
         "filterCrossAspect"?: boolean;
+        /**
+          * @default "PMID:,DOI:,GO_REF:,Reactome:"
+         */
         "filterReference"?: string;
         /**
           * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+          * @default false
          */
         "fireEventOnEmptyCells"?: boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl"?: string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+          * @default "term,qualifier"
          */
         "groupBy"?: string;
+        /**
+          * @default true
+         */
         "groupClickable"?: boolean;
+        /**
+          * @default 60
+         */
         "groupMaxLabelSize"?: number;
+        /**
+          * @default true
+         */
         "groupNewTab"?: boolean;
         /**
           * Used to hide specific column of the table
+          * @default "qualifier"
          */
         "hideColumns"?: string;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor"?: string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel"?: number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor"?: string;
         /**
           * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+          * @default "term"
          */
         "orderBy"?: string;
         /**
@@ -510,68 +716,124 @@ declare namespace LocalJSX {
         "selected"?: any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * @default SELECTION.CELL
          */
         "selectionMode"?: number;
         /**
           * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+          * @default true
          */
         "showOtherGroup"?: boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl"?: string;
+        /**
+          * @default true
+         */
         "subjectOpenNewTab"?: boolean;
         /**
           * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+          * @default POSITION.LEFT
          */
         "subjectPosition"?: number;
         "subjectUseTaxonIcon"?: boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+          * @default undefined
          */
         "subjects"?: string;
+        /**
+          * @default "goslim_agr"
+         */
         "subset"?: string;
     }
     interface GoAnnotationRibbonCell {
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels"?: string;
         /**
           * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
+          * @default true
          */
         "available"?: boolean;
+        /**
+          * @default false
+         */
         "binaryColor"?: boolean;
+        /**
+          * @default "term,terms"
+         */
         "classLabels"?: string;
+        /**
+          * @default COLOR_BY.CLASS_COUNT
+         */
         "colorBy"?: number;
         "group"?: IRibbonGroup;
+        /**
+          * @default false
+         */
         "hovered"?: boolean;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor"?: string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel"?: number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor"?: string;
+        /**
+          * @default false
+         */
         "selected"?: boolean;
         "subject"?: IRibbonSubject;
     }
     interface GoAnnotationRibbonStrips {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
+          * @default true
          */
         "addCellAll"?: boolean;
+        /**
+          * @default "annotation,annotations"
+         */
         "annotationLabels"?: string;
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl"?: string;
         /**
           * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * @default false
          */
         "binaryColor"?: boolean;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryAllStyle"?: number;
         /**
           * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
+          * @default FONT_CASE.LOWER_CASE
          */
         "categoryCase"?: number;
         /**
           * 0 = Normal 1 = Bold
+          * @default FONT_STYLE.NORMAL
          */
         "categoryOtherStyle"?: number;
+        /**
+          * @default "term,terms"
+         */
         "classLabels"?: string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
+          * @default COLOR_BY.ANNOTATION_COUNT
          */
         "colorBy"?: number;
         /**
@@ -580,14 +842,36 @@ declare namespace LocalJSX {
         "data"?: string;
         /**
           * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
+          * @default false
          */
         "fireEventOnEmptyCells"?: boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl"?: string;
+        /**
+          * @default true
+         */
         "groupClickable"?: boolean;
+        /**
+          * @default 60
+         */
         "groupMaxLabelSize"?: number;
+        /**
+          * @default true
+         */
         "groupNewTab"?: boolean;
+        /**
+          * @default "24,73,180"
+         */
         "maxColor"?: string;
+        /**
+          * @default 48
+         */
         "maxHeatLevel"?: number;
+        /**
+          * @default "255,255,255"
+         */
         "minColor"?: string;
         /**
           * This event is triggered whenever a ribbon cell is clicked
@@ -620,23 +904,39 @@ declare namespace LocalJSX {
         "selected"?: any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * @default SELECTION.CELL
          */
         "selectionMode"?: number;
+        /**
+          * @default false
+         */
         "showOtherGroup"?: boolean;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl"?: string;
+        /**
+          * @default true
+         */
         "subjectOpenNewTab"?: boolean;
         /**
           * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
+          * @default POSITION.LEFT
          */
         "subjectPosition"?: number;
         "subjectUseTaxonIcon"?: boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+          * @default undefined
          */
         "subjects"?: string;
+        /**
+          * @default "goslim_agr"
+         */
         "subset"?: string;
         /**
           * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
+          * @default true
          */
         "updateOnSubjectChange"?: boolean;
     }
@@ -650,6 +950,9 @@ declare namespace LocalJSX {
         "subjectBaseURL"?: string;
     }
     interface GoAnnotationRibbonTable {
+        /**
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
         "baseApiUrl"?: string;
         /**
           * Reading biolink data. This will trigger a render of the table as would changing data
@@ -663,6 +966,9 @@ declare namespace LocalJSX {
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy"?: string;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/term/"
+         */
         "groupBaseUrl"?: string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
@@ -676,15 +982,20 @@ declare namespace LocalJSX {
           * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
          */
         "orderBy"?: string;
+        /**
+          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+         */
         "subjectBaseUrl"?: string;
     }
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
+          * @default "gene"
          */
         "category"?: string;
         /**
           * Maximum number of results to show
+          * @default 100
          */
         "maxResults"?: number;
         /**
@@ -693,6 +1004,7 @@ declare namespace LocalJSX {
         "onItemSelected"?: (event: GoEntityAutocompleteCustomEvent<any>) => void;
         /**
           * Default placeholder for the autocomplete
+          * @default ""
          */
         "placeholder"?: string;
         "value"?: string;
@@ -700,6 +1012,7 @@ declare namespace LocalJSX {
     interface GoGocamViewer {
         /**
           * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
+          * @default "https://api.geneontology.org/api/go-cam/%ID"
          */
         "apiUrl"?: string;
         /**
@@ -712,6 +1025,7 @@ declare namespace LocalJSX {
         "onNodeOver"?: (event: GoGocamViewerCustomEvent<any>) => void;
         /**
           * Show/hide default legend
+          * @default true
          */
         "showLegend"?: boolean;
     }
