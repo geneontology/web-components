@@ -8,7 +8,7 @@
 ## Overview
 
 The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
-display. This can be use in advanced cases where the `go-gocam-viewer` component is used with
+display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
 the `show-legend` property set to `false`, and the legend needs to be displayed separately.
 
 ## Shadow Parts

@@ -467,7 +467,7 @@ export namespace Components {
     }
     /**
      * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
-     * display. This can be use in advanced cases where the `go-gocam-viewer` component is used with
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
      * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
      */
     interface GoGocamViewerLegend {
@@ -651,7 +651,7 @@ declare global {
     };
     /**
      * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
-     * display. This can be use in advanced cases where the `go-gocam-viewer` component is used with
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
      * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
      */
     interface HTMLGoGocamViewerLegendElement extends Components.GoGocamViewerLegend, HTMLStencilElement {
@@ -1176,7 +1176,7 @@ declare namespace LocalJSX {
     }
     /**
      * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
-     * display. This can be use in advanced cases where the `go-gocam-viewer` component is used with
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
      * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
      */
     interface GoGocamViewerLegend {
@@ -1268,7 +1268,7 @@ declare module "@stencil/core" {
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
             /**
              * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
-             * display. This can be use in advanced cases where the `go-gocam-viewer` component is used with
+             * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
              * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
              */
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
