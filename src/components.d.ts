@@ -10,6 +10,18 @@ import { Cam } from "./globals/@noctua.form";
 export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
+    /**
+     * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
+     * as a grid of cells. Each row in the grid (called "strips") represents a subject (typically a
+     * gene), and each column represents a GO term. The color of each cell indicates the relative number
+     * of GO annotations for that subject to the term or one of its descendants in the ontology
+     * hierarchy. The columns are additionally grouped into categories which are visually separated in
+     * the display.
+     * When a cell is clicked, a table of annotations is displayed below the strips. The table shows the
+     * details of the annotations for the selected subject and term.
+     * For advanced use cases, the individual components of the ribbon can be used separately:
+     * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
+     */
     interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
@@ -159,6 +171,9 @@ export namespace Components {
          */
         "subset": string;
     }
+    /**
+     * An individual cell in the annotation ribbon.
+     */
     interface GoAnnotationRibbonCell {
         /**
           * @default "annotation,annotations"
@@ -204,6 +219,14 @@ export namespace Components {
         "selected": boolean;
         "subject": IRibbonSubject;
     }
+    /**
+     * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
+     * a subject (typically a gene), and each column represents a GO term. The color of each cell
+     * indicates the relative number of GO annotations for that subject to the term or one of its
+     * descendants in the ontology hierarchy. The columns are additionally grouped into categories
+     * which are visually separated in the display.
+     * Events are fired when cells or cell headers (groups) are clicked or hovered over.
+     */
     interface GoAnnotationRibbonStrips {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
@@ -328,11 +351,18 @@ export namespace Components {
          */
         "updateOnSubjectChange": boolean;
     }
+    /**
+     * An individual subject in the annotation ribbon.
+     */
     interface GoAnnotationRibbonSubject {
         "newTab": boolean;
         "subject": IRibbonSubject;
         "subjectBaseURL": string;
     }
+    /**
+     * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+     * fetch data by itself, it expects the data to be provided in the `data` attribute.
+     */
     interface GoAnnotationRibbonTable {
         /**
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
@@ -375,6 +405,10 @@ export namespace Components {
          */
         "subjectBaseUrl": string;
     }
+    /**
+     * The Entity Autocomplete component provides an input field that allows users to search for
+     * entities (genes or GO terms) using the GO API.
+     */
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -393,6 +427,13 @@ export namespace Components {
         "placeholder": string;
         "value": string;
     }
+    /**
+     * The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+     * a graph of activities and their relationships. The sidebar displays a list of the activities,
+     * grouped by the larger GO `biological_process` in which the activity is a part, and showing
+     * additional details such as the gene product that carries out the activity and the GO
+     * `cellular_component` in which the activity occurs.
+     */
     interface GoGocamViewer {
         /**
           * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
@@ -424,8 +465,16 @@ export namespace Components {
         "showLegend": boolean;
         "toggleComplex": () => Promise<void>;
     }
+    /**
+     * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
+     * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
+     */
     interface GoGocamViewerLegend {
     }
+    /**
+     * The GO-CAM Viewer Sidebar
+     */
     interface GoGocamViewerSidebar {
         /**
           * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
@@ -437,6 +486,9 @@ export namespace Components {
          */
         "parentCy": any;
     }
+    /**
+     * The Spinner component displays a loading spinner with an optional message.
+     */
     interface GoSpinner {
         "message": string;
     }
@@ -462,12 +514,27 @@ export interface GoGocamViewerSidebarCustomEvent<T> extends CustomEvent<T> {
     target: HTMLGoGocamViewerSidebarElement;
 }
 declare global {
+    /**
+     * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
+     * as a grid of cells. Each row in the grid (called "strips") represents a subject (typically a
+     * gene), and each column represents a GO term. The color of each cell indicates the relative number
+     * of GO annotations for that subject to the term or one of its descendants in the ontology
+     * hierarchy. The columns are additionally grouped into categories which are visually separated in
+     * the display.
+     * When a cell is clicked, a table of annotations is displayed below the strips. The table shows the
+     * details of the annotations for the selected subject and term.
+     * For advanced use cases, the individual components of the ribbon can be used separately:
+     * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
+     */
     interface HTMLGoAnnotationRibbonElement extends Components.GoAnnotationRibbon, HTMLStencilElement {
     }
     var HTMLGoAnnotationRibbonElement: {
         prototype: HTMLGoAnnotationRibbonElement;
         new (): HTMLGoAnnotationRibbonElement;
     };
+    /**
+     * An individual cell in the annotation ribbon.
+     */
     interface HTMLGoAnnotationRibbonCellElement extends Components.GoAnnotationRibbonCell, HTMLStencilElement {
     }
     var HTMLGoAnnotationRibbonCellElement: {
@@ -482,6 +549,14 @@ declare global {
         "groupEnter": any;
         "groupLeave": any;
     }
+    /**
+     * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
+     * a subject (typically a gene), and each column represents a GO term. The color of each cell
+     * indicates the relative number of GO annotations for that subject to the term or one of its
+     * descendants in the ontology hierarchy. The columns are additionally grouped into categories
+     * which are visually separated in the display.
+     * Events are fired when cells or cell headers (groups) are clicked or hovered over.
+     */
     interface HTMLGoAnnotationRibbonStripsElement extends Components.GoAnnotationRibbonStrips, HTMLStencilElement {
         addEventListener<K extends keyof HTMLGoAnnotationRibbonStripsElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonStripsElement, ev: GoAnnotationRibbonStripsCustomEvent<HTMLGoAnnotationRibbonStripsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -499,6 +574,9 @@ declare global {
     interface HTMLGoAnnotationRibbonSubjectElementEventMap {
         "subjectClick": any;
     }
+    /**
+     * An individual subject in the annotation ribbon.
+     */
     interface HTMLGoAnnotationRibbonSubjectElement extends Components.GoAnnotationRibbonSubject, HTMLStencilElement {
         addEventListener<K extends keyof HTMLGoAnnotationRibbonSubjectElementEventMap>(type: K, listener: (this: HTMLGoAnnotationRibbonSubjectElement, ev: GoAnnotationRibbonSubjectCustomEvent<HTMLGoAnnotationRibbonSubjectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -513,6 +591,10 @@ declare global {
         prototype: HTMLGoAnnotationRibbonSubjectElement;
         new (): HTMLGoAnnotationRibbonSubjectElement;
     };
+    /**
+     * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+     * fetch data by itself, it expects the data to be provided in the `data` attribute.
+     */
     interface HTMLGoAnnotationRibbonTableElement extends Components.GoAnnotationRibbonTable, HTMLStencilElement {
     }
     var HTMLGoAnnotationRibbonTableElement: {
@@ -522,6 +604,10 @@ declare global {
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
     }
+    /**
+     * The Entity Autocomplete component provides an input field that allows users to search for
+     * entities (genes or GO terms) using the GO API.
+     */
     interface HTMLGoEntityAutocompleteElement extends Components.GoEntityAutocomplete, HTMLStencilElement {
         addEventListener<K extends keyof HTMLGoEntityAutocompleteElementEventMap>(type: K, listener: (this: HTMLGoEntityAutocompleteElement, ev: GoEntityAutocompleteCustomEvent<HTMLGoEntityAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -542,6 +628,13 @@ declare global {
         "nodeClick": any;
         "layoutChange": any;
     }
+    /**
+     * The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+     * a graph of activities and their relationships. The sidebar displays a list of the activities,
+     * grouped by the larger GO `biological_process` in which the activity is a part, and showing
+     * additional details such as the gene product that carries out the activity and the GO
+     * `cellular_component` in which the activity occurs.
+     */
     interface HTMLGoGocamViewerElement extends Components.GoGocamViewer, HTMLStencilElement {
         addEventListener<K extends keyof HTMLGoGocamViewerElementEventMap>(type: K, listener: (this: HTMLGoGocamViewerElement, ev: GoGocamViewerCustomEvent<HTMLGoGocamViewerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -556,6 +649,11 @@ declare global {
         prototype: HTMLGoGocamViewerElement;
         new (): HTMLGoGocamViewerElement;
     };
+    /**
+     * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
+     * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
+     */
     interface HTMLGoGocamViewerLegendElement extends Components.GoGocamViewerLegend, HTMLStencilElement {
     }
     var HTMLGoGocamViewerLegendElement: {
@@ -565,6 +663,9 @@ declare global {
     interface HTMLGoGocamViewerSidebarElementEventMap {
         "selectChanged": any;
     }
+    /**
+     * The GO-CAM Viewer Sidebar
+     */
     interface HTMLGoGocamViewerSidebarElement extends Components.GoGocamViewerSidebar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLGoGocamViewerSidebarElementEventMap>(type: K, listener: (this: HTMLGoGocamViewerSidebarElement, ev: GoGocamViewerSidebarCustomEvent<HTMLGoGocamViewerSidebarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -579,6 +680,9 @@ declare global {
         prototype: HTMLGoGocamViewerSidebarElement;
         new (): HTMLGoGocamViewerSidebarElement;
     };
+    /**
+     * The Spinner component displays a loading spinner with an optional message.
+     */
     interface HTMLGoSpinnerElement extends Components.GoSpinner, HTMLStencilElement {
     }
     var HTMLGoSpinnerElement: {
@@ -599,6 +703,18 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    /**
+     * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
+     * as a grid of cells. Each row in the grid (called "strips") represents a subject (typically a
+     * gene), and each column represents a GO term. The color of each cell indicates the relative number
+     * of GO annotations for that subject to the term or one of its descendants in the ontology
+     * hierarchy. The columns are additionally grouped into categories which are visually separated in
+     * the display.
+     * When a cell is clicked, a table of annotations is displayed below the strips. The table shows the
+     * details of the annotations for the selected subject and term.
+     * For advanced use cases, the individual components of the ribbon can be used separately:
+     * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
+     */
     interface GoAnnotationRibbon {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
@@ -748,6 +864,9 @@ declare namespace LocalJSX {
          */
         "subset"?: string;
     }
+    /**
+     * An individual cell in the annotation ribbon.
+     */
     interface GoAnnotationRibbonCell {
         /**
           * @default "annotation,annotations"
@@ -793,6 +912,14 @@ declare namespace LocalJSX {
         "selected"?: boolean;
         "subject"?: IRibbonSubject;
     }
+    /**
+     * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
+     * a subject (typically a gene), and each column represents a GO term. The color of each cell
+     * indicates the relative number of GO annotations for that subject to the term or one of its
+     * descendants in the ontology hierarchy. The columns are additionally grouped into categories
+     * which are visually separated in the display.
+     * Events are fired when cells or cell headers (groups) are clicked or hovered over.
+     */
     interface GoAnnotationRibbonStrips {
         /**
           * add a cell at the beginning of each row/subject to show all annotations
@@ -940,6 +1067,9 @@ declare namespace LocalJSX {
          */
         "updateOnSubjectChange"?: boolean;
     }
+    /**
+     * An individual subject in the annotation ribbon.
+     */
     interface GoAnnotationRibbonSubject {
         "newTab"?: boolean;
         /**
@@ -949,6 +1079,10 @@ declare namespace LocalJSX {
         "subject"?: IRibbonSubject;
         "subjectBaseURL"?: string;
     }
+    /**
+     * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+     * fetch data by itself, it expects the data to be provided in the `data` attribute.
+     */
     interface GoAnnotationRibbonTable {
         /**
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
@@ -987,6 +1121,10 @@ declare namespace LocalJSX {
          */
         "subjectBaseUrl"?: string;
     }
+    /**
+     * The Entity Autocomplete component provides an input field that allows users to search for
+     * entities (genes or GO terms) using the GO API.
+     */
     interface GoEntityAutocomplete {
         /**
           * Category to constrain the search; by default search "gene" Other values accepted: `undefined` : search both terms and genes `gene` : will only search genes used in GO `biological%20process` : will search for GO BP terms `molecular%20function` : will search for GO MF terms `cellular%20component` : will search for GO CC terms `cellular%20component,molecular%20function,biological%20process` : will search any GO term
@@ -1009,6 +1147,13 @@ declare namespace LocalJSX {
         "placeholder"?: string;
         "value"?: string;
     }
+    /**
+     * The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+     * a graph of activities and their relationships. The sidebar displays a list of the activities,
+     * grouped by the larger GO `biological_process` in which the activity is a part, and showing
+     * additional details such as the gene product that carries out the activity and the GO
+     * `cellular_component` in which the activity occurs.
+     */
     interface GoGocamViewer {
         /**
           * The url used to fetch GO-CAM graphs. Any occurrence of %ID in the string will be replaced by the GO-CAM ID.
@@ -1029,8 +1174,16 @@ declare namespace LocalJSX {
          */
         "showLegend"?: boolean;
     }
+    /**
+     * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
+     * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
+     * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
+     */
     interface GoGocamViewerLegend {
     }
+    /**
+     * The GO-CAM Viewer Sidebar
+     */
     interface GoGocamViewerSidebar {
         /**
           * BBOP Graph Handler -> GO-CAM Must be provided to build the side panel
@@ -1042,6 +1195,9 @@ declare namespace LocalJSX {
          */
         "parentCy"?: any;
     }
+    /**
+     * The Spinner component displays a loading spinner with an optional message.
+     */
     interface GoSpinner {
         "message"?: string;
     }
@@ -1062,15 +1218,67 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
+             * as a grid of cells. Each row in the grid (called "strips") represents a subject (typically a
+             * gene), and each column represents a GO term. The color of each cell indicates the relative number
+             * of GO annotations for that subject to the term or one of its descendants in the ontology
+             * hierarchy. The columns are additionally grouped into categories which are visually separated in
+             * the display.
+             * When a cell is clicked, a table of annotations is displayed below the strips. The table shows the
+             * details of the annotations for the selected subject and term.
+             * For advanced use cases, the individual components of the ribbon can be used separately:
+             * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
+             */
             "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
+            /**
+             * An individual cell in the annotation ribbon.
+             */
             "go-annotation-ribbon-cell": LocalJSX.GoAnnotationRibbonCell & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonCellElement>;
+            /**
+             * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
+             * a subject (typically a gene), and each column represents a GO term. The color of each cell
+             * indicates the relative number of GO annotations for that subject to the term or one of its
+             * descendants in the ontology hierarchy. The columns are additionally grouped into categories
+             * which are visually separated in the display.
+             * Events are fired when cells or cell headers (groups) are clicked or hovered over.
+             */
             "go-annotation-ribbon-strips": LocalJSX.GoAnnotationRibbonStrips & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonStripsElement>;
+            /**
+             * An individual subject in the annotation ribbon.
+             */
             "go-annotation-ribbon-subject": LocalJSX.GoAnnotationRibbonSubject & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonSubjectElement>;
+            /**
+             * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+             * fetch data by itself, it expects the data to be provided in the `data` attribute.
+             */
             "go-annotation-ribbon-table": LocalJSX.GoAnnotationRibbonTable & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonTableElement>;
+            /**
+             * The Entity Autocomplete component provides an input field that allows users to search for
+             * entities (genes or GO terms) using the GO API.
+             */
             "go-entity-autocomplete": LocalJSX.GoEntityAutocomplete & JSXBase.HTMLAttributes<HTMLGoEntityAutocompleteElement>;
+            /**
+             * The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+             * a graph of activities and their relationships. The sidebar displays a list of the activities,
+             * grouped by the larger GO `biological_process` in which the activity is a part, and showing
+             * additional details such as the gene product that carries out the activity and the GO
+             * `cellular_component` in which the activity occurs.
+             */
             "go-gocam-viewer": LocalJSX.GoGocamViewer & JSXBase.HTMLAttributes<HTMLGoGocamViewerElement>;
+            /**
+             * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
+             * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
+             * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
+             */
             "go-gocam-viewer-legend": LocalJSX.GoGocamViewerLegend & JSXBase.HTMLAttributes<HTMLGoGocamViewerLegendElement>;
+            /**
+             * The GO-CAM Viewer Sidebar
+             */
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
+            /**
+             * The Spinner component displays a loading spinner with an optional message.
+             */
             "go-spinner": LocalJSX.GoSpinner & JSXBase.HTMLAttributes<HTMLGoSpinnerElement>;
         }
     }

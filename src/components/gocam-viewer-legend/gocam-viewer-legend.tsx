@@ -26,6 +26,10 @@ const LEGEND_COLUMNS = {
 };
 
 /**
+ * The GO-CAM Viewer Legend component displays a legend for the relations used in the GO-CAM graph
+ * display. This can be used in advanced cases where the `go-gocam-viewer` component is used with
+ * the `show-legend` property set to `false`, and the legend needs to be displayed separately.
+ *
  * @part header - The header
  * @part sections - Group of legend entries
  * @part section - An individual legend entry

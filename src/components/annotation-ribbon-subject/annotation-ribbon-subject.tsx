@@ -6,6 +6,11 @@ import { formatTaxonLabel } from "./utils";
 import { EventEmitter, Event } from "@stencil/core";
 import { IRibbonSubject } from "../../globals/models";
 
+/**
+ * An individual subject in the annotation ribbon.
+ *
+ * @internal
+ */
 @Component({
   tag: "go-annotation-ribbon-subject",
   styleUrl: "annotation-ribbon-subject.scss",

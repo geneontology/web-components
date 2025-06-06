@@ -28,6 +28,12 @@ cytoscape.use(dagre);
 const GOMODEL_PREFIX = "gomodel:";
 
 /**
+ * The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+ * a graph of activities and their relationships. The sidebar displays a list of the activities,
+ * grouped by the larger GO `biological_process` in which the activity is a part, and showing
+ * additional details such as the gene product that carries out the activity and the GO
+ * `cellular_component` in which the activity occurs.
+ *
  * @part gocam-panel - The panel containing the GO-CAM graph and legend
  * @part gocam-title - The GO-CAM title
  * @part gocam-graph - The GO-CAM graph container

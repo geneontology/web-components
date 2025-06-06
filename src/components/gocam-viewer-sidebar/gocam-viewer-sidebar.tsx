@@ -18,6 +18,10 @@ import {
 } from "../../globals/@noctua.form";
 
 /**
+ * The GO-CAM Viewer Sidebar
+ *
+ * @internal
+ *
  * @part process - Process containers
  * @part process-label - Process label
  * @part activity - Activity containers

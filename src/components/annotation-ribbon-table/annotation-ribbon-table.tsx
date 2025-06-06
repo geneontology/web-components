@@ -5,6 +5,10 @@ import { bioLinkToTable, addEmptyCells } from "./utils";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
 
+/**
+ * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
+ * fetch data by itself, it expects the data to be provided in the `data` attribute.
+ */
 @Component({
   tag: "go-annotation-ribbon-table",
   styleUrl: "annotation-ribbon-table.scss",

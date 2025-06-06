@@ -2,6 +2,12 @@ import { Component, Prop, State, Event, EventEmitter, h } from "@stencil/core";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
 
+/**
+ * The Entity Autocomplete component provides an input field that allows users to search for
+ * entities (genes or GO terms) using the GO API.
+ *
+ * @internal
+ */
 @Component({
   tag: "go-entity-autocomplete",
   styleUrl: "entity-autocomplete.css",

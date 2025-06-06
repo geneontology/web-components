@@ -1,7 +1,19 @@
 # go-annotation-ribbon-strips
 
+
+
 <!-- Auto Generated Below -->
 
+
+## Overview
+
+The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
+a subject (typically a gene), and each column represents a GO term. The color of each cell
+indicates the relative number of GO annotations for that subject to the term or one of its
+descendants in the ontology hierarchy. The columns are additionally grouped into categories
+which are visually separated in the display.
+
+Events are fired when cells or cell headers (groups) are clicked or hovered over.
 
 ## Properties
 
@@ -77,9 +89,9 @@ Type: `Promise<void>`
 
 ### Depends on
 
-- [go-spinner](../spinner)
-- [go-annotation-ribbon-subject](../annotation-ribbon-subject)
-- [go-annotation-ribbon-cell](../annotation-ribbon-cell)
+- go-spinner
+- go-annotation-ribbon-subject
+- go-annotation-ribbon-cell
 
 ### Graph
 ```mermaid

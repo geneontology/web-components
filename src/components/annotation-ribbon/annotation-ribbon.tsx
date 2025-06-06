@@ -14,6 +14,20 @@ import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
 
 import { sameArray } from "../../globals/utils";
 
+/**
+ * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
+ * as a grid of cells. Each row in the grid (called "strips") represents a subject (typically a
+ * gene), and each column represents a GO term. The color of each cell indicates the relative number
+ * of GO annotations for that subject to the term or one of its descendants in the ontology
+ * hierarchy. The columns are additionally grouped into categories which are visually separated in
+ * the display.
+ *
+ * When a cell is clicked, a table of annotations is displayed below the strips. The table shows the
+ * details of the annotations for the selected subject and term.
+ *
+ * For advanced use cases, the individual components of the ribbon can be used separately:
+ * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
+ */
 @Component({
   tag: "go-annotation-ribbon",
   styleUrl: "annotation-ribbon.css",

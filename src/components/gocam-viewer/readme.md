@@ -1,7 +1,17 @@
 # go-gocam-viewer
 
+
+
 <!-- Auto Generated Below -->
 
+
+## Overview
+
+The GO-CAM Viewer component renders a [GO-CAM](https://geneontology.org/docs/gocam-overview/) as
+a graph of activities and their relationships. The sidebar displays a list of the activities,
+grouped by the larger GO `biological_process` in which the activity is a part, and showing
+additional details such as the gene product that carries out the activity and the GO
+`cellular_component` in which the activity occurs.
 
 ## Properties
 
@@ -167,8 +177,8 @@ Type: `Promise<void>`
 
 ### Depends on
 
-- [go-spinner](../spinner)
-- [go-gocam-viewer-sidebar](../gocam-viewer-sidebar)
+- go-spinner
+- go-gocam-viewer-sidebar
 - [go-gocam-viewer-legend](../gocam-viewer-legend)
 
 ### Graph
