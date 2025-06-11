@@ -1,79 +1,29 @@
 {
-  "name": "@geneontology/web-components",
-  "version": "0.0.2",
-  "description": "Web components for display of Gene Ontology annotations",
+  "name": "go-web-components",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "author": {
-    "name": "The Gene Ontology Consortium",
-    "url": "https://geneontology.org",
-    "email": "help@geneontology.org"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/geneontology/web-components.git"
-  },
-  "bugs": {
-    "url": "https://github.com/geneontology/web-components/issues"
-  },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/web-components/web-components.esm.js",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/web-components/web-components.esm.js",
-      "require": "./dist/web-components/web-components.js"
-    },
-    "./*": {
-      "types": "./dist/components/*.d.ts",
-      "import": "./dist/components/*.js"
-    },
-    "./loader": {
-      "types": "./loader/index.d.ts",
-      "import": "./loader/index.js",
-      "require": "./loader/index.cjs"
-    }
-  },
-  "files": [
-    "dist/",
-    "loader/"
-  ],
   "scripts": {
-    "build": "stencil build",
-    "format": "prettier --write --log-level warn .",
-    "lint": "eslint src",
-    "start": "stencil build --dev --watch --serve --no-open",
-    "test": "stencil test --spec --e2e",
-    "test.unit": "stencil test --spec",
-    "test.watch": "stencil test --spec --e2e --watchAll"
+    "dev": "npm run start --workspace=packages/web-components",
+    "dev:docs": "npm run start --workspace=website",
+    "build": "npm run build --workspaces",
+    "build:docs": "npm run build --workspace website",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "npm run test --workspaces"
   },
-  "dependencies": {
-    "@geneontology/dbxrefs": "^1.1.0",
-    "bbop-graph-noctua": "^0.0.35",
-    "cytoscape": "3.16.1",
-    "cytoscape-dagre": "2.4.0",
-    "graphlib": "^2.1.8",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "uuid": "^11.0.3"
-  },
+  "workspaces": [
+    "packages/*",
+    "website"
+  ],
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "@stencil/core": "4.33.1",
-    "@stencil/sass": "3.0.5",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.9.1",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.12.0",
-    "jest": "^29.7.0",
-    "jest-cli": "^29.7.0",
     "prettier": "3.3.3",
-    "puppeteer": "^23.9.0",
-    "typescript": "5.3.3",
+    "typescript": "~5.6.2",
     "typescript-eslint": "^8.15.0"
   },
   "license": "MIT"

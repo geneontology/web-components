@@ -19,6 +19,14 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["src/globals/@noctua.form/*"],
+    ignores: [
+      "packages/web-components/src/globals/@noctua.form/*",
+      "packages/*/.stencil",
+      "packages/*/dist",
+      "packages/*/loader",
+      "packages/*/www",
+      "website/.docusaurus",
+      "website/build",
+    ],
   },
 );
