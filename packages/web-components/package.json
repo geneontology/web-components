@@ -1,6 +1,6 @@
 {
   "name": "@geneontology/web-components",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Web components for display of Gene Ontology annotations",
   "type": "module",
   "author": {
