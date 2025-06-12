@@ -36,9 +36,12 @@ const config: Config = {
 
   themeConfig: {
     image: "img/go-log-large.png",
-    // TODO: come up with a dark mode color palette
-    defaultMode: "light",
-    disableSwitch: true,
+    colorMode: {
+      // TODO: come up with a dark mode color palette
+      defaultMode: "light",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     announcementBar: {
       content:
         "This package is an experimental prototype. Do not use in production.See <a href='https://github.com/geneontology/go-technical-announcements' target='_blank' rel='noopener noreferrer'>go-technical-annoucements</a> to get updates on the status of this package.",
