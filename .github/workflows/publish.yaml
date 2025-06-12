@@ -46,13 +46,13 @@ jobs:
 
       - name: Increment version
         run: |
-          npm version --preid=beta --workspaces --include-workspace-root $RELEASE_TYPE
-          echo "NEW_VERSION=v$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
+          npm version --preid=beta --workspaces --include-workspace-root --no-git-tag-version $RELEASE_TYPE
+          echo "NEW_VERSION=$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
       - name: Commit version change
-        run: git push --follow-tags
+        run: git commit -a -m "${{ env.NEW_VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -64,6 +64,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.NEW_VERSION }}
+          tag_name: v${{ env.NEW_VERSION }}
           generate_release_notes: true
           prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
