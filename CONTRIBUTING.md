@@ -72,7 +72,7 @@ npm run build
 Start the documentation development server by running:
 
 ```bash
-npm run docs:dev
+npm run dev:docs
 ```
 
 This will start a server on `http://localhost:3000` where you can view the documentation website. The server will watch for changes to the `website` source files and automatically reload the browser when changes are made.
