@@ -144,7 +144,7 @@ async function updateReadmeDocsUsageSections() {
 
     // Open the readme file produced by the docs-readme output target and parse it. Find the Usage
     // section and replace the content below it with the new usage sections.
-    const readmeContent = await fs.readFile(readmePath);
+    const readmeContent = await fs.readFile(readmePath, "utf-8");
     const tree = parser.parse(readmeContent);
     let inTargetSection = false;
     let startIndex = null;
