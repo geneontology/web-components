@@ -1,6 +1,6 @@
 {
   "name": "web-components-docs",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
