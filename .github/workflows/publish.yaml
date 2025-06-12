@@ -46,7 +46,7 @@ jobs:
 
       - name: Increment version
         run: |
-          echo "NEW_VERSION=$(npm --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "NEW_VERSION=$(npm --preid=beta version $RELEASE_TYPE --workspaces)" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
@@ -56,7 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --workspace packages/web-components
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
