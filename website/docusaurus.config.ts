@@ -2,6 +2,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 import { version } from "./package.json";
+import { createMDXFallbackPlugin } from "@docusaurus/core/lib/server/plugins/synthetic";
 
 const config: Config = {
   title: "GO Web Components",
@@ -36,9 +37,12 @@ const config: Config = {
 
   themeConfig: {
     image: "img/go-log-large.png",
-    // TODO: come up with a dark mode color palette
-    defaultMode: "light",
-    disableSwitch: true,
+    colorMode: {
+      // TODO: come up with a dark mode color palette
+      defaultMode: "light",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     announcementBar: {
       content:
         "This package is an experimental prototype. Do not use in production.See <a href='https://github.com/geneontology/go-technical-announcements' target='_blank' rel='noopener noreferrer'>go-technical-annoucements</a> to get updates on the status of this package.",
