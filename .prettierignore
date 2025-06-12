@@ -3,8 +3,14 @@
 # Reference: https://prettier.io/docs/en/ignore
 
 # Stencil-generated files
-src/components.d.ts
-src/components/**/readme.md
+/packages/web-components/dist
+/packages/web-components/loader
+/packages/web-components/src/components.d.ts
+/packages/web-components/www
 
 # Files copied from other projects
-src/globals/@noctua.form/
+/packages/web-components/src/globals/@noctua.form
+
+/website/.docusaurus
+/website/build
+/website/docs/components/**/readme.md
