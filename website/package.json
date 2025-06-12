@@ -12,6 +12,7 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
+    "test": "echo 'No docs tests yet' && exit 0",
     "typecheck": "tsc"
   },
   "dependencies": {

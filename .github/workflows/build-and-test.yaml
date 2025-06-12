@@ -42,5 +42,4 @@ jobs:
           }
 
       - name: Run tests
-        # TODO: Figure how to run e2e tests on GitHub Actions runner
-        run: npm run test.unit
+        run: npm run test
