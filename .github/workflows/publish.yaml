@@ -102,4 +102,3 @@ jobs:
           tag_name: v${{ needs.publish.outputs.new_version }}
           generate_release_notes: true
           prerelease: ${{ startsWith(inputs.release-type, 'pre') }}
-
