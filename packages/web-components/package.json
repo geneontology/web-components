@@ -15,8 +15,7 @@
   "bugs": {
     "url": "https://github.com/geneontology/web-components/issues"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
+  "main": "dist/web-components/web-components.esm.js",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
@@ -24,8 +23,7 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/web-components/web-components.esm.js",
-      "require": "./dist/web-components/web-components.js"
+      "import": "./dist/web-components/web-components.esm.js"
     },
     "./*": {
       "types": "./dist/components/*.d.ts",
@@ -33,8 +31,7 @@
     },
     "./loader": {
       "types": "./loader/index.d.ts",
-      "import": "./loader/index.js",
-      "require": "./loader/index.cjs"
+      "import": "./loader/index.js"
     }
   },
   "files": [
