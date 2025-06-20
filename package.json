@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "clear": "npm run clear --workspaces",
-    "dev": "npm run start --workspace=packages/web-components",
-    "dev:docs": "npm run start --workspace=website",
+    "start:web-components": "npm run start --workspace packages/web-components",
+    "start:docs": "npm run start --workspace website",
     "build": "npm run build --workspaces",
     "build:web-components": "npm run build --workspace packages/web-components",
     "build:docs": "npm run build --workspace website",
