@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run start --workspace=packages/web-components",
-    "dev:docs": "npm run start --workspace=website",
+    "clear": "npm run clear --workspaces",
+    "start:web-components": "npm run start --workspace packages/web-components",
+    "start:docs": "npm run start --workspace website",
     "build": "npm run build --workspaces",
+    "build:web-components": "npm run build --workspace packages/web-components",
     "build:docs": "npm run build --workspace website",
     "format": "prettier --write .",
     "lint": "eslint .",
@@ -19,6 +21,7 @@
   ],
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "del-cli": "^6.0.0",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.12.0",

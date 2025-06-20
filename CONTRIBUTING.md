@@ -37,7 +37,7 @@ The documentation website is located in the `website` workspace.
 The development server can be started by running:
 
 ```bash
-npm run dev
+npm run start:web-components
 ```
 
 By default, this will start a server on `http://localhost:3333`. From the index page you can navigate to a subpage for the component you are working on. The server will watch for changes to the source files and automatically reload the browser when changes are made.
@@ -72,7 +72,7 @@ npm run build
 Start the documentation development server by running:
 
 ```bash
-npm run dev:docs
+npm run start:docs
 ```
 
 This will start a server on `http://localhost:3000` where you can view the documentation website. The server will watch for changes to the `website` source files and automatically reload the browser when changes are made.
