@@ -17,21 +17,21 @@
    * the lightness values has been chosen to keep all colors within the P3 color gamut.
    * See: https://oklch.com/#0.416,0.148,270,100
    */
-  --ifm-color-primary-lightest: oklch(from var(--go-navy) calc(l + 0.30) c h);
-  --ifm-color-primary-lighter:  oklch(from var(--go-navy) calc(l + 0.23) c h);
-  --ifm-color-primary-light:    oklch(from var(--go-navy) calc(l + 0.15) c h);
-  --ifm-color-primary:          oklch(from var(--go-navy) calc(l + 0.08) c h);
-  --ifm-color-primary-dark:     var(--go-navy);
-  --ifm-color-primary-darker:   oklch(from var(--go-navy) calc(l - 0.08) c h);
-  --ifm-color-primary-darkest:  oklch(from var(--go-navy) calc(l - 0.15) c h);
+  --ifm-color-primary-lightest: oklch(from var(--go-navy) calc(l + 0.3) c h);
+  --ifm-color-primary-lighter: oklch(from var(--go-navy) calc(l + 0.23) c h);
+  --ifm-color-primary-light: oklch(from var(--go-navy) calc(l + 0.15) c h);
+  --ifm-color-primary: oklch(from var(--go-navy) calc(l + 0.08) c h);
+  --ifm-color-primary-dark: var(--go-navy);
+  --ifm-color-primary-darker: oklch(from var(--go-navy) calc(l - 0.08) c h);
+  --ifm-color-primary-darkest: oklch(from var(--go-navy) calc(l - 0.15) c h);
 
   --color-accent-lightest: oklch(from var(--go-teal) calc(l + 0.23) c h);
-  --color-accent-lighter:  oklch(from var(--go-teal) calc(l + 0.15) c h);
-  --color-accent-light:    oklch(from var(--go-teal) calc(l + 0.08) c h);
-  --color-accent:          var(--go-teal);
-  --color-accent-dark:     oklch(from var(--go-teal) calc(l - 0.08) c h);
-  --color-accent-darker:   oklch(from var(--go-teal) calc(l - 0.15) c h);
-  --color-accent-darkest:  oklch(from var(--go-teal) calc(l - 0.23) c h);
+  --color-accent-lighter: oklch(from var(--go-teal) calc(l + 0.15) c h);
+  --color-accent-light: oklch(from var(--go-teal) calc(l + 0.08) c h);
+  --color-accent: var(--go-teal);
+  --color-accent-dark: oklch(from var(--go-teal) calc(l - 0.08) c h);
+  --color-accent-darker: oklch(from var(--go-teal) calc(l - 0.15) c h);
+  --color-accent-darkest: oklch(from var(--go-teal) calc(l - 0.23) c h);
 
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
