@@ -27,6 +27,10 @@ For advanced use cases, the individual components of the ribbon can be used sepa
 
 [//]: # "TODO: Add a live demo here when it uses shadow DOM"
 
+<div class="demo-container">
+  <go-annotation-ribbon subjects="RGD:620474,RGD:3889"></go-annotation-ribbon>
+</div>
+
 ## Properties
 
 | Property                | Attribute                   | Description                                                                                                                                                                                                                                                              | Type      | Default                                               |

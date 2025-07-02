@@ -60,6 +60,10 @@
   border-width: 1px;
   border-radius: var(--ifm-card-border-radius);
   box-shadow: var(--ifm-global-shadow-lw);
-  overflow: hidden;
+  overflow: auto;
   padding: var(--ifm-card-vertical-spacing) var(--ifm-card-horizontal-spacing);
+}
+
+go-annotation-ribbon {
+  font-size: 80%;
 }
