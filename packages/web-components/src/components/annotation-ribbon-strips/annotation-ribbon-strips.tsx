@@ -1,36 +1,38 @@
 import {
-  h,
   Component,
-  Prop,
   Element,
   Event,
   EventEmitter,
+  h,
+  Host,
+  Method,
+  Prop,
   State,
   Watch,
 } from "@stencil/core";
+import clsx from "clsx";
 
-import { truncate, groupKey, subjectGroupKey } from "./utils";
+import { groupKey, subjectGroupKey, truncate } from "./utils";
 import { sameArray } from "../../globals/utils";
 import {
-  IRibbonModel,
   IRibbonCategory,
-  IRibbonGroup,
-  IRibbonSubject,
-  IRibbonCellEvent,
   IRibbonCellClick,
+  IRibbonCellEvent,
+  IRibbonGroup,
   IRibbonGroupEvent,
+  IRibbonModel,
+  IRibbonSubject,
 } from "../../globals/models";
 
 import {
-  COLOR_BY,
-  POSITION,
-  SELECTION,
-  EXP_CODES,
   CELL_TYPES,
+  COLOR_BY,
+  EXP_CODES,
   FONT_CASE,
   FONT_STYLE,
+  POSITION,
+  SELECTION,
 } from "../../globals/enums";
-import { Method } from "@stencil/core";
 
 /**
  * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
@@ -44,7 +46,7 @@ import { Method } from "@stencil/core";
 @Component({
   tag: "go-annotation-ribbon-strips",
   styleUrl: "annotation-ribbon-strips.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonStrips {
   @Element() ribbonElement;
@@ -355,15 +357,16 @@ export class AnnotationRibbonStrips {
       this.formerColors = new Map();
 
       // change header style
-      const el = this.ribbonElement.querySelector("#" + groupKey(group));
+      const el = this.ribbonElement.shadowRoot.querySelector(
+        "#" + groupKey(group),
+      );
       el.classList.add("selected");
 
       for (const subject of subjects) {
-        const el = this.ribbonElement.querySelector(
+        const el = this.ribbonElement.shadowRoot.querySelector(
           "#" + subjectGroupKey(subject, group),
         );
         el.hovered = true;
-        el.style.cursor = "pointer";
       }
     } else {
       // change cell style
@@ -380,18 +383,16 @@ export class AnnotationRibbonStrips {
             : 0;
       }
 
-      // let el = this.ribbonElement.shadowRoot.querySelector("#" + this.transform(subjects.id) + "-" + this.transform(group.id));
-      let el = this.ribbonElement.querySelector(
+      // let el = this.ribbonElement.shadowRoot.shadowRoot.querySelector("#" + this.transform(subjects.id) + "-" + this.transform(group.id));
+      let el = this.ribbonElement.shadowRoot.querySelector(
         "#" + subjectGroupKey(subjects, group),
       );
-
-      el.style.cursor = nbAnnotations == 0 ? "not-allowed" : "pointer";
 
       if (nbAnnotations > 0) {
         el.hovered = true;
 
         // change header style
-        el = this.ribbonElement.querySelector("#" + groupKey(group));
+        el = this.ribbonElement.shadowRoot.querySelector("#" + groupKey(group));
         el.classList.add("selected");
       }
     }
@@ -402,11 +403,13 @@ export class AnnotationRibbonStrips {
   onCellLeave(subjects, group) {
     if (subjects instanceof Array) {
       // change the header style
-      const el = this.ribbonElement.querySelector("#" + groupKey(group));
+      const el = this.ribbonElement.shadowRoot.querySelector(
+        "#" + groupKey(group),
+      );
       el.classList.remove("selected");
 
       for (const subject of subjects) {
-        const el = this.ribbonElement.querySelector(
+        const el = this.ribbonElement.shadowRoot.querySelector(
           "#" + subjectGroupKey(subject, group),
         );
         el.hovered = false;
@@ -414,13 +417,13 @@ export class AnnotationRibbonStrips {
       this.formerColors = undefined;
     } else {
       // change the cell style
-      let el = this.ribbonElement.querySelector(
+      let el = this.ribbonElement.shadowRoot.querySelector(
         "#" + subjectGroupKey(subjects, group),
       );
       el.hovered = false;
 
       // change the header style
-      el = this.ribbonElement.querySelector("#" + groupKey(group));
+      el = this.ribbonElement.shadowRoot.querySelector("#" + groupKey(group));
       el.classList.remove("selected");
     }
     const event: IRibbonCellEvent = { subjects: subjects, group: group };
@@ -450,7 +453,7 @@ export class AnnotationRibbonStrips {
 
     const hovered: boolean[] = [];
     for (const subject of subjects) {
-      const cell = this.ribbonElement.querySelector(
+      const cell = this.ribbonElement.shadowRoot.querySelector(
         "#" + subjectGroupKey(subject, group),
       );
       cell.hovered = !cell.hovered;
@@ -484,7 +487,7 @@ export class AnnotationRibbonStrips {
     const selected: boolean[] = [];
     let lastCell;
     for (const subject of subjects) {
-      const cell = this.ribbonElement.querySelector(
+      const cell = this.ribbonElement.shadowRoot.querySelector(
         "#" + subjectGroupKey(subject, group),
       );
       cell.selected = toggle ? !cell.selected : true;
@@ -637,29 +640,28 @@ export class AnnotationRibbonStrips {
 
     // Data is present, show the ribbon
     return (
-      <div>
-        <table class="ribbon">
-          {this.renderCategory()}
+      <Host>
+        <div class="ribbon">
+          {this.renderCategories()}
           {this.renderSubjects()}
-        </table>
+        </div>
         {/* <br/>
             <input type="checkbox" onClick={ this.filterExperiment.bind(this) }/> Show only experimental annotations */}
-      </div>
+      </Host>
     );
   }
 
-  renderCategory() {
+  renderCategories() {
     return (
-      <tr class="ribbon__category">
-        {this.subjectPosition == POSITION.LEFT ? (
-          <td class="ribbon__subject__label--left"></td>
-        ) : (
-          ""
+      <div
+        class={clsx(
+          "categories",
+          this.subjectPosition === POSITION.LEFT && "offset-left",
         )}
-
-        {this.addCellAll ? (
-          <th
-            class="ribbon__category--cell"
+      >
+        {this.addCellAll && (
+          <div
+            class="group"
             id={groupKey(this.groupAll)}
             title={
               this.groupAll.id +
@@ -677,26 +679,23 @@ export class AnnotationRibbonStrips {
             }
           >
             {this.applyCategoryStyling(this.groupAll.label)}
-          </th>
-        ) : (
-          ""
+          </div>
         )}
 
-        {this.ribbonSummary.categories.map((category: IRibbonCategory) => {
-          return [
-            <th class="ribbon__category--separator"></th>,
-            category.groups.map((group: IRibbonGroup) => {
-              if (group.type == CELL_TYPES.OTHER && !this.showOtherGroup) {
-                return;
-              }
-
-              const classes = this.groupClickable
-                ? "ribbon__category--cell clickable"
-                : "ribbon__category--cell";
-              return (
-                <th
-                  class={classes}
+        {this.ribbonSummary.categories.map(
+          (category: IRibbonCategory, categoryIndex) =>
+            category.groups.map((group: IRibbonGroup, groupIndex) =>
+              group.type == CELL_TYPES.OTHER && !this.showOtherGroup ? null : (
+                <div
+                  class={clsx({
+                    group: true,
+                    clickable: this.groupClickable,
+                    separated:
+                      groupIndex === 0 &&
+                      (categoryIndex > 0 || this.addCellAll),
+                  })}
                   id={groupKey(group)}
+                  key={groupKey(group)}
                   title={
                     group.id + ": " + group.label + "\n\n" + group.description
                   }
@@ -715,18 +714,11 @@ export class AnnotationRibbonStrips {
                   ) : (
                     this.applyCategoryStyling(group.label)
                   )}
-                </th>
-              );
-            }),
-          ];
-        })}
-
-        {this.subjectPosition == POSITION.RIGHT ? (
-          <td class="ribbon__subject__label--right" />
-        ) : (
-          ""
+                </div>
+              ),
+            ),
         )}
-      </tr>
+      </div>
     );
   }
 
@@ -737,21 +729,17 @@ export class AnnotationRibbonStrips {
           ? subject
           : this.ribbonSummary.subjects;
       return (
-        <tr class="ribbon__subject">
-          {this.subjectPosition == POSITION.LEFT ? (
+        <div class="subject" key={subject.id}>
+          {this.subjectPosition == POSITION.LEFT && (
             <go-annotation-ribbon-subject
-              class="ribbon__subject__label--left"
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}
               newTab={this.subjectOpenNewTab}
             />
-          ) : (
-            ""
           )}
 
-          {this.addCellAll ? (
+          {this.addCellAll && (
             <go-annotation-ribbon-cell
-              class="ribbon__subject--cell"
               id={subjectGroupKey(subject, this.groupAll)}
               subject={subject}
               group={this.groupAll}
@@ -766,20 +754,15 @@ export class AnnotationRibbonStrips {
               onMouseEnter={() => this.onCellEnter(subjects, this.groupAll)}
               onMouseLeave={() => this.onCellLeave(subjects, this.groupAll)}
             />
-          ) : (
-            ""
           )}
 
-          {this.ribbonSummary.categories.map((category: IRibbonCategory) => {
-            return [
-              <td class="ribbon__subject--separator"></td>,
-              category.groups.map((group: IRibbonGroup) => {
+          {this.ribbonSummary.categories.map(
+            (category: IRibbonCategory, categoryIndex) =>
+              category.groups.map((group: IRibbonGroup, groupIndex) => {
                 const cellid =
                   group.id + (group.type == CELL_TYPES.OTHER ? "-other" : "");
                 const cell =
                   cellid in subject.groups ? subject.groups[cellid] : undefined;
-
-                const nbAnnotations = cell ? cell["ALL"]["nb_annotations"] : 0;
 
                 // by default the group should be available
                 let available = true;
@@ -798,12 +781,13 @@ export class AnnotationRibbonStrips {
 
                 return (
                   <go-annotation-ribbon-cell
-                    class={
-                      nbAnnotations == 0
-                        ? "ribbon__subject--cell--no-annotation"
-                        : "ribbon__subject--cell"
-                    }
+                    class={clsx({
+                      separated:
+                        groupIndex === 0 &&
+                        (categoryIndex > 0 || this.addCellAll),
+                    })}
                     id={subjectGroupKey(subject, group)}
+                    key={subjectGroupKey(subject, group)}
                     subject={subject}
                     group={group}
                     available={available}
@@ -820,20 +804,16 @@ export class AnnotationRibbonStrips {
                   />
                 );
               }),
-            ];
-          })}
+          )}
 
-          {this.subjectPosition == POSITION.RIGHT ? (
+          {this.subjectPosition == POSITION.RIGHT && (
             <go-annotation-ribbon-subject
-              class="ribbon__subject__label--right"
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}
               newTab={this.subjectOpenNewTab}
             />
-          ) : (
-            ""
           )}
-        </tr>
+        </div>
       );
     });
   }

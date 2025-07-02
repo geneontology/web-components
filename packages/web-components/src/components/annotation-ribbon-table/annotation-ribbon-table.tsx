@@ -12,7 +12,7 @@ import * as dbxrefs from "@geneontology/dbxrefs";
 @Component({
   tag: "go-annotation-ribbon-table",
   styleUrl: "annotation-ribbon-table.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonTable {
   @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
@@ -384,117 +384,104 @@ export class AnnotationRibbonTable {
 
   render() {
     if (!this.table) {
-      return "";
+      return null;
     }
 
-    // console.log("TABLE:", table);
     return (
-      <div>
-        <table class="table">
-          {this.renderHeader(this.table)}
-          {this.renderRows(this.table)}
-        </table>
-      </div>
+      <table class="table" part="table">
+        {this.renderHeader(this.table)}
+        {this.renderRows(this.table)}
+      </table>
     );
   }
 
-  renderHeader(table) {
+  renderHeader(table: ITable) {
     return (
-      <tr class="table__header">
+      <tr class="header">
         {table.header.map((cell) => {
-          return [
-            cell.hide ? (
-              ""
-            ) : (
+          return (
+            !cell.hide && (
               <th
                 title={cell.description}
                 id={cell.id}
-                class="table__header__cell"
+                key={cell.id}
+                class="header-cell"
               >
                 {cell.label}
               </th>
-            ),
-          ];
+            )
+          );
         })}
       </tr>
     );
   }
 
-  renderRows(table) {
-    // console.log("Render table: ", table);
-    return table.rows.map((row) => {
-      return [
-        <tr class="table__row">
-          {row.cells.map((superCell) => {
-            if (!this.headerMap) {
-              return "";
-            }
-            const header = this.headerMap.get(superCell.headerId);
-            if (header.hide) {
-              return "";
-            }
+  renderRows(table: ITable) {
+    return table.rows.map((row) => (
+      <tr class="row">
+        {row.cells.map((superCell) => {
+          if (!this.headerMap) {
+            return null;
+          }
+          const header = this.headerMap.get(superCell.headerId);
+          if (header.hide) {
+            return null;
+          }
 
-            let baseURL = header.baseURL;
-            // adding automatically the ending slash cause too many problem (eg base URL that are example.com/tototo?uri=)
-            // baseURL = baseURL ? addEndingSlash(baseURL) : "";
-            baseURL = baseURL ? baseURL : "";
+          let baseURL = header.baseURL;
+          // adding automatically the ending slash cause too many problem (eg base URL that are example.com/tototo?uri=)
+          // baseURL = baseURL ? addEndingSlash(baseURL) : "";
+          baseURL = baseURL ? baseURL : "";
 
-            return (
-              <td class="table__row__supercell">
-                <ul class="table__row__supercell__list">
-                  {
-                    // Todo: this is where we can have a strategy for folding cells
-                    superCell.values.map((cell) => {
-                      let url = cell.url;
-                      if (url && baseURL.length > 0) {
-                        url = baseURL + url.replace(baseURL, "");
-                      }
+          return (
+            <td class="supercell">
+              <ul class="supercell-list">
+                {
+                  // Todo: this is where we can have a strategy for folding cells
+                  superCell.values.map((cell) => {
+                    let url = cell.url;
+                    if (url && baseURL.length > 0) {
+                      url = baseURL + url.replace(baseURL, "");
+                    }
 
-                      // create tags if any
-                      let tag_span = "";
-                      if (cell.tags) {
-                        tag_span = (
-                          <span class="table__row__supercell__cell--not">
-                            {cell.tags.join(", ")}
-                          </span>
-                        );
-                      }
+                    // create tags if any
+                    let tag_span = "";
+                    if (cell.tags) {
+                      tag_span = (
+                        <span class="tags">{cell.tags.join(", ")}</span>
+                      );
+                    }
 
-                      return [
-                        <li
-                          title={cell.description}
-                          class="table__row__supercell__cell"
-                        >
-                          {cell.url ? (
-                            <a
-                              class="table__row__supercell__cell__link"
-                              href={url}
-                              target={this.table.newTab ? "_blank" : "_self"}
-                            >
-                              {tag_span} {cell.label}
-                            </a>
-                          ) : (
-                            <div
-                              onClick={
-                                cell.clickable
-                                  ? () => this.onCellClick(cell)
-                                  : () => ""
-                              }
-                            >
-                              {tag_span} {cell.label}
-                            </div>
-                          )}
-                        </li>,
-                      ];
-                    })
-                  }
-                </ul>
-              </td>
-            );
-          })}
-        </tr>,
-      ];
-    });
+                    return [
+                      <li title={cell.description} class="supercell-list-item">
+                        {cell.url ? (
+                          <a
+                            href={url}
+                            target={this.table.newTab ? "_blank" : "_self"}
+                          >
+                            {tag_span} {cell.label}
+                          </a>
+                        ) : (
+                          <div
+                            onClick={
+                              cell.clickable
+                                ? () => this.onCellClick(cell)
+                                : () => ""
+                            }
+                          >
+                            {tag_span} {cell.label}
+                          </div>
+                        )}
+                      </li>,
+                    ];
+                  })
+                }
+              </ul>
+            </td>
+          );
+        })}
+      </tr>
+    ));
   }
 
   onCellClick(cell) {

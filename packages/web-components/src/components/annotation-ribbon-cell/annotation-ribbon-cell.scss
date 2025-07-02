@@ -1,26 +1,40 @@
-.clicked {
-  border: 1px solid #002eff;
-  box-shadow: 0px 0px 8px #002eff;
+:host {
+  --height: 18px;
+  --width: 18px;
 }
 
-.hovered {
-  // border: 1px solid black;
-}
+.cell {
+  display: block;
+  flex: 0 0 auto;
+  width: var(--width);
+  height: var(--height);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
 
-.unavailable {
-  cursor: not-allowed;
-  background: linear-gradient(
-    to top left,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) calc(50% - 0.8px),
-    rgba(240, 32, 32, 0.5) 50%,
-    rgba(0, 0, 0, 0) calc(50% + 0.8px),
-    rgba(0, 0, 0, 0) 100%
-  );
-  //    linear-gradient(to top right,
-  //        rgba(0,0,0,0) 0%,
-  //        rgba(0,0,0,0) calc(50% - 0.8px),
-  //        rgba(0,0,0,1) 50%,
-  //        rgba(0,0,0,0) calc(50% + 0.8px),
-  //        rgba(0,0,0,0) 100%);
+  &.no-annotations {
+    cursor: not-allowed;
+  }
+
+  &.selected {
+    border: 1px solid #002eff;
+    box-shadow: 0 0 8px #002eff;
+    z-index: 2;
+  }
+
+  &.hovered {
+  }
+
+  &.unavailable {
+    cursor: not-allowed;
+    background: linear-gradient(
+        to top left,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) calc(50% - 0.8px),
+        rgba(240, 32, 32, 0.5) 50%,
+        rgba(0, 0, 0, 0) calc(50% + 0.8px),
+        rgba(0, 0, 0, 0) 100%
+    );
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Element, h, Prop, Watch, State } from "@stencil/core";
+import { Component, Element, h, Prop, Watch, State, Host } from "@stencil/core";
 
 import { IRibbonGroup } from "../../globals/models";
 
@@ -30,8 +30,8 @@ import { sameArray } from "../../globals/utils";
  */
 @Component({
   tag: "go-annotation-ribbon",
-  styleUrl: "annotation-ribbon.css",
-  shadow: false,
+  styleUrl: "annotation-ribbon.scss",
+  shadow: true,
 })
 export class AnnotationRibbon {
   @Element() GORibbon;
@@ -476,64 +476,60 @@ export class AnnotationRibbon {
   }
 
   render() {
-    return [
-      <go-annotation-ribbon-strips
-        id="wc-go-ribbon-strips"
-        ref={(el) => (this.ribbonStrips = el)}
-        base-api-url={this.baseApiUrl}
-        subject-base-url={this.subjectBaseUrl}
-        group-base-url={this.groupBaseUrl}
-        add-cell-all={this.addCellAll}
-        binary-color={this.binaryColor}
-        color-by={this.colorBy}
-        min-color={this.minColor}
-        max-color={this.maxColor}
-        max-heat-level={this.maxHeatLevel}
-        annotation-labels={this.annotationLabels}
-        class-labels={this.classLabels}
-        data={this.data}
-        category-case={this.categoryCase}
-        category-all-style={this.categoryAllStyle}
-        categoryOtherStyle={this.categoryOtherStyle}
-        group-max-label-size={this.groupMaxLabelSize}
-        group-new-tab={this.groupNewTab}
-        group-clickable={this.groupClickable}
-        fire-event-on-empty-cells={this.fireEventOnEmptyCells}
-        subjects={this.subjects}
-        subject-open-new-tab={this.subjectOpenNewTab}
-        subject-position={this.subjectPosition}
-        subject-use-taxon-icon={this.subjectUseTaxonIcon}
-        selection-mode={this.selectionMode}
-        selected={this.selected}
-        subset={this.subset}
-        show-other-group={this.showOtherGroup}
-      />,
-
-      (this.subjects && this.subjects.length > 0) || this.data ? (
-        <div style={{ "font-style": "italic", color: "#7b7b7b" }}>
-          Cell color indicative of annotation volume
-        </div>
-      ) : (
-        ""
-      ),
-
-      this.loadingTable ? (
-        <go-spinner></go-spinner>
-      ) : (
-        <go-annotation-ribbon-table
-          id="wc-go-ribbon-table"
-          ref={(el) => (this.ribbonTable = el)}
+    return (
+      <Host>
+        <go-annotation-ribbon-strips
+          ref={(el) => (this.ribbonStrips = el)}
           base-api-url={this.baseApiUrl}
           subject-base-url={this.subjectBaseUrl}
           group-base-url={this.groupBaseUrl}
-          data={this.tableData}
-          bio-link-data={this.bioLinkData}
-          group-by={this.groupBy}
-          order-by={this.orderBy}
-          filter-by={this.filterBy}
-          hide-columns={this.hideColumns}
+          add-cell-all={this.addCellAll}
+          binary-color={this.binaryColor}
+          color-by={this.colorBy}
+          min-color={this.minColor}
+          max-color={this.maxColor}
+          max-heat-level={this.maxHeatLevel}
+          annotation-labels={this.annotationLabels}
+          class-labels={this.classLabels}
+          data={this.data}
+          category-case={this.categoryCase}
+          category-all-style={this.categoryAllStyle}
+          categoryOtherStyle={this.categoryOtherStyle}
+          group-max-label-size={this.groupMaxLabelSize}
+          group-new-tab={this.groupNewTab}
+          group-clickable={this.groupClickable}
+          fire-event-on-empty-cells={this.fireEventOnEmptyCells}
+          subjects={this.subjects}
+          subject-open-new-tab={this.subjectOpenNewTab}
+          subject-position={this.subjectPosition}
+          subject-use-taxon-icon={this.subjectUseTaxonIcon}
+          selection-mode={this.selectionMode}
+          selected={this.selected}
+          subset={this.subset}
+          show-other-group={this.showOtherGroup}
         />
-      ),
-    ];
+
+        {((this.subjects && this.subjects.length > 0) || this.data) && (
+          <div class="muted">Cell color indicative of annotation volume</div>
+        )}
+
+        {this.loadingTable ? (
+          <go-spinner></go-spinner>
+        ) : (
+          <go-annotation-ribbon-table
+            ref={(el) => (this.ribbonTable = el)}
+            base-api-url={this.baseApiUrl}
+            subject-base-url={this.subjectBaseUrl}
+            group-base-url={this.groupBaseUrl}
+            data={this.tableData}
+            bio-link-data={this.bioLinkData}
+            group-by={this.groupBy}
+            order-by={this.orderBy}
+            filter-by={this.filterBy}
+            hide-columns={this.hideColumns}
+          />
+        )}
+      </Host>
+    );
   }
 }

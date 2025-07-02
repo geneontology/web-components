@@ -1,12 +1,10 @@
-import { h } from "@stencil/core";
+import { Component, Element, h, Prop, Watch } from "@stencil/core";
+import clsx from "clsx";
 
-import { Component, Prop, Element } from "@stencil/core";
-
-import { heatColor, darken } from "./utils";
+import { darken, heatColor } from "./utils";
 import { CELL_TYPES, COLOR_BY } from "../../globals/enums";
 
 import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
-import { Watch } from "@stencil/core";
 
 /**
  * An individual cell in the annotation ribbon.
@@ -16,7 +14,7 @@ import { Watch } from "@stencil/core";
 @Component({
   tag: "go-annotation-ribbon-cell",
   styleUrl: "annotation-ribbon-cell.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonCell {
   @Element() el: HTMLElement;
@@ -155,59 +153,54 @@ export class AnnotationRibbonCell {
   }
 
   render() {
+    let title = "";
+    const classes: (string | boolean)[] = ["cell"];
+
     if (!this.available) {
-      const title =
-        this.subject.label + " can not have data for " + this.group.label;
-      const classes = "ribbon__subject--cell unavailable";
-      return (
-        <td title={title} class={classes}>
-          {" "}
-        </td>
+      title = this.subject.label + " can not have data for " + this.group.label;
+      classes.push("unavailable");
+    } else {
+      const nbClasses = this.getNbClasses();
+      const nbAnnotations = this.getNbAnnotations();
+
+      title =
+        "Subject: " +
+        this.subject.id +
+        ":" +
+        this.subject.label +
+        "\n\nGroup: " +
+        this.group.id +
+        ": " +
+        this.group.label;
+
+      if (nbAnnotations > 0) {
+        title +=
+          "\n\n" +
+          nbClasses +
+          " " +
+          (nbClasses > 1
+            ? this.arrayClassLabels[1]
+            : this.arrayClassLabels[0]) +
+          ", " +
+          nbAnnotations +
+          " " +
+          (nbAnnotations > 1
+            ? this.arrayAnnotationLabels[1]
+            : this.arrayAnnotationLabels[0]);
+      } else {
+        title += "\n\nNo data available";
+      }
+      this.el.style.setProperty(
+        "background",
+        this.cellColor(nbClasses, nbAnnotations),
+      );
+
+      classes.push(
+        nbAnnotations === 0 && "no-annotations",
+        this.selected && nbAnnotations > 0 && "selected",
+        this.hovered && nbAnnotations > 0 && "hovered",
       );
     }
-
-    const nbClasses = this.getNbClasses();
-    const nbAnnotations = this.getNbAnnotations();
-
-    let title =
-      "Subject: " +
-      this.subject.id +
-      ":" +
-      this.subject.label +
-      "\n\nGroup: " +
-      this.group.id +
-      ": " +
-      this.group.label;
-
-    if (nbAnnotations > 0) {
-      title +=
-        "\n\n" +
-        nbClasses +
-        " " +
-        (nbClasses > 1 ? this.arrayClassLabels[1] : this.arrayClassLabels[0]) +
-        ", " +
-        nbAnnotations +
-        " " +
-        (nbAnnotations > 1
-          ? this.arrayAnnotationLabels[1]
-          : this.arrayAnnotationLabels[0]);
-    } else {
-      title += "\n\nNo data available";
-    }
-    this.el.style.setProperty(
-      "background",
-      this.cellColor(nbClasses, nbAnnotations),
-    );
-
-    let classes =
-      this.selected && nbAnnotations > 0
-        ? "ribbon__subject--cell clicked"
-        : "ribbon__subject--cell";
-    classes += this.hovered && nbAnnotations > 0 ? " hovered" : "";
-    return (
-      <td title={title} class={classes}>
-        {" "}
-      </td>
-    );
+    return <div title={title} class={clsx(classes)} />;
   }
 }

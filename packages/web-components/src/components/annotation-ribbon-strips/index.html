@@ -12,7 +12,56 @@
     <script nomodule src="/build/web-components.js"></script>
   </head>
   <body>
-    <go-annotation-ribbon-strips subjects="RGD:620474,RGD:3889" />
+    <div>
+      <input type="checkbox" id="addCellAll" checked>
+      <label for="addCellAll">Add Cell All</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="showOtherGroup">
+      <label for="showOtherGroup">Show Other Group</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="groupClickable" checked>
+      <label for="groupClickable">Group Clickable</label>
+    </div>
+
+    <div>
+      <label for="subjectPosition">Subject Position</label>
+      <select id="subjectPosition">
+        <option value="0">None</option>
+        <option value="1" selected>Left</option>
+        <option value="2">Right</option>
+        <option value="3">Bottom</option>
+      </select>
+    </div>
+
+    <go-annotation-ribbon-strips subjects="RGD:620474,RGD:3889" id="ribbon" />
+
+    <script>
+      let ribbon = document.getElementById("ribbon")
+      let addCellAll = document.getElementById("addCellAll");
+      let showOtherGroup = document.getElementById("showOtherGroup");
+      let groupClickable = document.getElementById("groupClickable");
+      let subjectPosition = document.getElementById("subjectPosition");
+
+      addCellAll.addEventListener("change", function() {
+        ribbon.addCellAll = addCellAll.checked;
+      })
+
+      showOtherGroup.addEventListener("change", function() {
+        ribbon.showOtherGroup = showOtherGroup.checked;
+      })
+
+      groupClickable.addEventListener("change", function() {
+        ribbon.groupClickable = groupClickable.checked;
+      })
+
+      subjectPosition.addEventListener("change", function() {
+        ribbon.subjectPosition = parseInt(subjectPosition.value);
+      })
+    </script>
 
     <!-- <div style="width:1400px" id="ribbon-container"></div>
 

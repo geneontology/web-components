@@ -1,15 +1,21 @@
-.ribbon {
-  &__subject {
-    &__label {
-      &--link {
-        text-decoration: none;
-        color: black;
-        font-weight: normal;
+:host {
+  --width: 140px;
+  --height: auto;
 
-        &:hover {
-          font-weight: bold;
-        }
-      }
-    }
+  display: block;
+  flex: 0 0 auto;
+  width: var(--width);
+  height: var(--height);
+  overflow: hidden;
+  line-height: 1;
+}
+
+.label {
+  text-decoration: none;
+  color: black;
+  font-weight: normal;
+
+  &:hover {
+    font-weight: bold;
   }
 }

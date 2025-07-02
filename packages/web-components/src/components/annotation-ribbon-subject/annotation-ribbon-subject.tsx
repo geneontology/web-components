@@ -1,9 +1,14 @@
-import { h } from "@stencil/core";
-
-import { Component, Prop, State, Element } from "@stencil/core";
+import {
+  Component,
+  Element,
+  Event,
+  EventEmitter,
+  h,
+  Prop,
+  State,
+} from "@stencil/core";
 
 import { formatTaxonLabel } from "./utils";
-import { EventEmitter, Event } from "@stencil/core";
 import { IRibbonSubject } from "../../globals/models";
 
 /**
@@ -14,7 +19,7 @@ import { IRibbonSubject } from "../../globals/models";
 @Component({
   tag: "go-annotation-ribbon-subject",
   styleUrl: "annotation-ribbon-subject.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonSubject {
   @Element() el: HTMLElement;
@@ -51,21 +56,19 @@ export class AnnotationRibbonSubject {
 
   render() {
     return (
-      <td>
-        <a
-          class="ribbon__subject__label--link"
-          href={this.subjectBaseURL + this.id}
-          onClick={(e) => {
-            this.onSubjectClick(e, this.subject);
-          }}
-          target={this.newTab ? "_blank" : "_self"}
-        >
-          {this.subject.label +
-            " (" +
-            formatTaxonLabel(this.subject.taxon_label) +
-            ")"}
-        </a>
-      </td>
+      <a
+        class="label"
+        href={this.subjectBaseURL + this.id}
+        onClick={(e) => {
+          this.onSubjectClick(e, this.subject);
+        }}
+        target={this.newTab ? "_blank" : "_self"}
+      >
+        {this.subject.label +
+          " (" +
+          formatTaxonLabel(this.subject.taxon_label) +
+          ")"}
+      </a>
     );
   }
 }
