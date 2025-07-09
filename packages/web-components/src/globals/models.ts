@@ -2,7 +2,7 @@ export interface IRibbonGroup {
   id: string;
   label: string;
   description: string;
-  type: string;
+  type: "GlobalAll" | "All" | "Term" | "Other";
 }
 
 export interface IRibbonCategory {
@@ -78,3 +78,7 @@ export interface ITable {
 }
 
 export type ColorByOption = "classes" | "annotations";
+
+export type SubjectPositionOption = "none" | "left" | "right";
+
+export type SelectionModeOption = "cell" | "column";

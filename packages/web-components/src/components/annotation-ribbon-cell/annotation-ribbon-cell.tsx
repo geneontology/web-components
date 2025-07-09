@@ -2,7 +2,6 @@ import { Component, Element, h, Prop, Watch } from "@stencil/core";
 import clsx from "clsx";
 
 import { darken, heatColor } from "./utils";
-import { CELL_TYPES } from "../../globals/enums";
 
 import {
   ColorByOption,
@@ -124,7 +123,7 @@ export class AnnotationRibbonCell {
       return this.subject.nb_classes;
     }
     const cellid =
-      this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
+      this.group.id + (this.group.type === "Other" ? "-other" : "");
     const cell =
       cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
     return cell ? cell["ALL"]["nb_classes"] : 0;
@@ -135,7 +134,7 @@ export class AnnotationRibbonCell {
       return this.subject.nb_annotations;
     }
     const cellid =
-      this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
+      this.group.id + (this.group.type === "Other" ? "-other" : "");
     const cell =
       cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
     return cell ? cell["ALL"]["nb_annotations"] : 0;

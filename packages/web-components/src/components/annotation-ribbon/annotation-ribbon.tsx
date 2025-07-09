@@ -13,14 +13,9 @@ import {
   ColorByOption,
   IRibbonCellEvent,
   IRibbonGroup,
+  SelectionModeOption,
+  SubjectPositionOption,
 } from "../../globals/models";
-
-import {
-  POSITION,
-  SELECTION,
-  FONT_CASE,
-  FONT_STYLE,
-} from "../../globals/enums";
 
 import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
 
@@ -158,25 +153,6 @@ export class AnnotationRibbon {
   @Prop() groupMaxLabelSize = 60;
 
   /**
-   * Override of the category case
-   * 0 (default) = unchanged
-   * 1 = to lower case
-   * 2 = to upper case
-   */
-  @Prop() categoryCase = FONT_CASE.LOWER_CASE;
-
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryAllStyle = FONT_STYLE.NORMAL;
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryOtherStyle = FONT_STYLE.NORMAL;
-
-  /**
    * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
    */
   @Prop() showOtherGroup = true;
@@ -188,12 +164,8 @@ export class AnnotationRibbon {
 
   /**
    * Position the subject label of each row
-   * 0 = None
-   * 1 = Left
-   * 2 = Right
-   * 3 = Bottom
    */
-  @Prop() subjectPosition = POSITION.LEFT;
+  @Prop() subjectPosition: SubjectPositionOption = "left";
   @Prop() subjectUseTaxonIcon: boolean;
   @Prop() subjectOpenNewTab: boolean = true;
   @Prop() groupNewTab: boolean = true;
@@ -204,7 +176,7 @@ export class AnnotationRibbon {
    * 0 = select only the cell (1 subject, 1 group)
    * 1 = select the whole column (all subjects, 1 group)
    */
-  @Prop() selectionMode = SELECTION.CELL;
+  @Prop() selectionMode: SelectionModeOption = "cell";
 
   /**
    * If no value is provided, the ribbon will load without any group selected.
@@ -447,9 +419,6 @@ export class AnnotationRibbon {
           annotation-labels={this.annotationLabels}
           class-labels={this.classLabels}
           data={this.data}
-          category-case={this.categoryCase}
-          category-all-style={this.categoryAllStyle}
-          categoryOtherStyle={this.categoryOtherStyle}
           group-max-label-size={this.groupMaxLabelSize}
           group-new-tab={this.groupNewTab}
           group-clickable={this.groupClickable}

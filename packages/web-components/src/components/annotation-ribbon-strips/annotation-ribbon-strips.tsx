@@ -22,16 +22,9 @@ import {
   IRibbonGroupEvent,
   IRibbonModel,
   IRibbonSubject,
+  SelectionModeOption,
+  SubjectPositionOption,
 } from "../../globals/models";
-
-import {
-  CELL_TYPES,
-  EXP_CODES,
-  FONT_CASE,
-  FONT_STYLE,
-  POSITION,
-  SELECTION,
-} from "../../globals/enums";
 import { sameArray } from "../../globals/utils";
 
 const GROUP_ALL: IRibbonGroup = {
@@ -91,35 +84,12 @@ export class AnnotationRibbonStrips {
   @Prop() maxHeatLevel = 48;
   @Prop() groupMaxLabelSize = 60;
 
-  /**
-   * Override of the category case
-   * 0 (default) = unchanged
-   * 1 = to lower case
-   * 2 = to upper case
-   */
-  @Prop() categoryCase = FONT_CASE.LOWER_CASE;
-
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryAllStyle = FONT_STYLE.NORMAL;
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryOtherStyle = FONT_STYLE.NORMAL;
-
   @Prop() showOtherGroup = false;
 
   /**
    * Position the subject label of each row
-   * 0 = None
-   * 1 = Left
-   * 2 = Right
-   * 3 = Bottom
    */
-  @Prop() subjectPosition = POSITION.LEFT;
+  @Prop() subjectPosition: SubjectPositionOption = "left";
   @Prop() subjectUseTaxonIcon: boolean;
   @Prop() subjectOpenNewTab: boolean = true;
   @Prop() groupNewTab: boolean = true;
@@ -127,10 +97,8 @@ export class AnnotationRibbonStrips {
 
   /**
    * Click handling of a cell.
-   * 0 = select only the cell (1 subject, 1 group)
-   * 1 = select the whole column (all subjects, 1 group)
    */
-  @Prop() selectionMode = SELECTION.CELL;
+  @Prop() selectionMode: SelectionModeOption = "cell";
 
   /**
    * If no value is provided, the ribbon will load without any group selected.
@@ -253,7 +221,6 @@ export class AnnotationRibbonStrips {
   @Prop() ribbonSummary: IRibbonModel;
 
   loading = true;
-  onlyExperimental = false;
 
   loadData(data) {
     if (data) {
@@ -324,12 +291,8 @@ export class AnnotationRibbonStrips {
       subjects = subjects.join("&subject=");
     }
 
-    let query =
+    const query =
       this.baseApiUrl + "?subset=" + this.subset + "&subject=" + subjects;
-    if (this.onlyExperimental) {
-      query += EXP_CODES.map((exp) => "&ecodes=" + exp).join("");
-    }
-    console.log("API query is " + query);
 
     return fetch(query)
       .then((response: Response) => {
@@ -340,24 +303,8 @@ export class AnnotationRibbonStrips {
       });
   }
 
-  filterExperiment(checkbox) {
-    this.onlyExperimental = checkbox.target.checked;
-
-    // Fetch data based on subjects and subset
-    this.fetchData(this.subjects).then(
-      (data) => {
-        this.ribbonSummary = data;
-        this.loading = false;
-      },
-      (error) => {
-        console.error(error);
-        this.loading = false;
-      },
-    );
-  }
-
   onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
-    if (this.selectionMode === SELECTION.COLUMN) {
+    if (this.selectionMode === "column") {
       this.hoveredSubjects = this.ribbonSummary.subjects;
     } else {
       this.hoveredSubjects = [subject];
@@ -382,14 +329,14 @@ export class AnnotationRibbonStrips {
   onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
     if (
       this.selectedGroup === group &&
-      (this.selectionMode === SELECTION.COLUMN ||
+      (this.selectionMode === "column" ||
         sameArray(this.selectedSubjects, [subject]))
     ) {
       this.selectedSubjects = [];
       this.selectedGroup = null;
     } else {
       this.selectedSubjects =
-        this.selectionMode === SELECTION.COLUMN
+        this.selectionMode === "column"
           ? this.ribbonSummary.subjects
           : [subject];
       this.selectedGroup = group;
@@ -439,30 +386,7 @@ export class AnnotationRibbonStrips {
   }
 
   applyCategoryStyling(category) {
-    const cc0 = truncate(category, this.groupMaxLabelSize, "...");
-    const cc1 = this.applyCategoryCase(cc0);
-    const cc2 = this.applyCategoryBold(cc1);
-    return cc2;
-  }
-
-  applyCategoryBold(category) {
-    const lc = category.toLowerCase();
-    if (lc.startsWith("all") && this.categoryAllStyle == FONT_STYLE.BOLD) {
-      return <b>{category}</b>;
-    }
-    if (lc.startsWith("other") && this.categoryOtherStyle == FONT_STYLE.BOLD) {
-      return <b>{category}</b>;
-    }
-    return category;
-  }
-
-  applyCategoryCase(category) {
-    if (this.categoryCase == FONT_CASE.LOWER_CASE) {
-      return category.toLowerCase();
-    } else if (this.categoryCase == FONT_CASE.UPPER_CASE) {
-      return category.toUpperCase();
-    }
-    return category;
+    return truncate(category, this.groupMaxLabelSize, "...");
   }
 
   @Method()
@@ -533,8 +457,6 @@ export class AnnotationRibbonStrips {
           {this.renderCategories()}
           {this.renderSubjects()}
         </div>
-        {/* <br/>
-            <input type="checkbox" onClick={ this.filterExperiment.bind(this) }/> Show only experimental annotations */}
       </Host>
     );
   }
@@ -544,13 +466,14 @@ export class AnnotationRibbonStrips {
       <div
         class={clsx(
           "categories",
-          this.subjectPosition === POSITION.LEFT && "offset-left",
+          this.subjectPosition === "left" && "offset-left",
         )}
       >
         {this.addCellAll && (
           <div
             class={clsx({
               group: true,
+              "category-all": true,
               clickable: this.groupClickable,
               hovered: this.isGroupHovered(GROUP_ALL),
               selected: this.isGroupSelected(GROUP_ALL),
@@ -567,10 +490,12 @@ export class AnnotationRibbonStrips {
         {this.ribbonSummary.categories.map(
           (category: IRibbonCategory, categoryIndex) =>
             category.groups.map((group: IRibbonGroup, groupIndex) =>
-              group.type == CELL_TYPES.OTHER && !this.showOtherGroup ? null : (
+              group.type === "Other" && !this.showOtherGroup ? null : (
                 <div
                   class={clsx({
                     group: true,
+                    "category-all": group.type === "All",
+                    "category-other": group.type === "Other",
                     clickable: this.groupClickable,
                     hovered: this.isGroupHovered(group),
                     selected: this.isGroupSelected(group),
@@ -601,7 +526,7 @@ export class AnnotationRibbonStrips {
     return this.ribbonSummary.subjects.map((subject: IRibbonSubject) => {
       return (
         <div class="subject" key={subject.id}>
-          {this.subjectPosition == POSITION.LEFT && (
+          {this.subjectPosition === "left" && (
             <go-annotation-ribbon-subject
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}
@@ -632,7 +557,7 @@ export class AnnotationRibbonStrips {
             (category: IRibbonCategory, categoryIndex) =>
               category.groups.map((group: IRibbonGroup, groupIndex) => {
                 const cellid =
-                  group.id + (group.type == CELL_TYPES.OTHER ? "-other" : "");
+                  group.id + (group.type === "Other" ? "-other" : "");
                 const cell =
                   cellid in subject.groups ? subject.groups[cellid] : undefined;
 
@@ -647,7 +572,7 @@ export class AnnotationRibbonStrips {
                   available = cell.available;
                 }
 
-                if (group.type == CELL_TYPES.OTHER && !this.showOtherGroup) {
+                if (group.type === "Other" && !this.showOtherGroup) {
                   return;
                 }
 
@@ -679,7 +604,7 @@ export class AnnotationRibbonStrips {
               }),
           )}
 
-          {this.subjectPosition == POSITION.RIGHT && (
+          {this.subjectPosition === "right" && (
             <go-annotation-ribbon-subject
               subject={subject}
               subjectBaseURL={this.subjectBaseUrl}

@@ -1,5 +1,19 @@
 :host {
   display: block;
+
+  --strips-group-text-transform: none;
+  --strips-group-all-color: inherit;
+  --strips-group-all-font-weight: normal;
+  --strips-group-other-color: inherit;
+  --strips-group-other-font-weight: normal;
+}
+
+go-annotation-ribbon-strips {
+  --group-text-transform: var(--strips-group-text-transform);
+  --group-all-color: var(--strips-group-all-color);
+  --group-all-font-weight: var(--strips-group-all-font-weight);
+  --group-other-color: var(--strips-group-other-color);
+  --group-other-font-weight: var(--strips-group-other-font-weight);
 }
 
 .muted {

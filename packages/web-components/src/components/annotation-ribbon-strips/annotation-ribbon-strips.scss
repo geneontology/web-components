@@ -6,6 +6,12 @@
   --category-margin-bottom: 0.25em;
   --category-separator-width: 2em;
 
+  --group-text-transform: none;
+  --group-all-color: inherit;
+  --group-all-font-weight: normal;
+  --group-other-color: inherit;
+  --group-other-font-weight: normal;
+
   --subject-width: 10em;
 
   display: block;
@@ -40,6 +46,7 @@
   transform-origin: left bottom;
   line-height: 1;
   cursor: help;
+  text-transform: var(--group-text-transform);
 
   &.hovered {
     font-weight: bold;
@@ -49,6 +56,7 @@
 .subject {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 go-annotation-ribbon-subject {
@@ -76,4 +84,14 @@ b {
 
 .clickable {
   cursor: pointer !important;
+}
+
+.category-all {
+  color: var(--group-all-color);
+  font-weight: var(--group-all-font-weight);
+}
+
+.category-other {
+  color: var(--group-other-color);
+  font-weight: var(--group-other-font-weight);
 }

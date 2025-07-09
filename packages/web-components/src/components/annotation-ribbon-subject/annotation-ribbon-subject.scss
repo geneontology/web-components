@@ -2,8 +2,9 @@
   --width: 140px;
   --height: auto;
 
-  display: block;
+  display: flex;
   flex: 0 0 auto;
+  align-items: center;
   width: var(--width);
   height: var(--height);
   overflow: hidden;

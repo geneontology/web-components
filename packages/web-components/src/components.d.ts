@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -41,21 +41,6 @@ export namespace Components {
           * @default false
          */
         "binaryColor": boolean;
-        /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryAllStyle": number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-          * @default FONT_CASE.LOWER_CASE
-         */
-        "categoryCase": number;
-        /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryOtherStyle": number;
         /**
           * @default "term,terms"
          */
@@ -139,9 +124,9 @@ export namespace Components {
         "selected": any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-          * @default SELECTION.CELL
+          * @default "cell"
          */
-        "selectionMode": number;
+        "selectionMode": SelectionModeOption;
         /**
           * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
           * @default true
@@ -156,10 +141,10 @@ export namespace Components {
          */
         "subjectOpenNewTab": boolean;
         /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-          * @default POSITION.LEFT
+          * Position the subject label of each row
+          * @default "left"
          */
-        "subjectPosition": number;
+        "subjectPosition": SubjectPositionOption;
         "subjectUseTaxonIcon": boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
@@ -247,21 +232,6 @@ export namespace Components {
          */
         "binaryColor": boolean;
         /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryAllStyle": number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-          * @default FONT_CASE.LOWER_CASE
-         */
-        "categoryCase": number;
-        /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryOtherStyle": number;
-        /**
           * @default "term,terms"
          */
         "classLabels": string;
@@ -314,10 +284,10 @@ export namespace Components {
          */
         "selected": any;
         /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-          * @default SELECTION.CELL
+          * Click handling of a cell.
+          * @default "cell"
          */
-        "selectionMode": number;
+        "selectionMode": SelectionModeOption;
         /**
           * @default false
          */
@@ -331,10 +301,10 @@ export namespace Components {
          */
         "subjectOpenNewTab": boolean;
         /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-          * @default POSITION.LEFT
+          * Position the subject label of each row
+          * @default "left"
          */
-        "subjectPosition": number;
+        "subjectPosition": SubjectPositionOption;
         "subjectUseTaxonIcon": boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
@@ -737,21 +707,6 @@ declare namespace LocalJSX {
          */
         "binaryColor"?: boolean;
         /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryAllStyle"?: number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-          * @default FONT_CASE.LOWER_CASE
-         */
-        "categoryCase"?: number;
-        /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryOtherStyle"?: number;
-        /**
           * @default "term,terms"
          */
         "classLabels"?: string;
@@ -834,9 +789,9 @@ declare namespace LocalJSX {
         "selected"?: any;
         /**
           * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-          * @default SELECTION.CELL
+          * @default "cell"
          */
-        "selectionMode"?: number;
+        "selectionMode"?: SelectionModeOption;
         /**
           * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
           * @default true
@@ -851,10 +806,10 @@ declare namespace LocalJSX {
          */
         "subjectOpenNewTab"?: boolean;
         /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-          * @default POSITION.LEFT
+          * Position the subject label of each row
+          * @default "left"
          */
-        "subjectPosition"?: number;
+        "subjectPosition"?: SubjectPositionOption;
         "subjectUseTaxonIcon"?: boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
@@ -942,21 +897,6 @@ declare namespace LocalJSX {
          */
         "binaryColor"?: boolean;
         /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryAllStyle"?: number;
-        /**
-          * Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case
-          * @default FONT_CASE.LOWER_CASE
-         */
-        "categoryCase"?: number;
-        /**
-          * 0 = Normal 1 = Bold
-          * @default FONT_STYLE.NORMAL
-         */
-        "categoryOtherStyle"?: number;
-        /**
           * @default "term,terms"
          */
         "classLabels"?: string;
@@ -1032,10 +972,10 @@ declare namespace LocalJSX {
          */
         "selected"?: any;
         /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
-          * @default SELECTION.CELL
+          * Click handling of a cell.
+          * @default "cell"
          */
-        "selectionMode"?: number;
+        "selectionMode"?: SelectionModeOption;
         /**
           * @default false
          */
@@ -1049,10 +989,10 @@ declare namespace LocalJSX {
          */
         "subjectOpenNewTab"?: boolean;
         /**
-          * Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom
-          * @default POSITION.LEFT
+          * Position the subject label of each row
+          * @default "left"
          */
-        "subjectPosition"?: number;
+        "subjectPosition"?: SubjectPositionOption;
         "subjectUseTaxonIcon"?: boolean;
         /**
           * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])

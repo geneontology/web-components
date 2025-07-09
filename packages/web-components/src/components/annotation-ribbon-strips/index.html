@@ -17,6 +17,8 @@
       input, select {
         margin-bottom: 0.5rem;
       }
+      go-annotation-ribbon-strips {
+      }
     </style>
   </head>
   <body>
@@ -109,10 +111,9 @@
           { value: 1, label: "Column" },
         ])
         addSelect("subjectPosition", [
-          { value: 0, label: "None" },
-          { value: 1, label: "Left" },
-          { value: 2, label: "Right" },
-          { value: 3, label: "Bottom" }
+          { value: "none" },
+          { value: "left" },
+          { value: "right" },
         ]);
         addSelect("colorBy", [
           { value: "classes" },
