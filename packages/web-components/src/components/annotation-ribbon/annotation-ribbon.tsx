@@ -1,13 +1,4 @@
-import {
-  Component,
-  Element,
-  h,
-  Prop,
-  Watch,
-  State,
-  Host,
-  Listen,
-} from "@stencil/core";
+import { Component, h, Prop, Watch, State, Host, Listen } from "@stencil/core";
 
 import {
   ColorByOption,
@@ -39,79 +30,10 @@ import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
   shadow: true,
 })
 export class AnnotationRibbon {
-  @Element() GORibbon;
-
   ribbonStrips: HTMLGoAnnotationRibbonStripsElement;
   ribbonTable: HTMLGoAnnotationRibbonTableElement;
 
   @State() loadingTable = false;
-
-  mockup = [
-    {
-      subject: "UniProtKB:P04637",
-      slim: "GO:0003723",
-      assocs: [
-        {
-          id: "556e6950726f744b420950303436333709545035330909474f3a3030303337333009504d49443a3136323133323132094944410909460943656c6c756c61722074756d6f7220616e746967656e20703533095035330970726f7465696e097461786f6e3a393630360932303137303132350943414641090909",
-          subject: {
-            id: "HGNC:11998",
-            iri: "http://identifiers.org/uniprot/P04637",
-            label: "TP53",
-            taxon: {
-              id: "NCBITaxon:9606",
-              iri: "http://purl.obolibrary.org/obo/NCBITaxon_9606",
-              label: "Homo sapiens",
-            },
-          },
-          object: {
-            id: "GO:0003730",
-            iri: "http://purl.obolibrary.org/obo/GO_0003730",
-            label: "mRNA 3'-UTR binding",
-            category: ["molecular_activity"],
-          },
-          negated: false,
-          relation: null,
-          publications: [{ id: "UniProtKB" }],
-          provided_by: ["CAFA"],
-          reference: ["PMID:16213212"],
-          type: "protein",
-          evidence: "ECO:0000314",
-          evidence_label: "direct assay evidence used in manual assertion",
-          evidence_type: "IDA",
-          evidence_closure: [
-            "ECO:0000352",
-            "ECO:0000000",
-            "ECO:0000002",
-            "ECO:0000006",
-            "ECO:0000314",
-            "ECO:0000269",
-          ],
-          evidence_closure_label: [
-            "evidence used in manual assertion",
-            "evidence",
-            "direct assay evidence",
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-            "experimental evidence used in manual assertion",
-          ],
-          evidence_subset_closure: ["ECO:0000006", "ECO:0000314"],
-          evidence_subset_closure_label: [
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-          ],
-          evidence_type_closure: [
-            "evidence used in manual assertion",
-            "evidence",
-            "direct assay evidence",
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-            "experimental evidence used in manual assertion",
-          ],
-          slim: ["GO:0003723"],
-        },
-      ],
-    },
-  ];
 
   @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
 
@@ -119,62 +41,98 @@ export class AnnotationRibbon {
 
   @Prop() filterCrossAspect = true;
 
+  /**
+   * Base URL for the API to fetch the ribbon data when subjects are provided.
+   */
   @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
 
+  /**
+   * Base URL used when rendering subject label links.
+   */
   @Prop() subjectBaseUrl: string =
     "http://amigo.geneontology.org/amigo/gene_product/";
+
   @Prop() groupBaseUrl: string = "http://amigo.geneontology.org/amigo/term/";
 
+  /**
+   * Name of the GO subset used for grouping annotations.
+   */
   @Prop() subset: string = "goslim_agr";
 
   /**
-   * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
    */
-  @Prop() subjects: string = undefined;
+  @Prop() subjects?: string;
 
+  /**
+   * Labels used with class counts.
+   */
   @Prop() classLabels = "term,terms";
+
+  /**
+   * Labels used with annotation counts.
+   */
   @Prop() annotationLabels = "annotation,annotations";
 
   /**
-   * Which value to base the cell color on
-   * 0 = class count
-   * 1 = annotation count
+   * Whether to color cells by annotations or classes.
    */
   @Prop() colorBy: ColorByOption = "annotations";
 
   /**
-   * false = show a gradient of colors to indicate the value of a cell
-   * true = show only two colors (minColor; maxColor) to indicate the values of a cell
+   * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell.
+   * Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on
+   * the number of annotations or classes.
    */
   @Prop() binaryColor = false;
+
+  /**
+   * Color of cells with the least number of annotations or classes.
+   */
   @Prop() minColor = "255,255,255";
+
+  /**
+   * Color of cells with the most number of annotations or classes.
+   */
   @Prop() maxColor = "24,73,180";
+
+  /**
+   * Maximum number of annotations or classes before `maxColor` is applied.
+   */
   @Prop() maxHeatLevel = 48;
+
+  /**
+   * Maximum size of group labels in characters.
+   */
   @Prop() groupMaxLabelSize = 60;
 
   /**
-   * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+   * If `true`, show the "Other" group for each category.
    */
   @Prop() showOtherGroup = true;
 
   /**
-   * add a cell at the beginning of each row/subject to show all annotations
+   * If `true`, show the "all annotations" group.
    */
-  @Prop() addCellAll: boolean = true;
+  @Prop() showAllAnnotationsGroup: boolean = true;
 
   /**
-   * Position the subject label of each row
+   * Position subject labels.
    */
   @Prop() subjectPosition: SubjectPositionOption = "left";
-  @Prop() subjectUseTaxonIcon: boolean;
+
+  /**
+   * If `true`, clicking a subject label will open the link in a new tab.
+   */
   @Prop() subjectOpenNewTab: boolean = true;
-  @Prop() groupNewTab: boolean = true;
+
+  /**
+   * If `true`, the group labels are clickable and will trigger the `groupClick` event
+   */
   @Prop() groupClickable: boolean = true;
 
   /**
-   * Click handling of a cell.
-   * 0 = select only the cell (1 subject, 1 group)
-   * 1 = select the whole column (all subjects, 1 group)
+   * Selection mode for the ribbon cells.
    */
   @Prop() selectionMode: SelectionModeOption = "cell";
 
@@ -184,13 +142,6 @@ export class AnnotationRibbon {
    * The value should be the id of the group to be selected
    */
   @Prop() selected;
-
-  /**
-   * If true, the ribbon will fire an event if a user click an empty cell
-   * If false, the ribbon will not fire the event on an empty cell
-   * Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-   */
-  @Prop() fireEventOnEmptyCells = false;
 
   /**
    * if provided, will override any value provided in subjects and subset
@@ -407,30 +358,26 @@ export class AnnotationRibbon {
       <Host>
         <go-annotation-ribbon-strips
           ref={(el) => (this.ribbonStrips = el)}
-          base-api-url={this.baseApiUrl}
-          subject-base-url={this.subjectBaseUrl}
-          group-base-url={this.groupBaseUrl}
-          add-cell-all={this.addCellAll}
-          binary-color={this.binaryColor}
-          color-by={this.colorBy}
-          min-color={this.minColor}
-          max-color={this.maxColor}
-          max-heat-level={this.maxHeatLevel}
-          annotation-labels={this.annotationLabels}
-          class-labels={this.classLabels}
+          annotationLabels={this.annotationLabels}
+          baseApiUrl={this.baseApiUrl}
+          binaryColor={this.binaryColor}
+          classLabels={this.classLabels}
+          colorBy={this.colorBy}
           data={this.data}
-          group-max-label-size={this.groupMaxLabelSize}
-          group-new-tab={this.groupNewTab}
-          group-clickable={this.groupClickable}
-          fire-event-on-empty-cells={this.fireEventOnEmptyCells}
-          subjects={this.subjects}
-          subject-open-new-tab={this.subjectOpenNewTab}
-          subject-position={this.subjectPosition}
-          subject-use-taxon-icon={this.subjectUseTaxonIcon}
-          selection-mode={this.selectionMode}
+          groupClickable={this.groupClickable}
+          groupMaxLabelSize={this.groupMaxLabelSize}
+          maxColor={this.maxColor}
+          maxHeatLevel={this.maxHeatLevel}
+          minColor={this.minColor}
           selected={this.selected}
+          selectionMode={this.selectionMode}
+          showAllAnnotationsGroup={this.showAllAnnotationsGroup}
+          showOtherGroup={this.showOtherGroup}
+          subjectBaseUrl={this.subjectBaseUrl}
+          subjectOpenNewTab={this.subjectOpenNewTab}
+          subjectPosition={this.subjectPosition}
+          subjects={this.subjects}
           subset={this.subset}
-          show-other-group={this.showOtherGroup}
         />
 
         {((this.subjects && this.subjects.length > 0) || this.data) && (

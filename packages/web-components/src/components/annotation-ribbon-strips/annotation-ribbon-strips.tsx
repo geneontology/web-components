@@ -1,6 +1,5 @@
 import {
   Component,
-  Element,
   Event,
   EventEmitter,
   h,
@@ -49,54 +48,101 @@ const GROUP_ALL: IRibbonGroup = {
   shadow: true,
 })
 export class AnnotationRibbonStrips {
-  @Element() ribbonElement;
+  @State() selectedGroup: IRibbonGroup | null = null;
+  @State() selectedSubjects: IRibbonSubject[] = [];
+  @State() hoveredGroup: IRibbonGroup | null = null;
+  @State() hoveredSubjects: IRibbonSubject[] = [];
 
+  /**
+   * Base URL for the API to fetch the ribbon data when subjects are provided.
+   */
   @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
 
+  /**
+   * Base URL used when rendering subject label links.
+   */
   @Prop() subjectBaseUrl: string =
     "http://amigo.geneontology.org/amigo/gene_product/";
-  @Prop() groupBaseUrl: string = "http://amigo.geneontology.org/amigo/term/";
 
+  /**
+   * Name of the GO subset used for grouping annotations.
+   */
   @Prop() subset: string = "goslim_agr";
 
   /**
-   * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
    */
-  @Prop() subjects: string = undefined;
+  @Prop() subjects?: string;
 
+  /**
+   * Labels used with class counts.
+   */
   @Prop() classLabels = "term,terms";
+
+  /**
+   * Labels used with annotation counts.
+   */
   @Prop() annotationLabels = "annotation,annotations";
 
   /**
-   * Which value to base the cell color on
-   * 0 = class count
-   * 1 = annotation count
+   * Whether to color cells by annotations or classes.
    */
   @Prop() colorBy: ColorByOption = "annotations";
 
   /**
-   * false = show a gradient of colors to indicate the value of a cell
-   * true = show only two colors (minColor; maxColor) to indicate the values of a cell
+   * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell.
+   * Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on
+   * the number of annotations or classes.
    */
   @Prop() binaryColor = false;
+
+  /**
+   * Color of cells with the least number of annotations or classes.
+   */
   @Prop() minColor = "255,255,255";
+
+  /**
+   * Color of cells with the most number of annotations or classes.
+   */
   @Prop() maxColor = "24,73,180";
+
+  /**
+   * Maximum number of annotations or classes before `maxColor` is applied.
+   */
   @Prop() maxHeatLevel = 48;
+
+  /**
+   * Maximum size of group labels in characters.
+   */
   @Prop() groupMaxLabelSize = 60;
 
+  /**
+   * If `true`, show the "Other" group for each category.
+   */
   @Prop() showOtherGroup = false;
 
   /**
-   * Position the subject label of each row
+   * If `true`, show the "all annotations" group.
+   */
+  @Prop() showAllAnnotationsGroup: boolean = true;
+
+  /**
+   * Position subject labels.
    */
   @Prop() subjectPosition: SubjectPositionOption = "left";
-  @Prop() subjectUseTaxonIcon: boolean;
+
+  /**
+   * If `true`, clicking a subject label will open the link in a new tab.
+   */
   @Prop() subjectOpenNewTab: boolean = true;
-  @Prop() groupNewTab: boolean = true;
+
+  /**
+   * If `true`, the group labels are clickable and will trigger the `groupClick` event
+   */
   @Prop() groupClickable: boolean = true;
 
   /**
-   * Click handling of a cell.
+   * Selection mode for the ribbon cells.
    */
   @Prop() selectionMode: SelectionModeOption = "cell";
 
@@ -107,13 +153,6 @@ export class AnnotationRibbonStrips {
    */
   @Prop() selected;
 
-  /**
-   * If true, the ribbon will fire an event if a user click an empty cell
-   * If false, the ribbon will not fire the event on an empty cell
-   * Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-   */
-  @Prop() fireEventOnEmptyCells = false;
-
   // @Watch('selected')
   // selectedChanged(newValue, oldValue) {
   //     console.log("selectedChanged(", newValue , oldValue , ")");
@@ -122,11 +161,6 @@ export class AnnotationRibbonStrips {
   //         this.selectCells(this.ribbonSummary.subjects, gp);
   //     }
   // }
-
-  /**
-   * add a cell at the beginning of each row/subject to show all annotations
-   */
-  @Prop() addCellAll: boolean = true;
 
   /**
    * if provided, will override any value provided in subjects and subset
@@ -176,44 +210,38 @@ export class AnnotationRibbonStrips {
     }
   }
 
-  @State() selectedGroup: IRibbonGroup | null = null;
-  @State() selectedSubjects: IRibbonSubject[] = [];
-
-  @State() hoveredGroup: IRibbonGroup | null = null;
-  @State() hoveredSubjects: IRibbonSubject[] = [];
-
   /**
-   * This event is triggered whenever a ribbon cell is clicked
+   * Emitted when a ribbon cell is clicked.
    */
   @Event({ eventName: "cellClick", cancelable: true, bubbles: true })
   cellClick: EventEmitter<IRibbonCellEvent>;
 
   /**
-   * This event is triggered whenever the mouse enters a cell area
+   * Emitted when the mouse enters a ribbon cell.
    */
   @Event({ eventName: "cellEnter", cancelable: true, bubbles: true })
   cellEnter: EventEmitter<IRibbonCellEvent>;
 
   /**
-   * This event is triggered whenever the mouse leaves a cell area
+   * Emitted when the mouse leaves a ribbon cell.
    */
   @Event({ eventName: "cellLeave", cancelable: true, bubbles: true })
   cellLeave: EventEmitter<IRibbonCellEvent>;
 
   /**
-   * This event is triggered whenever a group cell is clicked
+   * Emitted when a group label is clicked.
    */
   @Event({ eventName: "groupClick", cancelable: true, bubbles: true })
   groupClick: EventEmitter<IRibbonGroupEvent>;
 
   /**
-   * This event is triggered whenever the mouse enters a group cell area
+   * Emitted when the mouse enters a group label.
    */
   @Event({ eventName: "groupEnter", cancelable: true, bubbles: true })
   groupEnter: EventEmitter<IRibbonGroupEvent>;
 
   /**
-   * This event is triggered whenever the mouse leaves a group cell area
+   * Emitted when the mouse leaves a group label.
    */
   @Event({ eventName: "groupLeave", cancelable: true, bubbles: true })
   groupLeave: EventEmitter<IRibbonGroupEvent>;
@@ -469,7 +497,7 @@ export class AnnotationRibbonStrips {
           this.subjectPosition === "left" && "offset-left",
         )}
       >
-        {this.addCellAll && (
+        {this.showAllAnnotationsGroup && (
           <div
             class={clsx({
               group: true,
@@ -501,7 +529,7 @@ export class AnnotationRibbonStrips {
                     selected: this.isGroupSelected(group),
                     separated:
                       groupIndex === 0 &&
-                      (categoryIndex > 0 || this.addCellAll),
+                      (categoryIndex > 0 || this.showAllAnnotationsGroup),
                   })}
                   key={groupKey(group)}
                   title={this.formatGroupTitle(group)}
@@ -534,7 +562,7 @@ export class AnnotationRibbonStrips {
             />
           )}
 
-          {this.addCellAll && (
+          {this.showAllAnnotationsGroup && (
             <go-annotation-ribbon-cell
               subject={subject}
               group={GROUP_ALL}
@@ -581,7 +609,7 @@ export class AnnotationRibbonStrips {
                     class={clsx({
                       separated:
                         groupIndex === 0 &&
-                        (categoryIndex > 0 || this.addCellAll),
+                        (categoryIndex > 0 || this.showAllAnnotationsGroup),
                     })}
                     key={cellKey(subject, group)}
                     subject={subject}

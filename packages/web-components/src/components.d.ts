@@ -24,29 +24,27 @@ export namespace Components {
      */
     interface GoAnnotationRibbon {
         /**
-          * add a cell at the beginning of each row/subject to show all annotations
-          * @default true
-         */
-        "addCellAll": boolean;
-        /**
+          * Labels used with annotation counts.
           * @default "annotation,annotations"
          */
         "annotationLabels": string;
         /**
+          * Base URL for the API to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
         "baseApiUrl": string;
         /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor": boolean;
         /**
+          * Labels used with class counts.
           * @default "term,terms"
          */
         "classLabels": string;
         /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
+          * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy": ColorByOption;
@@ -71,11 +69,6 @@ export namespace Components {
          */
         "filterReference": string;
         /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-          * @default false
-         */
-        "fireEventOnEmptyCells": boolean;
-        /**
           * @default "http://amigo.geneontology.org/amigo/term/"
          */
         "groupBaseUrl": string;
@@ -85,31 +78,32 @@ export namespace Components {
          */
         "groupBy": string;
         /**
+          * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
         "groupClickable": boolean;
         /**
+          * Maximum size of group labels in characters.
           * @default 60
          */
         "groupMaxLabelSize": number;
-        /**
-          * @default true
-         */
-        "groupNewTab": boolean;
         /**
           * Used to hide specific column of the table
           * @default "qualifier"
          */
         "hideColumns": string;
         /**
+          * Color of cells with the most number of annotations or classes.
           * @default "24,73,180"
          */
         "maxColor": string;
         /**
+          * Maximum number of annotations or classes before `maxColor` is applied.
           * @default 48
          */
         "maxHeatLevel": number;
         /**
+          * Color of cells with the least number of annotations or classes.
           * @default "255,255,255"
          */
         "minColor": string;
@@ -123,35 +117,41 @@ export namespace Components {
          */
         "selected": any;
         /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * Selection mode for the ribbon cells.
           * @default "cell"
          */
         "selectionMode": SelectionModeOption;
         /**
-          * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+          * If `true`, show the "all annotations" group.
+          * @default true
+         */
+        "showAllAnnotationsGroup": boolean;
+        /**
+          * If `true`, show the "Other" group for each category.
           * @default true
          */
         "showOtherGroup": boolean;
         /**
+          * Base URL used when rendering subject label links.
           * @default "http://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
         /**
+          * If `true`, clicking a subject label will open the link in a new tab.
           * @default true
          */
         "subjectOpenNewTab": boolean;
         /**
-          * Position the subject label of each row
+          * Position subject labels.
           * @default "left"
          */
         "subjectPosition": SubjectPositionOption;
-        "subjectUseTaxonIcon": boolean;
         /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-          * @default undefined
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
          */
-        "subjects": string;
+        "subjects"?: string;
         /**
+          * Name of the GO subset used for grouping annotations.
           * @default "goslim_agr"
          */
         "subset": string;
@@ -214,29 +214,27 @@ export namespace Components {
      */
     interface GoAnnotationRibbonStrips {
         /**
-          * add a cell at the beginning of each row/subject to show all annotations
-          * @default true
-         */
-        "addCellAll": boolean;
-        /**
+          * Labels used with annotation counts.
           * @default "annotation,annotations"
          */
         "annotationLabels": string;
         /**
+          * Base URL for the API to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
         "baseApiUrl": string;
         /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor": boolean;
         /**
+          * Labels used with class counts.
           * @default "term,terms"
          */
         "classLabels": string;
         /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
+          * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy": ColorByOption;
@@ -245,35 +243,27 @@ export namespace Components {
          */
         "data": string;
         /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-          * @default false
-         */
-        "fireEventOnEmptyCells": boolean;
-        /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
-         */
-        "groupBaseUrl": string;
-        /**
+          * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
         "groupClickable": boolean;
         /**
+          * Maximum size of group labels in characters.
           * @default 60
          */
         "groupMaxLabelSize": number;
         /**
-          * @default true
-         */
-        "groupNewTab": boolean;
-        /**
+          * Color of cells with the most number of annotations or classes.
           * @default "24,73,180"
          */
         "maxColor": string;
         /**
+          * Maximum number of annotations or classes before `maxColor` is applied.
           * @default 48
          */
         "maxHeatLevel": number;
         /**
+          * Color of cells with the least number of annotations or classes.
           * @default "255,255,255"
          */
         "minColor": string;
@@ -284,34 +274,41 @@ export namespace Components {
          */
         "selected": any;
         /**
-          * Click handling of a cell.
+          * Selection mode for the ribbon cells.
           * @default "cell"
          */
         "selectionMode": SelectionModeOption;
         /**
+          * If `true`, show the "all annotations" group.
+          * @default true
+         */
+        "showAllAnnotationsGroup": boolean;
+        /**
+          * If `true`, show the "Other" group for each category.
           * @default false
          */
         "showOtherGroup": boolean;
         /**
+          * Base URL used when rendering subject label links.
           * @default "http://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
         /**
+          * If `true`, clicking a subject label will open the link in a new tab.
           * @default true
          */
         "subjectOpenNewTab": boolean;
         /**
-          * Position the subject label of each row
+          * Position subject labels.
           * @default "left"
          */
         "subjectPosition": SubjectPositionOption;
-        "subjectUseTaxonIcon": boolean;
         /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-          * @default undefined
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
          */
-        "subjects": string;
+        "subjects"?: string;
         /**
+          * Name of the GO subset used for grouping annotations.
           * @default "goslim_agr"
          */
         "subset": string;
@@ -325,8 +322,14 @@ export namespace Components {
      * An individual subject in the annotation ribbon.
      */
     interface GoAnnotationRibbonSubject {
+        /**
+          * @default true
+         */
         "newTab": boolean;
         "subject": IRibbonSubject;
+        /**
+          * @default "/"
+         */
         "subjectBaseURL": string;
     }
     /**
@@ -689,29 +692,27 @@ declare namespace LocalJSX {
      */
     interface GoAnnotationRibbon {
         /**
-          * add a cell at the beginning of each row/subject to show all annotations
-          * @default true
-         */
-        "addCellAll"?: boolean;
-        /**
+          * Labels used with annotation counts.
           * @default "annotation,annotations"
          */
         "annotationLabels"?: string;
         /**
+          * Base URL for the API to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
         "baseApiUrl"?: string;
         /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor"?: boolean;
         /**
+          * Labels used with class counts.
           * @default "term,terms"
          */
         "classLabels"?: string;
         /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
+          * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
@@ -736,11 +737,6 @@ declare namespace LocalJSX {
          */
         "filterReference"?: string;
         /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-          * @default false
-         */
-        "fireEventOnEmptyCells"?: boolean;
-        /**
           * @default "http://amigo.geneontology.org/amigo/term/"
          */
         "groupBaseUrl"?: string;
@@ -750,31 +746,32 @@ declare namespace LocalJSX {
          */
         "groupBy"?: string;
         /**
+          * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
         "groupClickable"?: boolean;
         /**
+          * Maximum size of group labels in characters.
           * @default 60
          */
         "groupMaxLabelSize"?: number;
-        /**
-          * @default true
-         */
-        "groupNewTab"?: boolean;
         /**
           * Used to hide specific column of the table
           * @default "qualifier"
          */
         "hideColumns"?: string;
         /**
+          * Color of cells with the most number of annotations or classes.
           * @default "24,73,180"
          */
         "maxColor"?: string;
         /**
+          * Maximum number of annotations or classes before `maxColor` is applied.
           * @default 48
          */
         "maxHeatLevel"?: number;
         /**
+          * Color of cells with the least number of annotations or classes.
           * @default "255,255,255"
          */
         "minColor"?: string;
@@ -788,35 +785,41 @@ declare namespace LocalJSX {
          */
         "selected"?: any;
         /**
-          * Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)
+          * Selection mode for the ribbon cells.
           * @default "cell"
          */
         "selectionMode"?: SelectionModeOption;
         /**
-          * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+          * If `true`, show the "all annotations" group.
+          * @default true
+         */
+        "showAllAnnotationsGroup"?: boolean;
+        /**
+          * If `true`, show the "Other" group for each category.
           * @default true
          */
         "showOtherGroup"?: boolean;
         /**
+          * Base URL used when rendering subject label links.
           * @default "http://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
         /**
+          * If `true`, clicking a subject label will open the link in a new tab.
           * @default true
          */
         "subjectOpenNewTab"?: boolean;
         /**
-          * Position the subject label of each row
+          * Position subject labels.
           * @default "left"
          */
         "subjectPosition"?: SubjectPositionOption;
-        "subjectUseTaxonIcon"?: boolean;
         /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-          * @default undefined
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
          */
         "subjects"?: string;
         /**
+          * Name of the GO subset used for grouping annotations.
           * @default "goslim_agr"
          */
         "subset"?: string;
@@ -879,29 +882,27 @@ declare namespace LocalJSX {
      */
     interface GoAnnotationRibbonStrips {
         /**
-          * add a cell at the beginning of each row/subject to show all annotations
-          * @default true
-         */
-        "addCellAll"?: boolean;
-        /**
+          * Labels used with annotation counts.
           * @default "annotation,annotations"
          */
         "annotationLabels"?: string;
         /**
+          * Base URL for the API to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
         "baseApiUrl"?: string;
         /**
-          * false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell
+          * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor"?: boolean;
         /**
+          * Labels used with class counts.
           * @default "term,terms"
          */
         "classLabels"?: string;
         /**
-          * Which value to base the cell color on 0 = class count 1 = annotation count
+          * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
@@ -910,60 +911,52 @@ declare namespace LocalJSX {
          */
         "data"?: string;
         /**
-          * If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-          * @default false
-         */
-        "fireEventOnEmptyCells"?: boolean;
-        /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
-         */
-        "groupBaseUrl"?: string;
-        /**
+          * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
         "groupClickable"?: boolean;
         /**
+          * Maximum size of group labels in characters.
           * @default 60
          */
         "groupMaxLabelSize"?: number;
         /**
-          * @default true
-         */
-        "groupNewTab"?: boolean;
-        /**
+          * Color of cells with the most number of annotations or classes.
           * @default "24,73,180"
          */
         "maxColor"?: string;
         /**
+          * Maximum number of annotations or classes before `maxColor` is applied.
           * @default 48
          */
         "maxHeatLevel"?: number;
         /**
+          * Color of cells with the least number of annotations or classes.
           * @default "255,255,255"
          */
         "minColor"?: string;
         /**
-          * This event is triggered whenever a ribbon cell is clicked
+          * Emitted when a ribbon cell is clicked.
          */
         "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
-          * This event is triggered whenever the mouse enters a cell area
+          * Emitted when the mouse enters a ribbon cell.
          */
         "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
-          * This event is triggered whenever the mouse leaves a cell area
+          * Emitted when the mouse leaves a ribbon cell.
          */
         "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
-          * This event is triggered whenever a group cell is clicked
+          * Emitted when a group label is clicked.
          */
         "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         /**
-          * This event is triggered whenever the mouse enters a group cell area
+          * Emitted when the mouse enters a group label.
          */
         "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         /**
-          * This event is triggered whenever the mouse leaves a group cell area
+          * Emitted when the mouse leaves a group label.
          */
         "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         "ribbonSummary"?: IRibbonModel;
@@ -972,34 +965,41 @@ declare namespace LocalJSX {
          */
         "selected"?: any;
         /**
-          * Click handling of a cell.
+          * Selection mode for the ribbon cells.
           * @default "cell"
          */
         "selectionMode"?: SelectionModeOption;
         /**
+          * If `true`, show the "all annotations" group.
+          * @default true
+         */
+        "showAllAnnotationsGroup"?: boolean;
+        /**
+          * If `true`, show the "Other" group for each category.
           * @default false
          */
         "showOtherGroup"?: boolean;
         /**
+          * Base URL used when rendering subject label links.
           * @default "http://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
         /**
+          * If `true`, clicking a subject label will open the link in a new tab.
           * @default true
          */
         "subjectOpenNewTab"?: boolean;
         /**
-          * Position the subject label of each row
+          * Position subject labels.
           * @default "left"
          */
         "subjectPosition"?: SubjectPositionOption;
-        "subjectUseTaxonIcon"?: boolean;
         /**
-          * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
-          * @default undefined
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
          */
         "subjects"?: string;
         /**
+          * Name of the GO subset used for grouping annotations.
           * @default "goslim_agr"
          */
         "subset"?: string;
@@ -1013,12 +1013,18 @@ declare namespace LocalJSX {
      * An individual subject in the annotation ribbon.
      */
     interface GoAnnotationRibbonSubject {
+        /**
+          * @default true
+         */
         "newTab"?: boolean;
         /**
           * This event is triggered whenever a subject label is clicked Can call preventDefault() to avoid the default behavior (opening the linked subject page)
          */
         "onSubjectClick"?: (event: GoAnnotationRibbonSubjectCustomEvent<any>) => void;
-        "subject"?: IRibbonSubject;
+        "subject": IRibbonSubject;
+        /**
+          * @default "/"
+         */
         "subjectBaseURL"?: string;
     }
     /**
