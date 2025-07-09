@@ -1,9 +1,21 @@
-import { Component, Element, h, Prop, Watch, State, Host } from "@stencil/core";
-
-import { IRibbonGroup } from "../../globals/models";
+import {
+  Component,
+  Element,
+  h,
+  Prop,
+  Watch,
+  State,
+  Host,
+  Listen,
+} from "@stencil/core";
 
 import {
-  COLOR_BY,
+  ColorByOption,
+  IRibbonCellEvent,
+  IRibbonGroup,
+} from "../../globals/models";
+
+import {
   POSITION,
   SELECTION,
   FONT_CASE,
@@ -11,8 +23,6 @@ import {
 } from "../../globals/enums";
 
 import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
-
-import { sameArray } from "../../globals/utils";
 
 /**
  * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
@@ -135,7 +145,7 @@ export class AnnotationRibbon {
    * 0 = class count
    * 1 = annotation count
    */
-  @Prop() colorBy = COLOR_BY.ANNOTATION_COUNT;
+  @Prop() colorBy: ColorByOption = "annotations";
 
   /**
    * false = show a gradient of colors to indicate the value of a cell
@@ -273,38 +283,6 @@ export class AnnotationRibbon {
     }
   }
 
-  /**
-   * Check if a HTML element has a parent with provided id
-   * @param {} elt HTML element to check
-   * @param {*} id id to look in the parents of provided element
-   */
-  hasParentElementId(elt, id) {
-    if (elt.id == id) {
-      return true;
-    }
-    if (!elt.parentElement) {
-      return false;
-    }
-    return this.hasParentElementId(elt.parentElement, id);
-  }
-
-  /**
-   * Add listeners to the Ribbon strips
-   */
-  componentWillLoad() {
-    // if(this.hasParentElementId())
-    document.addEventListener("cellClick", this.onCellClick.bind(this));
-    document.addEventListener("groupClick", this.onGroupClick.bind(this));
-  }
-
-  /**
-   * Remove listeners to the Ribbon strips
-   */
-  disconnectedCallback() {
-    document.removeEventListener("cellClick", this.onCellClick);
-    document.removeEventListener("groupClick", this.onGroupClick);
-  }
-
   applyTableFilters(data, group) {
     if (this.filterReference != "") {
       data = this.applyFilterReference(data);
@@ -360,60 +338,37 @@ export class AnnotationRibbon {
     return data;
   }
 
-  sameSelection(selection) {
-    if (!this.previousSelection) {
-      return false;
-    }
-    const sameGroupID = selection.group.id == this.previousSelection.group.id;
-    const sameGroupType =
-      selection.group.type == this.previousSelection.group.type;
-    const sameSubject = sameArray(
-      selection.subjects,
-      this.previousSelection.subjects,
-    );
-
-    return sameGroupID && sameGroupType && sameSubject;
-  }
-
-  previousSelection = null;
-  onCellClick(e) {
+  @Listen("cellClick")
+  onCellClick(e: CustomEvent<IRibbonCellEvent>) {
     console.log("Cell Clicked", e.detail);
-    this.loadingTable = true;
 
     const selection = e.detail;
-    const group = selection.group;
-    let group_ids = group.id;
-    let subject_ids = selection.subjects.map((elt) => elt.id);
-
-    if (this.sameSelection(selection)) {
+    if (!selection.group || selection.subjects.length === 0) {
       this.bioLinkData = undefined;
-      this.previousSelection = null;
-      this.loadingTable = false;
-      console.log("yep that's the same");
       return;
     }
 
-    this.previousSelection = selection;
+    const group = selection.group;
+    let group_ids = group.id;
+    const subject_ids = selection.subjects.map((elt) => elt.id);
 
     if (group.id == "all") {
-      group_ids = this.ribbonStrips.ribbonSummary.categories.map((elt) => {
-        return elt.id;
-      });
-      group_ids = group_ids.join("&slim=");
+      group_ids = this.ribbonStrips.ribbonSummary.categories
+        .map((elt) => elt.id)
+        .join("&slim=");
     }
 
     const goApiUrl = "https://api.geneontology.org/api/";
-    subject_ids = subject_ids.join("&subject=");
     const query =
       goApiUrl +
       "bioentityset/slimmer/function?slim=" +
       group_ids +
       "&subject=" +
-      subject_ids +
+      subject_ids.join("&subject=") +
       "&rows=-1";
-    console.log("query: ", query);
 
     // fetch the json data
+    this.loadingTable = true;
     fetch(query)
       .then((response) => {
         return response.json();
@@ -441,7 +396,6 @@ export class AnnotationRibbon {
             "&subject=" +
             subject_ids +
             "&rows=-1";
-          console.log("query_terms: ", query_terms);
 
           // fetch the json data
           fetch(query_terms)
@@ -471,6 +425,7 @@ export class AnnotationRibbon {
       });
   }
 
+  @Listen("groupClick")
   onGroupClick(e) {
     console.log("Group Clicked", e.detail);
   }

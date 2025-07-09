@@ -1,3 +1,5 @@
+import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
+
 export function truncate(text, size, ending) {
   if (size == null) {
     size = 100;
@@ -16,17 +18,10 @@ export function transformID(txt) {
   return txt.replace(":", "_");
 }
 
-export function groupKey(group) {
-  return "category-" + transformID(group.id) + "-" + group.type;
+export function groupKey(group: IRibbonGroup) {
+  return `category-${transformID(group.id)}-${group.type}`;
 }
 
-export function subjectGroupKey(subject, group) {
-  return (
-    "subject-" +
-    transformID(subject.id) +
-    "-category-" +
-    transformID(group.id) +
-    "-" +
-    group.type
-  );
+export function cellKey(subject: IRibbonSubject, group: IRibbonGroup) {
+  return `subject-${transformID(subject.id)}-${groupKey(group)}`;
 }

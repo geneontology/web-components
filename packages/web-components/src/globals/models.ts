@@ -29,17 +29,12 @@ export interface IRibbonModel {
 
 export interface IRibbonCellEvent {
   subjects: IRibbonSubject[];
-  group: IRibbonGroup;
+  group: IRibbonGroup | null;
 }
 
 export interface IRibbonGroupEvent {
-  subjects: IRibbonSubject[];
   category: IRibbonCategory;
   group: IRibbonGroup;
-}
-
-export interface IRibbonCellClick extends IRibbonCellEvent {
-  selected: boolean[];
 }
 
 export interface ISuperCell {
@@ -81,3 +76,5 @@ export interface ITable {
   rows: IRow[];
   newTab?: boolean;
 }
+
+export type ColorByOption = "classes" | "annotations";

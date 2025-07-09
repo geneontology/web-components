@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { IRibbonGroup, IRibbonModel, IRibbonSubject } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -62,9 +62,9 @@ export namespace Components {
         "classLabels": string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
-          * @default COLOR_BY.ANNOTATION_COUNT
+          * @default "annotations"
          */
-        "colorBy": number;
+        "colorBy": ColorByOption;
         /**
           * if provided, will override any value provided in subjects and subset
          */
@@ -193,9 +193,9 @@ export namespace Components {
          */
         "classLabels": string;
         /**
-          * @default COLOR_BY.CLASS_COUNT
+          * @default "annotations"
          */
-        "colorBy": number;
+        "colorBy": ColorByOption;
         "group": IRibbonGroup;
         /**
           * @default false
@@ -267,9 +267,9 @@ export namespace Components {
         "classLabels": string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
-          * @default COLOR_BY.ANNOTATION_COUNT
+          * @default "annotations"
          */
-        "colorBy": number;
+        "colorBy": ColorByOption;
         /**
           * if provided, will override any value provided in subjects and subset
          */
@@ -543,12 +543,12 @@ declare global {
         new (): HTMLGoAnnotationRibbonCellElement;
     };
     interface HTMLGoAnnotationRibbonStripsElementEventMap {
-        "cellClick": any;
-        "cellEnter": any;
-        "cellLeave": any;
-        "groupClick": any;
-        "groupEnter": any;
-        "groupLeave": any;
+        "cellClick": IRibbonCellEvent;
+        "cellEnter": IRibbonCellEvent;
+        "cellLeave": IRibbonCellEvent;
+        "groupClick": IRibbonGroupEvent;
+        "groupEnter": IRibbonGroupEvent;
+        "groupLeave": IRibbonGroupEvent;
     }
     /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
@@ -757,9 +757,9 @@ declare namespace LocalJSX {
         "classLabels"?: string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
-          * @default COLOR_BY.ANNOTATION_COUNT
+          * @default "annotations"
          */
-        "colorBy"?: number;
+        "colorBy"?: ColorByOption;
         /**
           * if provided, will override any value provided in subjects and subset
          */
@@ -888,9 +888,9 @@ declare namespace LocalJSX {
          */
         "classLabels"?: string;
         /**
-          * @default COLOR_BY.CLASS_COUNT
+          * @default "annotations"
          */
-        "colorBy"?: number;
+        "colorBy"?: ColorByOption;
         "group"?: IRibbonGroup;
         /**
           * @default false
@@ -962,9 +962,9 @@ declare namespace LocalJSX {
         "classLabels"?: string;
         /**
           * Which value to base the cell color on 0 = class count 1 = annotation count
-          * @default COLOR_BY.ANNOTATION_COUNT
+          * @default "annotations"
          */
-        "colorBy"?: number;
+        "colorBy"?: ColorByOption;
         /**
           * if provided, will override any value provided in subjects and subset
          */
@@ -1005,27 +1005,27 @@ declare namespace LocalJSX {
         /**
           * This event is triggered whenever a ribbon cell is clicked
          */
-        "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
           * This event is triggered whenever the mouse enters a cell area
          */
-        "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
           * This event is triggered whenever the mouse leaves a cell area
          */
-        "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
         /**
           * This event is triggered whenever a group cell is clicked
          */
-        "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         /**
           * This event is triggered whenever the mouse enters a group cell area
          */
-        "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         /**
           * This event is triggered whenever the mouse leaves a group cell area
          */
-        "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<any>) => void;
+        "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
         "ribbonSummary"?: IRibbonModel;
         /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected

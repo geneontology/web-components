@@ -39,9 +39,9 @@
   transform: translateX(calc(var(--cell-width) / 2)) rotate(-45deg);
   transform-origin: left bottom;
   line-height: 1;
+  cursor: help;
 
-  &:hover {
-    cursor: help;
+  &.hovered {
     font-weight: bold;
   }
 }
@@ -70,7 +70,8 @@ b {
 }
 
 .selected {
-  font-weight: bold !important;
+  font-weight: bold;
+  color: #002eff;
 }
 
 .clickable {

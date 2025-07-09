@@ -10,57 +10,116 @@
 
     <script type="module" src="/build/web-components.esm.js"></script>
     <script nomodule src="/build/web-components.js"></script>
+    <style>
+      label {
+        margin-right: 0.25rem;
+      }
+      input, select {
+        margin-bottom: 0.5rem;
+      }
+    </style>
   </head>
   <body>
-    <div>
-      <input type="checkbox" id="addCellAll" checked>
-      <label for="addCellAll">Add Cell All</label>
-    </div>
-
-    <div>
-      <input type="checkbox" id="showOtherGroup">
-      <label for="showOtherGroup">Show Other Group</label>
-    </div>
-
-    <div>
-      <input type="checkbox" id="groupClickable" checked>
-      <label for="groupClickable">Group Clickable</label>
-    </div>
-
-    <div>
-      <label for="subjectPosition">Subject Position</label>
-      <select id="subjectPosition">
-        <option value="0">None</option>
-        <option value="1" selected>Left</option>
-        <option value="2">Right</option>
-        <option value="3">Bottom</option>
-      </select>
-    </div>
-
-    <go-annotation-ribbon-strips subjects="RGD:620474,RGD:3889" id="ribbon" />
+    <go-annotation-ribbon-strips subjects="RGD:620474,RGD:3889" />
 
     <script>
-      let ribbon = document.getElementById("ribbon")
-      let addCellAll = document.getElementById("addCellAll");
-      let showOtherGroup = document.getElementById("showOtherGroup");
-      let groupClickable = document.getElementById("groupClickable");
-      let subjectPosition = document.getElementById("subjectPosition");
+      function addCheckbox(prop) {
+        if (document.getElementById(prop)) {
+          return;
+        }
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = prop;
+        checkbox.checked = ribbon[prop] || false;
+        checkbox.addEventListener("change", function() {
+          ribbon[prop] = checkbox.checked;
+        });
 
-      addCellAll.addEventListener("change", function() {
-        ribbon.addCellAll = addCellAll.checked;
-      })
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
 
-      showOtherGroup.addEventListener("change", function() {
-        ribbon.showOtherGroup = showOtherGroup.checked;
-      })
+        let container = document.createElement("div");
+        container.appendChild(checkbox);
+        container.appendChild(labelElement);
+        document.body.insertBefore(container, ribbon);
+      }
 
-      groupClickable.addEventListener("change", function() {
-        ribbon.groupClickable = groupClickable.checked;
-      })
+      function addSelect(prop, options) {
+        if (document.getElementById(prop)) {
+          return;
+        }
+        let select = document.createElement("select");
+        select.id = prop;
+        select.addEventListener("change", function() {
+          ribbon[prop] = select.value;
+        });
 
-      subjectPosition.addEventListener("change", function() {
-        ribbon.subjectPosition = parseInt(subjectPosition.value);
-      })
+        options.forEach(option => {
+          let opt = document.createElement("option");
+          opt.value = option.value;
+          opt.textContent = option.label || option.value;
+          if (ribbon[prop] === option.value) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
+
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
+
+        let container = document.createElement("div");
+        container.appendChild(labelElement);
+        container.appendChild(select);
+        document.body.insertBefore(container, ribbon);
+      }
+
+      function addInput(prop, type = "text") {
+        if (document.getElementById(prop)) {
+          return;
+        }
+        let input = document.createElement("input");
+        input.type = type;
+        input.id = prop;
+        input.value = ribbon[prop] || '';
+        input.addEventListener("change", function() {
+          ribbon[prop] = input.value;
+        });
+
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
+
+        let container = document.createElement("div");
+        container.appendChild(labelElement);
+        container.appendChild(input);
+        document.body.insertBefore(container, ribbon);
+      };
+
+      const ribbon = document.querySelector("go-annotation-ribbon-strips");
+
+      window.addEventListener('appload', (event) => {
+        addCheckbox("addCellAll");
+        addCheckbox("showOtherGroup");
+        addCheckbox("groupClickable");
+        addCheckbox("binaryColor");
+        addSelect("selectionMode", [
+          { value: 0, label: "Cell" },
+          { value: 1, label: "Column" },
+        ])
+        addSelect("subjectPosition", [
+          { value: 0, label: "None" },
+          { value: 1, label: "Left" },
+          { value: 2, label: "Right" },
+          { value: 3, label: "Bottom" }
+        ]);
+        addSelect("colorBy", [
+          { value: "classes" },
+          { value: "annotations" },
+        ]);
+        addInput("groupMaxLabelSize", "number");
+      });
     </script>
 
     <!-- <div style="width:1400px" id="ribbon-container"></div>

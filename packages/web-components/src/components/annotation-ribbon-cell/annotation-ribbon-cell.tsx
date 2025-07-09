@@ -2,9 +2,13 @@ import { Component, Element, h, Prop, Watch } from "@stencil/core";
 import clsx from "clsx";
 
 import { darken, heatColor } from "./utils";
-import { CELL_TYPES, COLOR_BY } from "../../globals/enums";
+import { CELL_TYPES } from "../../globals/enums";
 
-import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
+import {
+  ColorByOption,
+  IRibbonGroup,
+  IRibbonSubject,
+} from "../../globals/models";
 
 /**
  * An individual cell in the annotation ribbon.
@@ -24,7 +28,7 @@ export class AnnotationRibbonCell {
 
   @Prop() classLabels = "term,terms";
   @Prop() annotationLabels = "annotation,annotations";
-  @Prop() colorBy = COLOR_BY.CLASS_COUNT;
+  @Prop() colorBy: ColorByOption = "annotations";
   @Prop() binaryColor = false;
   @Prop() minColor = "255,255,255";
   @Prop() maxColor = "24,73,180";
@@ -99,8 +103,7 @@ export class AnnotationRibbonCell {
   @Prop() hovered = false;
 
   cellColor(nbClasses, nbAnnotations) {
-    const levels =
-      this.colorBy == COLOR_BY.CLASS_COUNT ? nbClasses : nbAnnotations;
+    const levels = this.colorBy == "classes" ? nbClasses : nbAnnotations;
     let newColor = heatColor(
       levels,
       this.maxHeatLevel,
