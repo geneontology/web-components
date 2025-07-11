@@ -4,7 +4,6 @@ import {
   EventEmitter,
   h,
   Host,
-  Method,
   Prop,
   State,
   Watch,
@@ -25,6 +24,7 @@ import {
   SubjectPositionOption,
 } from "../../globals/models";
 import { sameArray } from "../../globals/utils";
+import { getRibbonSummary } from "../../globals/api";
 
 const GROUP_ALL: IRibbonGroup = {
   id: "all",
@@ -53,6 +53,20 @@ export class AnnotationRibbonStrips {
   @State() hoveredGroup: IRibbonGroup | null = null;
   @State() hoveredSubjects: IRibbonSubject[] = [];
 
+  @State() loading: boolean = false;
+  @State() loadingError: boolean = false;
+  @State() data?: IRibbonModel;
+
+  /**
+   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
+   */
+  @Prop() subjects?: string;
+
+  /**
+   * Name of the GO subset used for grouping annotations.
+   */
+  @Prop() subset: string = "goslim_agr";
+
   /**
    * Base URL for the API to fetch the ribbon data when subjects are provided.
    */
@@ -63,16 +77,6 @@ export class AnnotationRibbonStrips {
    */
   @Prop() subjectBaseUrl: string =
     "http://amigo.geneontology.org/amigo/gene_product/";
-
-  /**
-   * Name of the GO subset used for grouping annotations.
-   */
-  @Prop() subset: string = "goslim_agr";
-
-  /**
-   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
-   */
-  @Prop() subjects?: string;
 
   /**
    * Labels used with class counts.
@@ -151,63 +155,33 @@ export class AnnotationRibbonStrips {
    * If a value is provided, the ribbon will show the requested group as selected
    * The value should be the id of the group to be selected
    */
-  @Prop() selected;
-
-  // @Watch('selected')
-  // selectedChanged(newValue, oldValue) {
-  //     console.log("selectedChanged(", newValue , oldValue , ")");
-  //     if(newValue != oldValue) {
-  //         let gp = this.getGroup(newValue);
-  //         this.selectCells(this.ribbonSummary.subjects, gp);
-  //     }
-  // }
-
-  /**
-   * if provided, will override any value provided in subjects and subset
-   */
-  @Prop() data: string;
-
-  @Watch("data")
-  dataChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      this.loadData(newValue);
+  @Prop() selected?: string;
+  @Watch("selected")
+  selectedChanged() {
+    if (this.selected) {
+      if (this.selected === GROUP_ALL.id) {
+        this.selectedGroup = GROUP_ALL;
+      } else {
+        this.selectedGroup =
+          this.data?.categories
+            .flatMap((cat) => cat.groups)
+            .find((group) => group.id === this.selected) || null;
+      }
+      this.selectedSubjects = this.data?.subjects || [];
+    } else {
+      this.selectedGroup = null;
+      this.selectedSubjects = [];
     }
   }
 
   /**
-   * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon
-   * This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
-   */
-  @Prop() updateOnSubjectChange = true;
-
-  /**
-   * This method is automatically called whenever the value of "subjects" changes
-   * Note this method can be (and should be) deactivated (use updateOnSubjectChange)
-   * when the ribbon is not loading from GO and not using the internal fetchData mechanism
-   * @param newValue a new subject is submitted (e.g. gene)
-   * @param oldValue old value of the subject (e.g. gene or genes)
+   * When one of the props that affect data fetching changes, refetch the data.
    */
   @Watch("subjects")
-  subjectsChanged(newValue, oldValue) {
-    // if we don't want to update the ribbon on subject changes
-    if (!this.updateOnSubjectChange) {
-      this.loading = false;
-      return;
-    }
-
-    if (newValue != oldValue) {
-      // Fetch data based on subjects and subset
-      this.fetchData(this.subjects).then(
-        (data) => {
-          this.ribbonSummary = data;
-          this.loading = false;
-        },
-        (error) => {
-          console.error(error);
-          this.loading = false;
-        },
-      );
-    }
+  @Watch("subset")
+  @Watch("baseApiUrl")
+  doFetch() {
+    this.fetchData();
   }
 
   /**
@@ -246,94 +220,40 @@ export class AnnotationRibbonStrips {
   @Event({ eventName: "groupLeave", cancelable: true, bubbles: true })
   groupLeave: EventEmitter<IRibbonGroupEvent>;
 
-  @Prop() ribbonSummary: IRibbonModel;
-
-  loading = true;
-
-  loadData(data) {
-    if (data) {
-      // If was injected as string, transform to json
-      if (typeof data == "string") {
-        this.ribbonSummary = JSON.parse(data);
-      } else {
-        this.ribbonSummary = data;
-      }
-      this.loading = false;
-      this.subjects = this.ribbonSummary.subjects
-        .map((elt) => elt.id)
-        .join(",");
-      return true;
-    }
-    return false;
-  }
-
-  getGroup(group_id) {
-    if (!this.ribbonSummary) return null;
-    if (group_id == "all") {
-      return GROUP_ALL;
-    }
-    for (const cat of this.ribbonSummary.categories) {
-      for (const gp of cat.groups) {
-        if (gp.id == group_id) return gp;
-      }
-    }
-    return null;
-  }
-
   /**
-   * Once the component is loaded, fetch the data
+   * Lifecycle method called when the component has loaded.
+   * Fetches data based on the provided subjects and subset.
    */
-  componentWillLoad() {
-    // Prioritize data if provided
-    if (this.loadData(this.data)) return;
+  async componentDidLoad() {
+    await this.fetchData();
+    this.selectedChanged();
+  }
 
-    // If no subjects were provided, don't try to fetch data
+  private async fetchData() {
     if (!this.subjects) {
-      this.loading = false;
       return;
     }
 
-    // Fetch data based on subjects and subset
-    this.fetchData(this.subjects).then(
-      (data) => {
-        this.ribbonSummary = data;
-        this.loading = false;
-      },
-      (error) => {
-        console.error(error);
-        this.loading = false;
-      },
-    );
-  }
-
-  componentDidLoad() {
-    this.selectGroup(this.selected);
-    this.selected = null;
-  }
-
-  fetchData(subjects) {
-    if (subjects.includes(",")) {
-      subjects = subjects.split(",");
+    try {
+      this.loading = true;
+      this.data = await getRibbonSummary(
+        this.baseApiUrl,
+        this.subjects,
+        this.subset,
+      );
+      this.loadingError = false;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      this.loadingError = true;
+      this.data = undefined;
+    } finally {
+      this.loading = false;
     }
-    if (subjects instanceof Array) {
-      subjects = subjects.join("&subject=");
-    }
-
-    const query =
-      this.baseApiUrl + "?subset=" + this.subset + "&subject=" + subjects;
-
-    return fetch(query)
-      .then((response: Response) => {
-        return response.json();
-      })
-      .catch((error) => {
-        return error;
-      });
   }
 
-  onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
+  private onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
     if (this.selectionMode === "column") {
-      this.hoveredSubjects = this.ribbonSummary.subjects;
+      this.hoveredSubjects = this.data.subjects;
     } else {
       this.hoveredSubjects = [subject];
     }
@@ -345,7 +265,7 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  onCellLeave() {
+  private onCellLeave() {
     this.cellLeave.emit({
       subjects: this.hoveredSubjects,
       group: this.hoveredGroup,
@@ -354,7 +274,7 @@ export class AnnotationRibbonStrips {
     this.hoveredGroup = null;
   }
 
-  onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
+  private onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
     if (
       this.selectedGroup === group &&
       (this.selectionMode === "column" ||
@@ -364,9 +284,7 @@ export class AnnotationRibbonStrips {
       this.selectedGroup = null;
     } else {
       this.selectedSubjects =
-        this.selectionMode === "column"
-          ? this.ribbonSummary.subjects
-          : [subject];
+        this.selectionMode === "column" ? this.data.subjects : [subject];
       this.selectedGroup = group;
     }
     this.cellClick.emit({
@@ -375,18 +293,18 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  onGroupClick(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupClick(category: IRibbonCategory, group: IRibbonGroup) {
     if (!this.groupClickable) {
       return;
     }
     if (
       this.selectedGroup === group &&
-      sameArray(this.selectedSubjects, this.ribbonSummary.subjects)
+      sameArray(this.selectedSubjects, this.data.subjects)
     ) {
       this.selectedSubjects = [];
       this.selectedGroup = null;
     } else {
-      this.selectedSubjects = this.ribbonSummary.subjects;
+      this.selectedSubjects = this.data.subjects;
       this.selectedGroup = group;
     }
     this.groupClick.emit({
@@ -395,16 +313,16 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  onGroupEnter(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupEnter(category: IRibbonCategory, group: IRibbonGroup) {
     this.hoveredGroup = group;
-    this.hoveredSubjects = this.ribbonSummary.subjects;
+    this.hoveredSubjects = this.data.subjects;
     this.groupEnter.emit({
       category,
       group,
     });
   }
 
-  onGroupLeave(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupLeave(category: IRibbonCategory, group: IRibbonGroup) {
     this.hoveredGroup = null;
     this.hoveredSubjects = [];
     this.groupLeave.emit({
@@ -413,67 +331,53 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  applyCategoryStyling(category) {
-    return truncate(category, this.groupMaxLabelSize, "...");
-  }
-
-  @Method()
-  async selectGroup(group_id) {
-    setTimeout(() => {
-      if (group_id && this.ribbonSummary) {
-        const gp = this.getGroup(group_id);
-        if (gp) {
-          this.selectedGroup = gp;
-          this.selectedSubjects = this.ribbonSummary.subjects;
-        } else {
-          console.warn("Could not find group <", group_id, ">");
-        }
-      }
-    }, 750);
-  }
-
-  isGroupHovered(group: IRibbonGroup): boolean {
+  private isGroupHovered(group: IRibbonGroup): boolean {
     return this.hoveredGroup === group;
   }
 
-  isCellHovered(subject: IRibbonSubject, group: IRibbonGroup): boolean {
+  private isCellHovered(subject: IRibbonSubject, group: IRibbonGroup): boolean {
     return (
       this.hoveredGroup === group && this.hoveredSubjects.includes(subject)
     );
   }
 
-  isGroupSelected(group: IRibbonGroup): boolean {
+  private isGroupSelected(group: IRibbonGroup): boolean {
     return this.selectedGroup === group;
   }
 
-  isCellSelected(subject: IRibbonSubject, group: IRibbonGroup): boolean {
+  private isCellSelected(
+    subject: IRibbonSubject,
+    group: IRibbonGroup,
+  ): boolean {
     return (
       this.selectedGroup === group && this.selectedSubjects.includes(subject)
     );
   }
 
-  formatGroupTitle(group: IRibbonGroup): string {
+  private formatGroupLabel(category: string) {
+    return truncate(category, this.groupMaxLabelSize, "...");
+  }
+
+  private formatGroupTitle(group: IRibbonGroup): string {
     return `${group.id}: ${group.label}\n\n${group.description}`;
   }
 
   render() {
-    // Still loading (executing fetch)
     if (this.loading) {
-      // return ( "Loading Ribbon..." );
       return <go-spinner></go-spinner>;
     }
 
-    if (!this.subjects && !this.ribbonSummary) {
+    if (!this.subjects && !this.data) {
       return <div>Must provide at least one subject</div>;
     }
 
     // API request undefined
-    if (!this.ribbonSummary) {
+    if (!this.data) {
       return <div>No data available</div>;
     }
 
     // API request done but not subject retrieved
-    const nbSubjects: number = this.ribbonSummary.subjects.length;
+    const nbSubjects: number = this.data.subjects.length;
     if (nbSubjects == 0) {
       return <div>Must provide at least one subject</div>;
     }
@@ -511,47 +415,46 @@ export class AnnotationRibbonStrips {
             onMouseLeave={() => this.onGroupLeave(null, GROUP_ALL)}
             onClick={() => this.onGroupClick(undefined, GROUP_ALL)}
           >
-            {this.applyCategoryStyling(GROUP_ALL.label)}
+            {this.formatGroupLabel(GROUP_ALL.label)}
           </div>
         )}
 
-        {this.ribbonSummary.categories.map(
-          (category: IRibbonCategory, categoryIndex) =>
-            category.groups.map((group: IRibbonGroup, groupIndex) =>
-              group.type === "Other" && !this.showOtherGroup ? null : (
-                <div
-                  class={clsx({
-                    group: true,
-                    "category-all": group.type === "All",
-                    "category-other": group.type === "Other",
-                    clickable: this.groupClickable,
-                    hovered: this.isGroupHovered(group),
-                    selected: this.isGroupSelected(group),
-                    separated:
-                      groupIndex === 0 &&
-                      (categoryIndex > 0 || this.showAllAnnotationsGroup),
-                  })}
-                  key={groupKey(group)}
-                  title={this.formatGroupTitle(group)}
-                  onMouseEnter={() => this.onGroupEnter(category, group)}
-                  onMouseLeave={() => this.onGroupLeave(category, group)}
-                  onClick={
-                    this.groupClickable
-                      ? () => this.onGroupClick(category, group)
-                      : undefined
-                  }
-                >
-                  {this.applyCategoryStyling(group.label)}
-                </div>
-              ),
+        {this.data.categories.map((category: IRibbonCategory, categoryIndex) =>
+          category.groups.map((group: IRibbonGroup, groupIndex) =>
+            group.type === "Other" && !this.showOtherGroup ? null : (
+              <div
+                class={clsx({
+                  group: true,
+                  "category-all": group.type === "All",
+                  "category-other": group.type === "Other",
+                  clickable: this.groupClickable,
+                  hovered: this.isGroupHovered(group),
+                  selected: this.isGroupSelected(group),
+                  separated:
+                    groupIndex === 0 &&
+                    (categoryIndex > 0 || this.showAllAnnotationsGroup),
+                })}
+                key={groupKey(group)}
+                title={this.formatGroupTitle(group)}
+                onMouseEnter={() => this.onGroupEnter(category, group)}
+                onMouseLeave={() => this.onGroupLeave(category, group)}
+                onClick={
+                  this.groupClickable
+                    ? () => this.onGroupClick(category, group)
+                    : undefined
+                }
+              >
+                {this.formatGroupLabel(group.label)}
+              </div>
             ),
+          ),
         )}
       </div>
     );
   }
 
   renderSubjects() {
-    return this.ribbonSummary.subjects.map((subject: IRibbonSubject) => {
+    return this.data.subjects.map((subject: IRibbonSubject) => {
       return (
         <div class="subject" key={subject.id}>
           {this.subjectPosition === "left" && (
@@ -581,7 +484,7 @@ export class AnnotationRibbonStrips {
             />
           )}
 
-          {this.ribbonSummary.categories.map(
+          {this.data.categories.map(
             (category: IRibbonCategory, categoryIndex) =>
               category.groups.map((group: IRibbonGroup, groupIndex) => {
                 const cellid =

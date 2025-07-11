@@ -102,13 +102,18 @@
       const ribbon = document.querySelector("go-annotation-ribbon-strips");
 
       window.addEventListener('appload', (event) => {
-        addCheckbox("addCellAll");
+        addCheckbox("showAllAnnotationsGroup");
         addCheckbox("showOtherGroup");
         addCheckbox("groupClickable");
         addCheckbox("binaryColor");
         addSelect("selectionMode", [
-          { value: 0, label: "Cell" },
-          { value: 1, label: "Column" },
+          { value: "cell" },
+          { value: "column" },
+        ])
+        addSelect("selected", [
+          { value: "" },
+          { value: "all" },
+          { value: "GO:0030234" }
         ])
         addSelect("subjectPosition", [
           { value: "none" },

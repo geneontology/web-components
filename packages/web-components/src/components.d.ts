@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -239,10 +239,6 @@ export namespace Components {
          */
         "colorBy": ColorByOption;
         /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data": string;
-        /**
           * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
@@ -267,12 +263,10 @@ export namespace Components {
           * @default "255,255,255"
          */
         "minColor": string;
-        "ribbonSummary": IRibbonModel;
-        "selectGroup": (group_id: any) => Promise<void>;
         /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
          */
-        "selected": any;
+        "selected"?: string;
         /**
           * Selection mode for the ribbon cells.
           * @default "cell"
@@ -312,11 +306,6 @@ export namespace Components {
           * @default "goslim_agr"
          */
         "subset": string;
-        /**
-          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
-          * @default true
-         */
-        "updateOnSubjectChange": boolean;
     }
     /**
      * An individual subject in the annotation ribbon.
@@ -907,10 +896,6 @@ declare namespace LocalJSX {
          */
         "colorBy"?: ColorByOption;
         /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data"?: string;
-        /**
           * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
          */
@@ -959,11 +944,10 @@ declare namespace LocalJSX {
           * Emitted when the mouse leaves a group label.
          */
         "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
-        "ribbonSummary"?: IRibbonModel;
         /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
          */
-        "selected"?: any;
+        "selected"?: string;
         /**
           * Selection mode for the ribbon cells.
           * @default "cell"
@@ -1003,11 +987,6 @@ declare namespace LocalJSX {
           * @default "goslim_agr"
          */
         "subset"?: string;
-        /**
-          * When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism
-          * @default true
-         */
-        "updateOnSubjectChange"?: boolean;
     }
     /**
      * An individual subject in the annotation ribbon.
