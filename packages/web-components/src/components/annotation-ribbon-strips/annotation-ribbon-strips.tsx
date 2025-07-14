@@ -4,6 +4,7 @@ import {
   EventEmitter,
   h,
   Host,
+  Method,
   Prop,
   State,
   Watch,
@@ -48,6 +49,8 @@ const GROUP_ALL: IRibbonGroup = {
   shadow: true,
 })
 export class AnnotationRibbonStrips {
+  private dataManuallySet: boolean = false;
+
   @State() selectedGroup: IRibbonGroup | null = null;
   @State() selectedSubjects: IRibbonSubject[] = [];
   @State() hoveredGroup: IRibbonGroup | null = null;
@@ -181,7 +184,11 @@ export class AnnotationRibbonStrips {
   @Watch("subset")
   @Watch("baseApiUrl")
   doFetch() {
-    this.fetchData();
+    if (this.dataManuallySet) {
+      // If data was manually set, do not fetch again
+      return;
+    }
+    return this.fetchData();
   }
 
   /**
@@ -224,9 +231,16 @@ export class AnnotationRibbonStrips {
    * Lifecycle method called when the component has loaded.
    * Fetches data based on the provided subjects and subset.
    */
-  async componentDidLoad() {
-    await this.fetchData();
-    this.selectedChanged();
+  async componentWillLoad() {
+    // Use .then() instead of await in order to not block the initial
+    // render while the call to fetchData resolves.
+    this.fetchData().then(() => this.selectedChanged());
+  }
+
+  @Method()
+  async setData(data: IRibbonModel) {
+    this.dataManuallySet = true;
+    this.data = data;
   }
 
   private async fetchData() {
@@ -236,16 +250,15 @@ export class AnnotationRibbonStrips {
 
     try {
       this.loading = true;
+      this.loadingError = false;
       this.data = await getRibbonSummary(
         this.baseApiUrl,
         this.subjects,
         this.subset,
       );
-      this.loadingError = false;
     } catch (error) {
       console.error("Error fetching data:", error);
       this.loadingError = true;
-      this.data = undefined;
     } finally {
       this.loading = false;
     }
@@ -367,13 +380,8 @@ export class AnnotationRibbonStrips {
       return <go-spinner></go-spinner>;
     }
 
-    if (!this.subjects && !this.data) {
-      return <div>Must provide at least one subject</div>;
-    }
-
-    // API request undefined
     if (!this.data) {
-      return <div>No data available</div>;
+      return null;
     }
 
     // API request done but not subject retrieved

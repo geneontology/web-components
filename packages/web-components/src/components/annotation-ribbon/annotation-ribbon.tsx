@@ -4,11 +4,13 @@ import {
   ColorByOption,
   IRibbonCellEvent,
   IRibbonGroup,
+  IRibbonModel,
   SelectionModeOption,
   SubjectPositionOption,
 } from "../../globals/models";
 
 import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
+import { getRibbonSummary } from "../../globals/api";
 
 /**
  * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
@@ -30,10 +32,15 @@ import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
   shadow: true,
 })
 export class AnnotationRibbon {
-  ribbonStrips: HTMLGoAnnotationRibbonStripsElement;
+  private stripsElement: HTMLGoAnnotationRibbonStripsElement;
   ribbonTable: HTMLGoAnnotationRibbonTableElement;
 
+  @State() ribbonData?: IRibbonModel;
+  @State() ribbonDataLoading = false;
+  @State() ribbonDataLoadingError = false;
+
   @State() loadingTable = false;
+  @State() selectedGroup: IRibbonGroup;
 
   @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
 
@@ -143,13 +150,6 @@ export class AnnotationRibbon {
    */
   @Prop() selected;
 
-  /**
-   * if provided, will override any value provided in subjects and subset
-   */
-  @Prop() data: string;
-
-  @State() selectedGroup: IRibbonGroup;
-
   onlyExperimental = false;
 
   /**
@@ -199,10 +199,35 @@ export class AnnotationRibbon {
    * @param oldValue old value of the subject (e.g. gene or genes)
    */
   @Watch("subjects")
-  subjectsChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      this.bioLinkData = undefined;
-      this.tableData = undefined;
+  subjectsChanged() {
+    void this.fetchRibbonData();
+    this.bioLinkData = undefined;
+    this.tableData = undefined;
+  }
+
+  async componentWillLoad() {
+    void this.fetchRibbonData();
+  }
+
+  private async fetchRibbonData() {
+    if (!this.subjects) {
+      return;
+    }
+
+    try {
+      this.ribbonDataLoading = true;
+      this.ribbonDataLoadingError = false;
+      this.ribbonData = await getRibbonSummary(
+        this.baseApiUrl,
+        this.subjects,
+        this.subset,
+      );
+      return this.stripsElement.setData(this.ribbonData);
+    } catch (error) {
+      console.error("Error loading ribbon data:", error);
+      this.ribbonDataLoadingError = true;
+    } finally {
+      this.ribbonDataLoading = false;
     }
   }
 
@@ -245,10 +270,10 @@ export class AnnotationRibbon {
   }
 
   applyFilterCrossAspect(data, group) {
-    const aspect = getCategoryIdLabel(
-      group,
-      this.ribbonStrips.ribbonSummary.categories,
-    );
+    if (!this.ribbonData) {
+      return;
+    }
+    const aspect = getCategoryIdLabel(group, this.ribbonData.categories);
     for (let i = 0; i < data.length; i++) {
       data[i].assocs = data[i].assocs.filter((assoc) => {
         const cat =
@@ -263,6 +288,9 @@ export class AnnotationRibbon {
 
   @Listen("cellClick")
   onCellClick(e: CustomEvent<IRibbonCellEvent>) {
+    if (!this.ribbonData) {
+      return;
+    }
     console.log("Cell Clicked", e.detail);
 
     const selection = e.detail;
@@ -276,7 +304,7 @@ export class AnnotationRibbon {
     const subject_ids = selection.subjects.map((elt) => elt.id);
 
     if (group.id == "all") {
-      group_ids = this.ribbonStrips.ribbonSummary.categories
+      group_ids = this.ribbonData.categories
         .map((elt) => elt.id)
         .join("&slim=");
     }
@@ -300,10 +328,7 @@ export class AnnotationRibbon {
         data = this.applyTableFilters(data, group);
 
         if (group.type == "Other") {
-          const aspect = getCategory(
-            group,
-            this.ribbonStrips.ribbonSummary.categories,
-          );
+          const aspect = getCategory(group, this.ribbonData.categories);
           let terms = aspect.groups.filter((elt) => {
             return elt.type == "Term";
           });
@@ -357,13 +382,11 @@ export class AnnotationRibbon {
     return (
       <Host>
         <go-annotation-ribbon-strips
-          ref={(el) => (this.ribbonStrips = el)}
+          ref={(el) => (this.stripsElement = el)}
           annotationLabels={this.annotationLabels}
-          baseApiUrl={this.baseApiUrl}
           binaryColor={this.binaryColor}
           classLabels={this.classLabels}
           colorBy={this.colorBy}
-          data={this.data}
           groupClickable={this.groupClickable}
           groupMaxLabelSize={this.groupMaxLabelSize}
           maxColor={this.maxColor}
@@ -376,11 +399,10 @@ export class AnnotationRibbon {
           subjectBaseUrl={this.subjectBaseUrl}
           subjectOpenNewTab={this.subjectOpenNewTab}
           subjectPosition={this.subjectPosition}
-          subjects={this.subjects}
-          subset={this.subset}
         />
+        {this.ribbonDataLoading && <go-spinner />}
 
-        {((this.subjects && this.subjects.length > 0) || this.data) && (
+        {((this.subjects && this.subjects.length > 0) || this.ribbonData) && (
           <div class="muted">Cell color indicative of annotation volume</div>
         )}
 

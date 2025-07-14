@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -48,10 +48,6 @@ export namespace Components {
           * @default "annotations"
          */
         "colorBy": ColorByOption;
-        /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data": string;
         /**
           * @default true
          */
@@ -272,6 +268,7 @@ export namespace Components {
           * @default "cell"
          */
         "selectionMode": SelectionModeOption;
+        "setData": (data: IRibbonModel) => Promise<void>;
         /**
           * If `true`, show the "all annotations" group.
           * @default true
@@ -705,10 +702,6 @@ declare namespace LocalJSX {
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
-        /**
-          * if provided, will override any value provided in subjects and subset
-         */
-        "data"?: string;
         /**
           * @default true
          */
