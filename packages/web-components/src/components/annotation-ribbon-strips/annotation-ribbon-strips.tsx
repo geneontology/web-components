@@ -277,6 +277,10 @@ export class AnnotationRibbonStrips {
     return a.id === b.id && a.type === b.type;
   }
 
+  private subjectsEqual(a: IRibbonSubject[], b: IRibbonSubject[]): boolean {
+    return sameArray(a, b, (s1, s2) => s1.id === s2.id);
+  }
+
   private onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
     if (this.selectionMode === "column") {
       this.hoveredSubjects = this.data.subjects;
@@ -304,7 +308,7 @@ export class AnnotationRibbonStrips {
     if (
       this.groupsEqual(this.selectedGroup, group) &&
       (this.selectionMode === "column" ||
-        sameArray(this.selectedSubjects, [subject]))
+        this.subjectsEqual(this.selectedSubjects, [subject]))
     ) {
       this.selectedSubjects = [];
       this.selectedGroup = null;
@@ -323,10 +327,7 @@ export class AnnotationRibbonStrips {
     if (!this.groupClickable) {
       return;
     }
-    if (
-      this.groupsEqual(this.selectedGroup, group) &&
-      sameArray(this.selectedSubjects, this.data.subjects)
-    ) {
+    if (this.groupsEqual(this.selectedGroup, group)) {
       this.selectedSubjects = [];
       this.selectedGroup = null;
     } else {

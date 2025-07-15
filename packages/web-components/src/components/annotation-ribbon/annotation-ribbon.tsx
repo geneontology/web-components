@@ -206,7 +206,6 @@ export class AnnotationRibbon {
   @Watch("subjects")
   subjectsChanged() {
     void this.fetchRibbonData();
-    void this.tableElement.setData(undefined);
   }
 
   async componentWillLoad() {
