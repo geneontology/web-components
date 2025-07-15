@@ -264,6 +264,19 @@ export class AnnotationRibbonStrips {
     }
   }
 
+  private groupsEqual(a: IRibbonGroup | null, b: IRibbonGroup | null): boolean {
+    // If objects are the same reference, return true
+    if (a === b) {
+      return true;
+    }
+    // If either object is null, return false
+    if (!a || !b) {
+      return false;
+    }
+    // Compare properties of the objects
+    return a.id === b.id && a.type === b.type;
+  }
+
   private onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
     if (this.selectionMode === "column") {
       this.hoveredSubjects = this.data.subjects;
@@ -289,7 +302,7 @@ export class AnnotationRibbonStrips {
 
   private onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
     if (
-      this.selectedGroup === group &&
+      this.groupsEqual(this.selectedGroup, group) &&
       (this.selectionMode === "column" ||
         sameArray(this.selectedSubjects, [subject]))
     ) {
@@ -311,7 +324,7 @@ export class AnnotationRibbonStrips {
       return;
     }
     if (
-      this.selectedGroup === group &&
+      this.groupsEqual(this.selectedGroup, group) &&
       sameArray(this.selectedSubjects, this.data.subjects)
     ) {
       this.selectedSubjects = [];
@@ -345,17 +358,18 @@ export class AnnotationRibbonStrips {
   }
 
   private isGroupHovered(group: IRibbonGroup): boolean {
-    return this.hoveredGroup === group;
+    return this.groupsEqual(this.hoveredGroup, group);
   }
 
   private isCellHovered(subject: IRibbonSubject, group: IRibbonGroup): boolean {
     return (
-      this.hoveredGroup === group && this.hoveredSubjects.includes(subject)
+      this.isGroupHovered(group) &&
+      this.hoveredSubjects.findIndex((s) => s.id === subject.id) >= 0
     );
   }
 
   private isGroupSelected(group: IRibbonGroup): boolean {
-    return this.selectedGroup === group;
+    return this.groupsEqual(this.selectedGroup, group);
   }
 
   private isCellSelected(
@@ -363,7 +377,8 @@ export class AnnotationRibbonStrips {
     group: IRibbonGroup,
   ): boolean {
     return (
-      this.selectedGroup === group && this.selectedSubjects.includes(subject)
+      this.isGroupSelected(group) &&
+      this.selectedSubjects.findIndex((s) => s.id === subject.id) >= 0
     );
   }
 
