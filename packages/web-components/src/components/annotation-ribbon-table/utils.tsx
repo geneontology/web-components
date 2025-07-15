@@ -1,3 +1,6 @@
+import { ITable, TableData } from "../../globals/models";
+import { Immutable } from "immer";
+
 /**
  * For table that have cells with multiple values
  * When merging rows based on such cells with multiple values, we have to fill with empty cells the columns that
@@ -5,12 +8,11 @@
  * Note: Should only be launched once on a table
  * @param table
  */
-export function addEmptyCells(table) {
+export function addEmptyCells(table: ITable) {
   for (const row of table.rows) {
     let nbMax = 0;
     for (const header of table.header) {
       const eqcell = row.cells.filter((elt) => elt.headerId == header.id)[0];
-      // console.log("R: ", row , "H: ", header , "E:", eqcell);
       nbMax = Math.max(nbMax, eqcell.values.length);
     }
     for (const header of table.header) {
@@ -20,7 +22,6 @@ export function addEmptyCells(table) {
       }
     }
   }
-  return table;
 }
 
 export function aspectShortLabel(txt) {
@@ -34,8 +35,11 @@ export function aspectShortLabel(txt) {
   return "U";
 }
 
-export function bioLinkToTable(data, getURL) {
-  const table = {
+export function bioLinkToTable(
+  data: Immutable<TableData>,
+  getURL: (db: string, type: string | undefined, id: string) => string,
+): ITable {
+  const table: ITable = {
     newTab: true,
     header: [
       {
@@ -89,7 +93,6 @@ export function bioLinkToTable(data, getURL) {
   };
 
   for (const subject of data) {
-    // console.log("S:", subject);
     for (const assoc of subject.assocs) {
       table.rows.push({
         cells: [
@@ -129,7 +132,7 @@ export function bioLinkToTable(data, getURL) {
               {
                 label: assoc.object.label,
                 url: assoc.object.id,
-                tags: assoc.qualifiers ? assoc.qualifiers : undefined,
+                tags: assoc.qualifiers ? [...assoc.qualifiers] : undefined,
               },
             ],
           },

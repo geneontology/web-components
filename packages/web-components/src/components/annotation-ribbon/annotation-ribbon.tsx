@@ -232,39 +232,8 @@ export class AnnotationRibbon {
   }
 
   applyTableFilters(data, group) {
-    if (this.filterReference != "") {
-      data = this.applyFilterReference(data);
-    }
-    if (this.excludePB) {
-      data = this.applyFilterPB(data);
-    }
     if (this.filterCrossAspect) {
       data = this.applyFilterCrossAspect(data, group);
-    }
-    return data;
-  }
-
-  applyFilterReference(data) {
-    const filters = this.filterReference.includes(",")
-      ? this.filterReference.split(",")
-      : [this.filterReference.trim()];
-
-    for (let i = 0; i < data.length; i++) {
-      data[i].assocs = data[i].assocs.filter((assoc) => {
-        assoc.reference = assoc.reference.filter((ref) =>
-          filters.some((filter) => ref.includes(filter)),
-        );
-        return assoc;
-      });
-    }
-    return data;
-  }
-
-  applyFilterPB(data) {
-    for (let i = 0; i < data.length; i++) {
-      data[i].assocs = data[i].assocs.filter(
-        (assoc) => assoc.object.id != "GO:0005515",
-      );
     }
     return data;
   }
@@ -414,7 +383,6 @@ export class AnnotationRibbon {
             base-api-url={this.baseApiUrl}
             subject-base-url={this.subjectBaseUrl}
             group-base-url={this.groupBaseUrl}
-            data={this.tableData}
             bio-link-data={this.bioLinkData}
             group-by={this.groupBy}
             order-by={this.orderBy}

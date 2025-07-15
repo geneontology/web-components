@@ -324,45 +324,44 @@ export namespace Components {
      */
     interface GoAnnotationRibbonTable {
         /**
-          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+          * Base URL for the API to fetch the table data when subjects and slims are provided.
+          * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
          */
         "baseApiUrl": string;
         /**
-          * Reading biolink data. This will trigger a render of the table as would changing data
+          * If true, will exclude the protein binding GO term (GO:0005515) from the table
+          * @default true
          */
-        "bioLinkData": string;
+        "excludeProteinBinding": boolean;
         /**
-          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx"
          */
-        "data": string;
+        "filterBy"?: string;
         /**
-          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+          * Comma-separated list of reference prefixes to filter include
+          * @default "PMID:,DOI:,GO_REF:,Reactome:"
          */
-        "filterBy": string;
+        "filterReference": string;
         /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2
          */
-        "groupBaseUrl": string;
-        /**
-          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
-         */
-        "groupBy": string;
+        "groupBy"?: string;
         /**
           * Used to hide specific column of the table
          */
-        "hideColumns": string;
+        "hideColumns"?: string;
         /**
-          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping
          */
-        "orderBy": string;
-        "showCurie": () => Promise<void>;
-        "showDBXrefs": () => Promise<void>;
-        "showOriginalTable": () => Promise<void>;
-        "showTable": () => Promise<void>;
+        "orderBy"?: string;
         /**
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * Comma-separate list of GO term IDs (e.g. GO:0003674,GO:0008150,GO:0005575)
          */
-        "subjectBaseUrl": string;
+        "slims"?: string;
+        /**
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
+         */
+        "subjects"?: string;
     }
     /**
      * The Entity Autocomplete component provides an input field that allows users to search for
@@ -1005,27 +1004,26 @@ declare namespace LocalJSX {
      */
     interface GoAnnotationRibbonTable {
         /**
-          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+          * Base URL for the API to fetch the table data when subjects and slims are provided.
+          * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
          */
         "baseApiUrl"?: string;
         /**
-          * Reading biolink data. This will trigger a render of the table as would changing data
+          * If true, will exclude the protein binding GO term (GO:0005515) from the table
+          * @default true
          */
-        "bioLinkData"?: string;
+        "excludeProteinBinding"?: boolean;
         /**
-          * Must follow the appropriate JSON data model Can be given as either JSON or stringified JSON
-         */
-        "data"?: string;
-        /**
-          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
+          * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx"
          */
         "filterBy"?: string;
         /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
+          * Comma-separated list of reference prefixes to filter include
+          * @default "PMID:,DOI:,GO_REF:,Reactome:"
          */
-        "groupBaseUrl"?: string;
+        "filterReference"?: string;
         /**
-          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
+          * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2
          */
         "groupBy"?: string;
         /**
@@ -1033,13 +1031,17 @@ declare namespace LocalJSX {
          */
         "hideColumns"?: string;
         /**
-          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping Note: if value is "", remove any ordering
+          * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping
          */
         "orderBy"?: string;
         /**
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * Comma-separate list of GO term IDs (e.g. GO:0003674,GO:0008150,GO:0005575)
          */
-        "subjectBaseUrl"?: string;
+        "slims"?: string;
+        /**
+          * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
+         */
+        "subjects"?: string;
     }
     /**
      * The Entity Autocomplete component provides an input field that allows users to search for
