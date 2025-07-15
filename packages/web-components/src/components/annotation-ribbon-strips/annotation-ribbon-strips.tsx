@@ -334,8 +334,8 @@ export class AnnotationRibbonStrips {
       this.selectedGroup = group;
     }
     this.groupClick.emit({
-      category,
-      group,
+      category: this.selectedGroup ? category : null,
+      group: this.selectedGroup,
     });
   }
 
