@@ -1,16 +1,19 @@
-import { Component, h, Prop, Watch, State, Host, Listen } from "@stencil/core";
+import { Component, h, Host, Listen, Prop, State, Watch } from "@stencil/core";
 
 import {
   ColorByOption,
   IRibbonCellEvent,
   IRibbonGroup,
+  IRibbonGroupEvent,
   IRibbonModel,
+  IRibbonSubject,
   SelectionModeOption,
   SubjectPositionOption,
+  TableData,
 } from "../../globals/models";
 
-import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
-import { getRibbonSummary } from "../../globals/api";
+import { diffAssociations, getCategory, getCategoryIdLabel } from "./utils";
+import { getRibbonSummary, getTableData } from "../../globals/api";
 
 /**
  * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
@@ -33,33 +36,33 @@ import { getRibbonSummary } from "../../globals/api";
 })
 export class AnnotationRibbon {
   private stripsElement: HTMLGoAnnotationRibbonStripsElement;
-  ribbonTable: HTMLGoAnnotationRibbonTableElement;
+  private tableElement: HTMLGoAnnotationRibbonTableElement;
 
   @State() ribbonData?: IRibbonModel;
   @State() ribbonDataLoading = false;
   @State() ribbonDataLoadingError = false;
 
-  @State() loadingTable = false;
-  @State() selectedGroup: IRibbonGroup;
-
-  @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
-
-  @Prop() excludePB = true;
-
-  @Prop() filterCrossAspect = true;
+  @State() tableDataLoading = false;
+  @State() tableDataLoadingError = false;
 
   /**
-   * Base URL for the API to fetch the ribbon data when subjects are provided.
+   * URL for the API endpoint to fetch the ribbon data when subjects are provided.
    */
-  @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
+  @Prop() ribbonDataApiEndpoint =
+    "https://api.geneontology.org/api/ontology/ribbon/";
+
+  /**
+   * URL for the API endpoint to fetch the table data when a group is selected.
+   * This is used to fetch the annotations for the selected group and subjects.
+   */
+  @Prop() tableDataApiEndpoint =
+    "https://api.geneontology.org/api/bioentityset/slimmer/function";
 
   /**
    * Base URL used when rendering subject label links.
    */
-  @Prop() subjectBaseUrl: string =
-    "http://amigo.geneontology.org/amigo/gene_product/";
-
-  @Prop() groupBaseUrl: string = "http://amigo.geneontology.org/amigo/term/";
+  @Prop()
+  subjectBaseUrl: string = "https://amigo.geneontology.org/amigo/gene_product/";
 
   /**
    * Name of the GO subset used for grouping annotations.
@@ -148,9 +151,7 @@ export class AnnotationRibbon {
    * If a value is provided, the ribbon will show the requested group as selected
    * The value should be the id of the group to be selected
    */
-  @Prop() selected;
-
-  onlyExperimental = false;
+  @Prop() selected?: string;
 
   /**
    * Using this parameter, the table rows can bee grouped based on column ids
@@ -183,15 +184,19 @@ export class AnnotationRibbon {
   @Prop() hideColumns: string = "qualifier";
 
   /**
-   * Must follow the appropriate JSON data model
-   * Can be given as either JSON or stringified JSON
+   * Comma-separated list of reference prefixes to filter include
    */
-  @State() tableData: string;
+  @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
 
   /**
-   * Reading biolink data. This will trigger a render of the table as would changing data
+   * If true, will exclude the protein binding GO term (GO:0005515) from the table
    */
-  @State() bioLinkData: string;
+  @Prop() excludeProteinBinding = true;
+
+  /**
+   * If true, the table will filter out associations that are cross-aspect
+   */
+  @Prop() filterCrossAspect = true;
 
   /**
    * This method is automatically called whenever the value of "subjects" changes
@@ -201,8 +206,7 @@ export class AnnotationRibbon {
   @Watch("subjects")
   subjectsChanged() {
     void this.fetchRibbonData();
-    this.bioLinkData = undefined;
-    this.tableData = undefined;
+    void this.tableElement.setData(undefined);
   }
 
   async componentWillLoad() {
@@ -218,7 +222,7 @@ export class AnnotationRibbon {
       this.ribbonDataLoading = true;
       this.ribbonDataLoadingError = false;
       this.ribbonData = await getRibbonSummary(
-        this.baseApiUrl,
+        this.ribbonDataApiEndpoint,
         this.subjects,
         this.subset,
       );
@@ -231,14 +235,69 @@ export class AnnotationRibbon {
     }
   }
 
-  applyTableFilters(data, group) {
-    if (this.filterCrossAspect) {
-      data = this.applyFilterCrossAspect(data, group);
+  private async fetchTableData(
+    group: IRibbonGroup,
+    subjects: IRibbonSubject[],
+  ) {
+    if (!this.ribbonData) {
+      return;
     }
-    return data;
+
+    const groupIds =
+      group.id === "all"
+        ? this.ribbonData.categories.map((category) => category.id)
+        : [group.id];
+    const subjectIds = subjects.map((subject) => subject.id);
+
+    try {
+      await this.tableElement.setData(undefined);
+      this.tableDataLoading = true;
+      this.tableDataLoadingError = false;
+      const tableData = await getTableData(
+        this.tableDataApiEndpoint,
+        subjectIds,
+        groupIds,
+      );
+      this.applyTableFilters(tableData, group);
+
+      if (group.type === "Other") {
+        const category = getCategory(group, this.ribbonData.categories);
+        const categoryTermIds = category.groups
+          .filter((group) => group.type === "Term")
+          .map((group) => group.id);
+        const specificGroupData = await getTableData(
+          this.tableDataApiEndpoint,
+          subjectIds,
+          categoryTermIds,
+        );
+        this.applyTableFilters(specificGroupData, group);
+
+        const allSpecificGroupAssociations = specificGroupData.flatMap(
+          (entry) => entry.assocs,
+        );
+
+        tableData[0].assocs = diffAssociations(
+          tableData[0].assocs,
+          allSpecificGroupAssociations,
+        );
+      }
+      await this.tableElement.setData(tableData);
+    } catch (error) {
+      console.error("Error loading table data:", error);
+      this.tableDataLoadingError = true;
+      await this.tableElement.setData(undefined);
+    } finally {
+      this.tableDataLoading = false;
+    }
   }
 
-  applyFilterCrossAspect(data, group) {
+  private applyTableFilters(data: TableData, group: IRibbonGroup) {
+    if (this.filterCrossAspect) {
+      this.applyFilterCrossAspect(data, group);
+    }
+  }
+
+  private applyFilterCrossAspect(data: TableData, group: IRibbonGroup) {
     if (!this.ribbonData) {
       return;
     }
@@ -252,7 +311,6 @@ export class AnnotationRibbon {
         return aspect == undefined || cat == aspect[1];
       });
     }
-    return data;
   }
 
   @Listen("cellClick")
@@ -260,91 +318,27 @@ export class AnnotationRibbon {
     if (!this.ribbonData) {
       return;
     }
-    console.log("Cell Clicked", e.detail);
 
-    const selection = e.detail;
-    if (!selection.group || selection.subjects.length === 0) {
-      this.bioLinkData = undefined;
-      return;
+    const { group, subjects } = e.detail;
+    if (!group || subjects.length === 0) {
+      void this.tableElement.setData(undefined);
+    } else {
+      void this.fetchTableData(group, subjects);
     }
-
-    const group = selection.group;
-    let group_ids = group.id;
-    const subject_ids = selection.subjects.map((elt) => elt.id);
-
-    if (group.id == "all") {
-      group_ids = this.ribbonData.categories
-        .map((elt) => elt.id)
-        .join("&slim=");
-    }
-
-    const goApiUrl = "https://api.geneontology.org/api/";
-    const query =
-      goApiUrl +
-      "bioentityset/slimmer/function?slim=" +
-      group_ids +
-      "&subject=" +
-      subject_ids.join("&subject=") +
-      "&rows=-1";
-
-    // fetch the json data
-    this.loadingTable = true;
-    fetch(query)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        data = this.applyTableFilters(data, group);
-
-        if (group.type == "Other") {
-          const aspect = getCategory(group, this.ribbonData.categories);
-          let terms = aspect.groups.filter((elt) => {
-            return elt.type == "Term";
-          });
-          terms = terms.map((elt) => {
-            return elt.id;
-          });
-          terms = terms.join("&slim=");
-
-          const query_terms =
-            goApiUrl +
-            "bioentityset/slimmer/function?slim=" +
-            terms +
-            "&subject=" +
-            subject_ids +
-            "&rows=-1";
-
-          // fetch the json data
-          fetch(query_terms)
-            .then((response_terms) => {
-              return response_terms.json();
-            })
-            .then((data_terms) => {
-              data_terms = this.applyTableFilters(data_terms, group);
-
-              let concat_assocs = [];
-              for (const array of data_terms) {
-                concat_assocs = concat_assocs.concat(array.assocs);
-              }
-
-              const other_assocs = diffAssociations(
-                data[0].assocs,
-                concat_assocs,
-              );
-              data[0].assocs = other_assocs;
-              this.loadingTable = false;
-              this.bioLinkData = JSON.stringify(data);
-            });
-        } else {
-          this.loadingTable = false;
-          this.bioLinkData = JSON.stringify(data);
-        }
-      });
   }
 
   @Listen("groupClick")
-  onGroupClick(e) {
-    console.log("Group Clicked", e.detail);
+  onGroupClick(e: CustomEvent<IRibbonGroupEvent>) {
+    if (!this.ribbonData) {
+      return;
+    }
+
+    const { group } = e.detail;
+    if (!group) {
+      void this.tableElement.setData(undefined);
+    } else {
+      void this.fetchTableData(group, this.ribbonData.subjects);
+    }
   }
 
   render() {
@@ -370,25 +364,26 @@ export class AnnotationRibbon {
           subjectPosition={this.subjectPosition}
         />
         {this.ribbonDataLoading && <go-spinner />}
+        {this.ribbonDataLoadingError && (
+          <div class="error">Error loading ribbon data.</div>
+        )}
 
-        {((this.subjects && this.subjects.length > 0) || this.ribbonData) && (
+        {this.ribbonData && (
           <div class="muted">Cell color indicative of annotation volume</div>
         )}
 
-        {this.loadingTable ? (
-          <go-spinner></go-spinner>
-        ) : (
-          <go-annotation-ribbon-table
-            ref={(el) => (this.ribbonTable = el)}
-            base-api-url={this.baseApiUrl}
-            subject-base-url={this.subjectBaseUrl}
-            group-base-url={this.groupBaseUrl}
-            bio-link-data={this.bioLinkData}
-            group-by={this.groupBy}
-            order-by={this.orderBy}
-            filter-by={this.filterBy}
-            hide-columns={this.hideColumns}
-          />
+        {this.tableDataLoading && <go-spinner></go-spinner>}
+        <go-annotation-ribbon-table
+          ref={(el) => (this.tableElement = el)}
+          groupBy={this.groupBy}
+          orderBy={this.orderBy}
+          filterBy={this.filterBy}
+          hideColumns={this.hideColumns}
+          filterReference={this.filterReference}
+          excludeProteinBinding={this.excludeProteinBinding}
+        />
+        {this.tableDataLoadingError && (
+          <div class="error">Error loading table data.</div>
         )}
       </Host>
     );

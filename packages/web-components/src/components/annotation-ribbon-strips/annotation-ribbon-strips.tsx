@@ -71,15 +71,15 @@ export class AnnotationRibbonStrips {
   @Prop() subset: string = "goslim_agr";
 
   /**
-   * Base URL for the API to fetch the ribbon data when subjects are provided.
+   * URL for the API endpoint to fetch the ribbon data when subjects are provided.
    */
-  @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
+  @Prop() apiEndpoint = "https://api.geneontology.org/api/ontology/ribbon/";
 
   /**
    * Base URL used when rendering subject label links.
    */
   @Prop() subjectBaseUrl: string =
-    "http://amigo.geneontology.org/amigo/gene_product/";
+    "https://amigo.geneontology.org/amigo/gene_product/";
 
   /**
    * Labels used with class counts.
@@ -183,7 +183,7 @@ export class AnnotationRibbonStrips {
   @Watch("subjects")
   @Watch("subset")
   @Watch("baseApiUrl")
-  doFetch() {
+  refetchData() {
     if (this.dataManuallySet) {
       // If data was manually set, do not fetch again
       return;
@@ -252,7 +252,7 @@ export class AnnotationRibbonStrips {
       this.loading = true;
       this.loadingError = false;
       this.data = await getRibbonSummary(
-        this.baseApiUrl,
+        this.apiEndpoint,
         this.subjects,
         this.subset,
       );

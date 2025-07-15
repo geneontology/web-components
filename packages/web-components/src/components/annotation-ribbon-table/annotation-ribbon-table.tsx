@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Watch } from "@stencil/core";
+import { Component, h, Method, Prop, State, Watch } from "@stencil/core";
 
 import {
   IHeaderCell,
@@ -28,6 +28,7 @@ export class AnnotationRibbonTable {
 
   private tableData?: Immutable<TableData>;
   private headerMap?: Map<string, Immutable<IHeaderCell>>;
+  private dataManuallySet: boolean = false;
 
   /**
    * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
@@ -40,9 +41,9 @@ export class AnnotationRibbonTable {
   @Prop() slims?: string;
 
   /**
-   * Base URL for the API to fetch the table data when subjects and slims are provided.
+   * URL for the API endpoint to fetch the table data when subjects and slims are provided.
    */
-  @Prop() baseApiUrl =
+  @Prop() apiEndpoint =
     "https://api.geneontology.org/api/bioentityset/slimmer/function";
 
   /**
@@ -92,9 +93,29 @@ export class AnnotationRibbonTable {
     this.produceDisplayTable();
   }
 
+  @Watch("subjects")
+  @Watch("slims")
+  async refetchData() {
+    if (this.dataManuallySet) {
+      return;
+    }
+    await this.fetchData();
+  }
+
   async componentWillLoad() {
     await dbxrefs.init();
     void this.fetchData();
+  }
+
+  @Method()
+  async setData(data?: TableData) {
+    this.dataManuallySet = true;
+    this.tableData = data;
+    if (data) {
+      this.produceDisplayTable();
+    } else {
+      this.displayTable = undefined;
+    }
   }
 
   private async fetchData() {
@@ -106,7 +127,7 @@ export class AnnotationRibbonTable {
       this.loading = true;
       this.loadingError = false;
       this.tableData = await getTableData(
-        this.baseApiUrl,
+        this.apiEndpoint,
         this.subjects,
         this.slims,
       );

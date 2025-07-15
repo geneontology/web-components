@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -29,11 +29,6 @@ export namespace Components {
          */
         "annotationLabels": string;
         /**
-          * Base URL for the API to fetch the ribbon data when subjects are provided.
-          * @default "https://api.geneontology.org/api/ontology/ribbon/"
-         */
-        "baseApiUrl": string;
-        /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
@@ -49,25 +44,24 @@ export namespace Components {
          */
         "colorBy": ColorByOption;
         /**
+          * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true
          */
-        "excludePB": boolean;
+        "excludeProteinBinding": boolean;
         /**
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy": string;
         /**
+          * If true, the table will filter out associations that are cross-aspect
           * @default true
          */
         "filterCrossAspect": boolean;
         /**
+          * Comma-separated list of reference prefixes to filter include
           * @default "PMID:,DOI:,GO_REF:,Reactome:"
          */
         "filterReference": string;
-        /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
-         */
-        "groupBaseUrl": string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
           * @default "term,qualifier"
@@ -109,9 +103,14 @@ export namespace Components {
          */
         "orderBy": string;
         /**
+          * URL for the API endpoint to fetch the ribbon data when subjects are provided.
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
+        "ribbonDataApiEndpoint": string;
+        /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
          */
-        "selected": any;
+        "selected"?: string;
         /**
           * Selection mode for the ribbon cells.
           * @default "cell"
@@ -129,7 +128,7 @@ export namespace Components {
         "showOtherGroup": boolean;
         /**
           * Base URL used when rendering subject label links.
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
         /**
@@ -151,6 +150,11 @@ export namespace Components {
           * @default "goslim_agr"
          */
         "subset": string;
+        /**
+          * URL for the API endpoint to fetch the table data when a group is selected. This is used to fetch the annotations for the selected group and subjects.
+          * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
+         */
+        "tableDataApiEndpoint": string;
     }
     /**
      * An individual cell in the annotation ribbon.
@@ -215,10 +219,10 @@ export namespace Components {
          */
         "annotationLabels": string;
         /**
-          * Base URL for the API to fetch the ribbon data when subjects are provided.
+          * URL for the API endpoint to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
-        "baseApiUrl": string;
+        "apiEndpoint": string;
         /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
@@ -281,7 +285,7 @@ export namespace Components {
         "showOtherGroup": boolean;
         /**
           * Base URL used when rendering subject label links.
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
         /**
@@ -324,10 +328,10 @@ export namespace Components {
      */
     interface GoAnnotationRibbonTable {
         /**
-          * Base URL for the API to fetch the table data when subjects and slims are provided.
+          * URL for the API endpoint to fetch the table data when subjects and slims are provided.
           * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
          */
-        "baseApiUrl": string;
+        "apiEndpoint": string;
         /**
           * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true
@@ -354,6 +358,7 @@ export namespace Components {
           * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping
          */
         "orderBy"?: string;
+        "setData": (data?: TableData) => Promise<void>;
         /**
           * Comma-separate list of GO term IDs (e.g. GO:0003674,GO:0008150,GO:0005575)
          */
@@ -682,11 +687,6 @@ declare namespace LocalJSX {
          */
         "annotationLabels"?: string;
         /**
-          * Base URL for the API to fetch the ribbon data when subjects are provided.
-          * @default "https://api.geneontology.org/api/ontology/ribbon/"
-         */
-        "baseApiUrl"?: string;
-        /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
@@ -702,25 +702,24 @@ declare namespace LocalJSX {
          */
         "colorBy"?: ColorByOption;
         /**
+          * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true
          */
-        "excludePB"?: boolean;
+        "excludeProteinBinding"?: boolean;
         /**
           * Filter rows based on the presence of one or more values in a given column The filtering will be based on cell label or id Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx" Note: if value is "", remove any filtering
          */
         "filterBy"?: string;
         /**
+          * If true, the table will filter out associations that are cross-aspect
           * @default true
          */
         "filterCrossAspect"?: boolean;
         /**
+          * Comma-separated list of reference prefixes to filter include
           * @default "PMID:,DOI:,GO_REF:,Reactome:"
          */
         "filterReference"?: string;
-        /**
-          * @default "http://amigo.geneontology.org/amigo/term/"
-         */
-        "groupBaseUrl"?: string;
         /**
           * Using this parameter, the table rows can bee grouped based on column ids A multiple step grouping is possible by using a ";" between groups The grouping applies before the ordering Example: hid-1,hid-3 OR hid-1,hid-3;hid-2 Note: if value is "", remove any grouping
           * @default "term,qualifier"
@@ -762,9 +761,14 @@ declare namespace LocalJSX {
          */
         "orderBy"?: string;
         /**
+          * URL for the API endpoint to fetch the ribbon data when subjects are provided.
+          * @default "https://api.geneontology.org/api/ontology/ribbon/"
+         */
+        "ribbonDataApiEndpoint"?: string;
+        /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
          */
-        "selected"?: any;
+        "selected"?: string;
         /**
           * Selection mode for the ribbon cells.
           * @default "cell"
@@ -782,7 +786,7 @@ declare namespace LocalJSX {
         "showOtherGroup"?: boolean;
         /**
           * Base URL used when rendering subject label links.
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
         /**
@@ -804,6 +808,11 @@ declare namespace LocalJSX {
           * @default "goslim_agr"
          */
         "subset"?: string;
+        /**
+          * URL for the API endpoint to fetch the table data when a group is selected. This is used to fetch the annotations for the selected group and subjects.
+          * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
+         */
+        "tableDataApiEndpoint"?: string;
     }
     /**
      * An individual cell in the annotation ribbon.
@@ -868,10 +877,10 @@ declare namespace LocalJSX {
          */
         "annotationLabels"?: string;
         /**
-          * Base URL for the API to fetch the ribbon data when subjects are provided.
+          * URL for the API endpoint to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
          */
-        "baseApiUrl"?: string;
+        "apiEndpoint"?: string;
         /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
@@ -957,7 +966,7 @@ declare namespace LocalJSX {
         "showOtherGroup"?: boolean;
         /**
           * Base URL used when rendering subject label links.
-          * @default "http://amigo.geneontology.org/amigo/gene_product/"
+          * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
         /**
@@ -1004,10 +1013,10 @@ declare namespace LocalJSX {
      */
     interface GoAnnotationRibbonTable {
         /**
-          * Base URL for the API to fetch the table data when subjects and slims are provided.
+          * URL for the API endpoint to fetch the table data when subjects and slims are provided.
           * @default "https://api.geneontology.org/api/bioentityset/slimmer/function"
          */
-        "baseApiUrl"?: string;
+        "apiEndpoint"?: string;
         /**
           * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true

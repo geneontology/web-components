@@ -1,8 +1,16 @@
+import {
+  IRibbonCategory,
+  IRibbonGroup,
+  TableDataAssociation,
+} from "../../globals/models";
+
 /**
  * Return the category object for a given group
- * @param {*} group group object (eg ontology term)
  */
-export function getCategory(group, categories) {
+export function getCategory(
+  group: IRibbonGroup,
+  categories: IRibbonCategory[],
+) {
   const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);
   });
@@ -11,9 +19,11 @@ export function getCategory(group, categories) {
 
 /**
  * Return the category [id, label] for a given group
- * @param {*} group group object (eg ontology term)
  */
-export function getCategoryIdLabel(group, categories) {
+export function getCategoryIdLabel(
+  group: IRibbonGroup,
+  categories: IRibbonCategory[],
+) {
   const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);
   });
@@ -47,8 +57,11 @@ export function fullAssociationKey(assoc) {
   return key;
 }
 
-export function diffAssociations(assocs_all, assocs_exclude) {
-  const list = [];
+export function diffAssociations(
+  assocs_all: TableDataAssociation[],
+  assocs_exclude: TableDataAssociation[],
+) {
+  const list: TableDataAssociation[] = [];
   for (const assoc of assocs_all) {
     let found = false;
     const key_all = fullAssociationKey(assoc);
