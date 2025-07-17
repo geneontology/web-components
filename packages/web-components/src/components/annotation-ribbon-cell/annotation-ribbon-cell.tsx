@@ -2,6 +2,10 @@ import { Component, h, Prop, Watch } from "@stencil/core";
 import clsx from "clsx";
 
 import { darken, heatColor } from "./utils";
+import {
+  getNbAnnotations,
+  getNbClasses,
+} from "../annotation-ribbon-strips/utils";
 
 import {
   ColorByOption,
@@ -99,7 +103,7 @@ export class AnnotationRibbonCell {
   @Prop() selected = false;
   @Prop() hovered = false;
 
-  cellColor(nbClasses, nbAnnotations) {
+  private cellColor(nbClasses: number, nbAnnotations: number) {
     const levels = this.colorBy == "classes" ? nbClasses : nbAnnotations;
     let newColor = heatColor(
       levels,
@@ -114,32 +118,6 @@ export class AnnotationRibbonCell {
       newColor = "rgb(" + val.join(",") + ")";
     }
     return newColor;
-  }
-
-  getNbClasses() {
-    if (this.group.type == "GlobalAll") {
-      return this.subject.nb_classes;
-    }
-    const cellid =
-      this.group.id + (this.group.type === "Other" ? "-other" : "");
-    const cell =
-      cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
-    return cell ? cell["ALL"]["nb_classes"] : 0;
-  }
-
-  getNbAnnotations() {
-    if (this.group.type == "GlobalAll") {
-      return this.subject.nb_annotations;
-    }
-    const cellid =
-      this.group.id + (this.group.type === "Other" ? "-other" : "");
-    const cell =
-      cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
-    return cell ? cell["ALL"]["nb_annotations"] : 0;
-  }
-
-  hasAnnotations() {
-    return this.getNbAnnotations() > 0;
   }
 
   /**
@@ -162,8 +140,8 @@ export class AnnotationRibbonCell {
       title = this.subject.label + " can not have data for " + this.group.label;
       classes.push("unavailable");
     } else {
-      nbClasses = this.getNbClasses();
-      nbAnnotations = this.getNbAnnotations();
+      nbClasses = getNbClasses(this.group, this.subject);
+      nbAnnotations = getNbAnnotations(this.group, this.subject);
 
       title =
         "Subject: " +

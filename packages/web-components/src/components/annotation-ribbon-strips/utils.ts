@@ -25,3 +25,21 @@ export function groupKey(group: IRibbonGroup) {
 export function cellKey(subject: IRibbonSubject, group: IRibbonGroup) {
   return `subject-${transformID(subject.id)}-${groupKey(group)}`;
 }
+
+export function getNbClasses(group: IRibbonGroup, subject: IRibbonSubject) {
+  if (group.type == "GlobalAll") {
+    return subject.nb_classes;
+  }
+  const cellid = group.id + (group.type === "Other" ? "-other" : "");
+  const cell = cellid in subject.groups ? subject.groups[cellid] : undefined;
+  return cell ? cell["ALL"]["nb_classes"] : 0;
+}
+
+export function getNbAnnotations(group: IRibbonGroup, subject: IRibbonSubject) {
+  if (group.type == "GlobalAll") {
+    return subject.nb_annotations;
+  }
+  const cellid = group.id + (group.type === "Other" ? "-other" : "");
+  const cell = cellid in subject.groups ? subject.groups[cellid] : undefined;
+  return cell ? cell["ALL"]["nb_annotations"] : 0;
+}

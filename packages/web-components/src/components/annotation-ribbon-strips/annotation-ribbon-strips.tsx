@@ -12,7 +12,7 @@ import {
 } from "@stencil/core";
 import clsx from "clsx";
 
-import { groupKey, cellKey, truncate } from "./utils";
+import { groupKey, cellKey, truncate, getNbAnnotations } from "./utils";
 
 import {
   ColorByOption,
@@ -313,6 +313,10 @@ export class AnnotationRibbonStrips {
   }
 
   private onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
+    const numberOfAnnotations = getNbAnnotations(group, subject);
+    if (numberOfAnnotations === 0) {
+      return;
+    }
     if (
       this.groupsEqual(this.selectedGroup, group) &&
       (this.selectionMode === "column" ||
@@ -333,6 +337,13 @@ export class AnnotationRibbonStrips {
 
   private onGroupClick(category: IRibbonCategory, group: IRibbonGroup) {
     if (!this.groupClickable) {
+      return;
+    }
+    const totalAnnotations = this.data.subjects.reduce(
+      (total, subject) => total + getNbAnnotations(group, subject),
+      0,
+    );
+    if (totalAnnotations === 0) {
       return;
     }
     if (this.groupsEqual(this.selectedGroup, group)) {
