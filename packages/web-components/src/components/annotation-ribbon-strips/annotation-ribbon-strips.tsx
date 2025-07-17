@@ -183,7 +183,7 @@ export class AnnotationRibbonStrips {
    */
   @Watch("subjects")
   @Watch("subset")
-  @Watch("baseApiUrl")
+  @Watch("apiEndpoint")
   refetchData() {
     if (this.dataManuallySet) {
       // If data was manually set, do not fetch again
