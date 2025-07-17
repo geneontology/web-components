@@ -10,102 +10,117 @@
 
     <script type="module" src="/build/web-components.esm.js"></script>
     <script nomodule src="/build/web-components.js"></script>
+    <style>
+      label {
+        margin-right: 0.25rem;
+      }
+      input,
+      select {
+        margin-bottom: 0.5rem;
+      }
+      go-annotation-ribbon-strips {
+      }
+    </style>
   </head>
   <body>
     <go-annotation-ribbon-strips subjects="RGD:620474,RGD:3889" />
 
-    <!-- <div style="width:1400px" id="ribbon-container"></div>
-
-  <button onclick=button_switch()>Switch</button>
-
-  <script>
-
-        let subs = [
-          ["RGD:620474","RGD:3889"],
-          ["UniProtKB:Q9BYF1", "UniProtKB:O15393"],
-          ["MGI:1890682"]
-        ];
-
-        pos = 0;
-        alternate = function() {
-          if(pos < 1)
-            pos++;
-          else
-            pos = 0;
-          return subs[pos];
+    <script>
+      function addCheckbox(prop) {
+        if (document.getElementById(prop)) {
+          return;
         }
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = prop;
+        checkbox.checked = ribbon[prop] || false;
+        checkbox.addEventListener("change", function () {
+          ribbon[prop] = checkbox.checked;
+        });
 
-        button_switch = function() {
-          let baseAPIURL = "https://api.geneontology.org/api/ontology/ribbon/";
-          let subjects = alternate();
-          subjects = subjects.join("&subject=");
-          let query = baseAPIURL + '?subset=goslim_agr&subject=' + subjects;
-          console.log('API query is ' + query);
-          loadData(query)
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
+
+        let container = document.createElement("div");
+        container.appendChild(checkbox);
+        container.appendChild(labelElement);
+        document.body.insertBefore(container, ribbon);
+      }
+
+      function addSelect(prop, options) {
+        if (document.getElementById(prop)) {
+          return;
         }
+        let select = document.createElement("select");
+        select.id = prop;
+        select.addEventListener("change", function () {
+          ribbon[prop] = select.value;
+        });
 
-        let baseAPIURL = "https://api.geneontology.org/api/ontology/ribbon/";
-        let subjects = ["RGD:620474","RGD:3889"].join("&subject=");
-        // let subjects = ["UniProtKB:Q9BYF1", "UniProtKB:O15393"].join("&subject=");
-        // let subjects = ["MGI:1890682"].join("&subject=");
-        let query = baseAPIURL + '?subset=goslim_agr&subject=' + subjects;
-        console.log('API query is ' + query);
+        options.forEach((option) => {
+          let opt = document.createElement("option");
+          opt.value = option.value;
+          opt.textContent = option.label || option.value;
+          if (ribbon[prop] === option.value) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
 
-        // fetch(query)
-        // .then(response => {
-        //   response.json().then(data => {
-        //     var element = document.createElement("wc-ribbon-strips");
-        //     // element.setAttribute("subjects", subjects);
-        //     element.setAttribute("data", JSON.stringify(data));
-        //     document.body.appendChild(element);
-        //   })
-        // })
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
 
+        let container = document.createElement("div");
+        container.appendChild(labelElement);
+        container.appendChild(select);
+        document.body.insertBefore(container, ribbon);
+      }
 
-        async function loadData(query) {
-          // fetch the json data
-          let response = await fetch(query);
-          let data = await response.json();
-
-          // create the ribbon strips element
-          var element = await document.createElement("wc-ribbon-strips");
-          // element.setAttribute("subject-base-url", 'http://stage.alliancegenome.org/gene/');
-          element.setAttribute("add-cell-all", "true");
-          element.setAttribute("data", JSON.stringify(data));
-          element.setAttribute("binary-color", "false");
-          element.setAttribute("category-all-style", 0);
-          element.setAttribute("new-tab", "true");
-          element.setAttribute("selection-mode", 0);
-          element.setAttribute("subject-position", 1);
-          element.setAttribute("max-color", [24,73,180]);
-          element.setAttribute("show-other-group", true);
-          // element.setAttribute("selected", "all");
-
-          var parent = document.getElementById("ribbon-container");
-          parent.innerHTML = '';
-          await parent.appendChild(element);
-
-          // add a listener whenever a cell is clicked
-          document.addEventListener('cellClick', function cellClicked(event) {
-            console.log('Cell Clicked' , event);
-          });
-
-          // add a listener whenever a group is clicked
-          document.addEventListener('groupClick', function groupClicked(event) {
-            console.log('Group Clicked' , event);
-          });
-
-          // add a listener whenever a subject is clicked
-          document.addEventListener('subjectClick', function subjectClicked(event) {
-            console.log('Subject Clicked' , event);
-            // event.detail.originalEvent.preventDefault(); // can use that to override default behavior
-          });
-
+      function addInput(prop, type = "text") {
+        if (document.getElementById(prop)) {
+          return;
         }
+        let input = document.createElement("input");
+        input.type = type;
+        input.id = prop;
+        input.value = ribbon[prop] || "";
+        input.addEventListener("change", function () {
+          ribbon[prop] = input.value;
+        });
 
-        loadData(query);
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
 
+        let container = document.createElement("div");
+        container.appendChild(labelElement);
+        container.appendChild(input);
+        document.body.insertBefore(container, ribbon);
+      }
 
-  </script> -->
+      const ribbon = document.querySelector("go-annotation-ribbon-strips");
+
+      window.addEventListener("appload", (event) => {
+        addCheckbox("showAllAnnotationsGroup");
+        addCheckbox("showOtherGroup");
+        addCheckbox("groupClickable");
+        addCheckbox("binaryColor");
+        addSelect("selectionMode", [{ value: "cell" }, { value: "column" }]);
+        addSelect("selected", [
+          { value: "" },
+          { value: "all" },
+          { value: "GO:0030234" },
+        ]);
+        addSelect("subjectPosition", [
+          { value: "none" },
+          { value: "left" },
+          { value: "right" },
+        ]);
+        addSelect("colorBy", [{ value: "classes" }, { value: "annotations" }]);
+        addInput("groupMaxLabelSize", "number");
+      });
+    </script>
   </body>
 </html>

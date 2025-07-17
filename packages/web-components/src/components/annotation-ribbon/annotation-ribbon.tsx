@@ -1,18 +1,19 @@
-import { Component, Element, h, Prop, Watch, State } from "@stencil/core";
-
-import { IRibbonGroup } from "../../globals/models";
+import { Component, h, Host, Listen, Prop, State, Watch } from "@stencil/core";
 
 import {
-  COLOR_BY,
-  POSITION,
-  SELECTION,
-  FONT_CASE,
-  FONT_STYLE,
-} from "../../globals/enums";
+  ColorByOption,
+  IRibbonCellEvent,
+  IRibbonGroup,
+  IRibbonGroupEvent,
+  IRibbonModel,
+  IRibbonSubject,
+  SelectionModeOption,
+  SubjectPositionOption,
+  TableData,
+} from "../../globals/models";
 
-import { getCategory, getCategoryIdLabel, diffAssociations } from "./utils";
-
-import { sameArray } from "../../globals/utils";
+import { diffAssociations, getCategory, getCategoryIdLabel } from "./utils";
+import { getRibbonSummary, getTableData } from "../../globals/api";
 
 /**
  * The Annotation Ribbon component summarizes [GO annotation](https://geneontology.org/docs/go-annotations/)
@@ -30,194 +31,127 @@ import { sameArray } from "../../globals/utils";
  */
 @Component({
   tag: "go-annotation-ribbon",
-  styleUrl: "annotation-ribbon.css",
-  shadow: false,
+  styleUrl: "annotation-ribbon.scss",
+  shadow: true,
 })
 export class AnnotationRibbon {
-  @Element() GORibbon;
+  private stripsElement: HTMLGoAnnotationRibbonStripsElement;
+  private tableElement: HTMLGoAnnotationRibbonTableElement;
 
-  ribbonStrips: HTMLGoAnnotationRibbonStripsElement;
-  ribbonTable: HTMLGoAnnotationRibbonTableElement;
+  @State() ribbonData?: IRibbonModel;
+  @State() ribbonDataLoading = false;
+  @State() ribbonDataLoadingError = false;
 
-  @State() loadingTable = false;
+  @State() tableDataLoading = false;
+  @State() tableDataLoadingError = false;
 
-  mockup = [
-    {
-      subject: "UniProtKB:P04637",
-      slim: "GO:0003723",
-      assocs: [
-        {
-          id: "556e6950726f744b420950303436333709545035330909474f3a3030303337333009504d49443a3136323133323132094944410909460943656c6c756c61722074756d6f7220616e746967656e20703533095035330970726f7465696e097461786f6e3a393630360932303137303132350943414641090909",
-          subject: {
-            id: "HGNC:11998",
-            iri: "http://identifiers.org/uniprot/P04637",
-            label: "TP53",
-            taxon: {
-              id: "NCBITaxon:9606",
-              iri: "http://purl.obolibrary.org/obo/NCBITaxon_9606",
-              label: "Homo sapiens",
-            },
-          },
-          object: {
-            id: "GO:0003730",
-            iri: "http://purl.obolibrary.org/obo/GO_0003730",
-            label: "mRNA 3'-UTR binding",
-            category: ["molecular_activity"],
-          },
-          negated: false,
-          relation: null,
-          publications: [{ id: "UniProtKB" }],
-          provided_by: ["CAFA"],
-          reference: ["PMID:16213212"],
-          type: "protein",
-          evidence: "ECO:0000314",
-          evidence_label: "direct assay evidence used in manual assertion",
-          evidence_type: "IDA",
-          evidence_closure: [
-            "ECO:0000352",
-            "ECO:0000000",
-            "ECO:0000002",
-            "ECO:0000006",
-            "ECO:0000314",
-            "ECO:0000269",
-          ],
-          evidence_closure_label: [
-            "evidence used in manual assertion",
-            "evidence",
-            "direct assay evidence",
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-            "experimental evidence used in manual assertion",
-          ],
-          evidence_subset_closure: ["ECO:0000006", "ECO:0000314"],
-          evidence_subset_closure_label: [
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-          ],
-          evidence_type_closure: [
-            "evidence used in manual assertion",
-            "evidence",
-            "direct assay evidence",
-            "experimental evidence",
-            "direct assay evidence used in manual assertion",
-            "experimental evidence used in manual assertion",
-          ],
-          slim: ["GO:0003723"],
-        },
-      ],
-    },
-  ];
+  /**
+   * URL for the API endpoint to fetch the ribbon data when subjects are provided.
+   */
+  @Prop() ribbonDataApiEndpoint =
+    "https://api.geneontology.org/api/ontology/ribbon/";
 
-  @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
+  /**
+   * URL for the API endpoint to fetch the table data when a group is selected.
+   * This is used to fetch the annotations for the selected group and subjects.
+   */
+  @Prop() tableDataApiEndpoint =
+    "https://api.geneontology.org/api/bioentityset/slimmer/function";
 
-  @Prop() excludePB = true;
+  /**
+   * Base URL used when rendering subject label links.
+   */
+  @Prop()
+  subjectBaseUrl: string = "https://amigo.geneontology.org/amigo/gene_product/";
 
-  @Prop() filterCrossAspect = true;
-
-  @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
-
-  @Prop() subjectBaseUrl: string =
-    "http://amigo.geneontology.org/amigo/gene_product/";
-  @Prop() groupBaseUrl: string = "http://amigo.geneontology.org/amigo/term/";
-
+  /**
+   * Name of the GO subset used for grouping annotations.
+   */
   @Prop() subset: string = "goslim_agr";
 
   /**
-   * provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])
+   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
    */
-  @Prop() subjects: string = undefined;
+  @Prop() subjects?: string;
 
+  /**
+   * Labels used with class counts.
+   */
   @Prop() classLabels = "term,terms";
+
+  /**
+   * Labels used with annotation counts.
+   */
   @Prop() annotationLabels = "annotation,annotations";
 
   /**
-   * Which value to base the cell color on
-   * 0 = class count
-   * 1 = annotation count
+   * Whether to color cells by annotations or classes.
    */
-  @Prop() colorBy = COLOR_BY.ANNOTATION_COUNT;
+  @Prop() colorBy: ColorByOption = "annotations";
 
   /**
-   * false = show a gradient of colors to indicate the value of a cell
-   * true = show only two colors (minColor; maxColor) to indicate the values of a cell
+   * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell.
+   * Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on
+   * the number of annotations or classes.
    */
   @Prop() binaryColor = false;
+
+  /**
+   * Color of cells with the least number of annotations or classes.
+   */
   @Prop() minColor = "255,255,255";
+
+  /**
+   * Color of cells with the most number of annotations or classes.
+   */
   @Prop() maxColor = "24,73,180";
+
+  /**
+   * Maximum number of annotations or classes before `maxColor` is applied.
+   */
   @Prop() maxHeatLevel = 48;
+
+  /**
+   * Maximum size of group labels in characters.
+   */
   @Prop() groupMaxLabelSize = 60;
 
   /**
-   * Override of the category case
-   * 0 (default) = unchanged
-   * 1 = to lower case
-   * 2 = to upper case
-   */
-  @Prop() categoryCase = FONT_CASE.LOWER_CASE;
-
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryAllStyle = FONT_STYLE.NORMAL;
-  /**
-   * 0 = Normal
-   * 1 = Bold
-   */
-  @Prop() categoryOtherStyle = FONT_STYLE.NORMAL;
-
-  /**
-   * add a cell at the end of each row/subject to represent all annotations not mapped to a specific term
+   * If `true`, show the "Other" group for each category.
    */
   @Prop() showOtherGroup = true;
 
   /**
-   * add a cell at the beginning of each row/subject to show all annotations
+   * If `true`, show the "all annotations" group.
    */
-  @Prop() addCellAll: boolean = true;
+  @Prop() showAllAnnotationsGroup: boolean = true;
 
   /**
-   * Position the subject label of each row
-   * 0 = None
-   * 1 = Left
-   * 2 = Right
-   * 3 = Bottom
+   * Position subject labels.
    */
-  @Prop() subjectPosition = POSITION.LEFT;
-  @Prop() subjectUseTaxonIcon: boolean;
+  @Prop() subjectPosition: SubjectPositionOption = "left";
+
+  /**
+   * If `true`, clicking a subject label will open the link in a new tab.
+   */
   @Prop() subjectOpenNewTab: boolean = true;
-  @Prop() groupNewTab: boolean = true;
+
+  /**
+   * If `true`, the group labels are clickable and will trigger the `groupClick` event
+   */
   @Prop() groupClickable: boolean = true;
 
   /**
-   * Click handling of a cell.
-   * 0 = select only the cell (1 subject, 1 group)
-   * 1 = select the whole column (all subjects, 1 group)
+   * Selection mode for the ribbon cells.
    */
-  @Prop() selectionMode = SELECTION.CELL;
+  @Prop() selectionMode: SelectionModeOption = "cell";
 
   /**
    * If no value is provided, the ribbon will load without any group selected.
    * If a value is provided, the ribbon will show the requested group as selected
    * The value should be the id of the group to be selected
    */
-  @Prop() selected;
-
-  /**
-   * If true, the ribbon will fire an event if a user click an empty cell
-   * If false, the ribbon will not fire the event on an empty cell
-   * Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations
-   */
-  @Prop() fireEventOnEmptyCells = false;
-
-  /**
-   * if provided, will override any value provided in subjects and subset
-   */
-  @Prop() data: string;
-
-  @State() selectedGroup: IRibbonGroup;
-
-  onlyExperimental = false;
+  @Prop() selected?: string;
 
   /**
    * Using this parameter, the table rows can bee grouped based on column ids
@@ -250,15 +184,19 @@ export class AnnotationRibbon {
   @Prop() hideColumns: string = "qualifier";
 
   /**
-   * Must follow the appropriate JSON data model
-   * Can be given as either JSON or stringified JSON
+   * Comma-separated list of reference prefixes to filter include
    */
-  @State() tableData: string;
+  @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
 
   /**
-   * Reading biolink data. This will trigger a render of the table as would changing data
+   * If true, will exclude the protein binding GO term (GO:0005515) from the table
    */
-  @State() bioLinkData: string;
+  @Prop() excludeProteinBinding = true;
+
+  /**
+   * If true, the table will filter out associations that are cross-aspect
+   */
+  @Prop() filterCrossAspect = true;
 
   /**
    * This method is automatically called whenever the value of "subjects" changes
@@ -266,88 +204,103 @@ export class AnnotationRibbon {
    * @param oldValue old value of the subject (e.g. gene or genes)
    */
   @Watch("subjects")
-  subjectsChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      this.bioLinkData = undefined;
-      this.tableData = undefined;
-    }
+  subjectsChanged() {
+    void this.fetchRibbonData();
   }
 
-  /**
-   * Check if a HTML element has a parent with provided id
-   * @param {} elt HTML element to check
-   * @param {*} id id to look in the parents of provided element
-   */
-  hasParentElementId(elt, id) {
-    if (elt.id == id) {
-      return true;
-    }
-    if (!elt.parentElement) {
-      return false;
-    }
-    return this.hasParentElementId(elt.parentElement, id);
+  async componentWillLoad() {
+    void this.fetchRibbonData();
   }
 
-  /**
-   * Add listeners to the Ribbon strips
-   */
-  componentWillLoad() {
-    // if(this.hasParentElementId())
-    document.addEventListener("cellClick", this.onCellClick.bind(this));
-    document.addEventListener("groupClick", this.onGroupClick.bind(this));
-  }
-
-  /**
-   * Remove listeners to the Ribbon strips
-   */
-  disconnectedCallback() {
-    document.removeEventListener("cellClick", this.onCellClick);
-    document.removeEventListener("groupClick", this.onGroupClick);
-  }
-
-  applyTableFilters(data, group) {
-    if (this.filterReference != "") {
-      data = this.applyFilterReference(data);
+  private async fetchRibbonData() {
+    if (!this.subjects) {
+      return;
     }
-    if (this.excludePB) {
-      data = this.applyFilterPB(data);
-    }
-    if (this.filterCrossAspect) {
-      data = this.applyFilterCrossAspect(data, group);
-    }
-    return data;
-  }
 
-  applyFilterReference(data) {
-    const filters = this.filterReference.includes(",")
-      ? this.filterReference.split(",")
-      : [this.filterReference.trim()];
-
-    for (let i = 0; i < data.length; i++) {
-      data[i].assocs = data[i].assocs.filter((assoc) => {
-        assoc.reference = assoc.reference.filter((ref) =>
-          filters.some((filter) => ref.includes(filter)),
-        );
-        return assoc;
-      });
-    }
-    return data;
-  }
-
-  applyFilterPB(data) {
-    for (let i = 0; i < data.length; i++) {
-      data[i].assocs = data[i].assocs.filter(
-        (assoc) => assoc.object.id != "GO:0005515",
+    try {
+      this.ribbonDataLoading = true;
+      this.ribbonDataLoadingError = false;
+      this.ribbonData = await getRibbonSummary(
+        this.ribbonDataApiEndpoint,
+        this.subjects,
+        this.subset,
       );
+      return this.stripsElement.setData(this.ribbonData);
+    } catch (error) {
+      console.error("Error loading ribbon data:", error);
+      this.ribbonDataLoadingError = true;
+    } finally {
+      this.ribbonDataLoading = false;
     }
-    return data;
   }
 
-  applyFilterCrossAspect(data, group) {
-    const aspect = getCategoryIdLabel(
-      group,
-      this.ribbonStrips.ribbonSummary.categories,
-    );
+  private async fetchTableData(
+    group: IRibbonGroup,
+    subjects: IRibbonSubject[],
+  ) {
+    if (!this.ribbonData) {
+      return;
+    }
+
+    const groupIds =
+      group.id === "all"
+        ? this.ribbonData.categories.map((category) => category.id)
+        : [group.id];
+    const subjectIds = subjects.map((subject) => subject.id);
+
+    try {
+      await this.tableElement.setData(undefined);
+      this.tableDataLoading = true;
+      this.tableDataLoadingError = false;
+      const tableData = await getTableData(
+        this.tableDataApiEndpoint,
+        subjectIds,
+        groupIds,
+      );
+      this.applyTableFilters(tableData, group);
+
+      if (group.type === "Other") {
+        const category = getCategory(group, this.ribbonData.categories);
+        const categoryTermIds = category.groups
+          .filter((group) => group.type === "Term")
+          .map((group) => group.id);
+        const specificGroupData = await getTableData(
+          this.tableDataApiEndpoint,
+          subjectIds,
+          categoryTermIds,
+        );
+        this.applyTableFilters(specificGroupData, group);
+
+        const allSpecificGroupAssociations = specificGroupData.flatMap(
+          (entry) => entry.assocs,
+        );
+
+        tableData[0].assocs = diffAssociations(
+          tableData[0].assocs,
+          allSpecificGroupAssociations,
+        );
+      }
+      await this.tableElement.setData(tableData);
+    } catch (error) {
+      console.error("Error loading table data:", error);
+      this.tableDataLoadingError = true;
+      await this.tableElement.setData(undefined);
+    } finally {
+      this.tableDataLoading = false;
+    }
+  }
+
+  private applyTableFilters(data: TableData, group: IRibbonGroup) {
+    if (this.filterCrossAspect) {
+      this.applyFilterCrossAspect(data, group);
+    }
+  }
+
+  private applyFilterCrossAspect(data: TableData, group: IRibbonGroup) {
+    if (!this.ribbonData) {
+      return;
+    }
+    const aspect = getCategoryIdLabel(group, this.ribbonData.categories);
     for (let i = 0; i < data.length; i++) {
       data[i].assocs = data[i].assocs.filter((assoc) => {
         const cat =
@@ -357,183 +310,83 @@ export class AnnotationRibbon {
         return aspect == undefined || cat == aspect[1];
       });
     }
-    return data;
   }
 
-  sameSelection(selection) {
-    if (!this.previousSelection) {
-      return false;
-    }
-    const sameGroupID = selection.group.id == this.previousSelection.group.id;
-    const sameGroupType =
-      selection.group.type == this.previousSelection.group.type;
-    const sameSubject = sameArray(
-      selection.subjects,
-      this.previousSelection.subjects,
-    );
-
-    return sameGroupID && sameGroupType && sameSubject;
-  }
-
-  previousSelection = null;
-  onCellClick(e) {
-    console.log("Cell Clicked", e.detail);
-    this.loadingTable = true;
-
-    const selection = e.detail;
-    const group = selection.group;
-    let group_ids = group.id;
-    let subject_ids = selection.subjects.map((elt) => elt.id);
-
-    if (this.sameSelection(selection)) {
-      this.bioLinkData = undefined;
-      this.previousSelection = null;
-      this.loadingTable = false;
-      console.log("yep that's the same");
+  @Listen("cellClick")
+  onCellClick(e: CustomEvent<IRibbonCellEvent>) {
+    if (!this.ribbonData) {
       return;
     }
 
-    this.previousSelection = selection;
-
-    if (group.id == "all") {
-      group_ids = this.ribbonStrips.ribbonSummary.categories.map((elt) => {
-        return elt.id;
-      });
-      group_ids = group_ids.join("&slim=");
+    const { group, subjects } = e.detail;
+    if (!group || subjects.length === 0) {
+      void this.tableElement.setData(undefined);
+    } else {
+      void this.fetchTableData(group, subjects);
     }
-
-    const goApiUrl = "https://api.geneontology.org/api/";
-    subject_ids = subject_ids.join("&subject=");
-    const query =
-      goApiUrl +
-      "bioentityset/slimmer/function?slim=" +
-      group_ids +
-      "&subject=" +
-      subject_ids +
-      "&rows=-1";
-    console.log("query: ", query);
-
-    // fetch the json data
-    fetch(query)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        data = this.applyTableFilters(data, group);
-
-        if (group.type == "Other") {
-          const aspect = getCategory(
-            group,
-            this.ribbonStrips.ribbonSummary.categories,
-          );
-          let terms = aspect.groups.filter((elt) => {
-            return elt.type == "Term";
-          });
-          terms = terms.map((elt) => {
-            return elt.id;
-          });
-          terms = terms.join("&slim=");
-
-          const query_terms =
-            goApiUrl +
-            "bioentityset/slimmer/function?slim=" +
-            terms +
-            "&subject=" +
-            subject_ids +
-            "&rows=-1";
-          console.log("query_terms: ", query_terms);
-
-          // fetch the json data
-          fetch(query_terms)
-            .then((response_terms) => {
-              return response_terms.json();
-            })
-            .then((data_terms) => {
-              data_terms = this.applyTableFilters(data_terms, group);
-
-              let concat_assocs = [];
-              for (const array of data_terms) {
-                concat_assocs = concat_assocs.concat(array.assocs);
-              }
-
-              const other_assocs = diffAssociations(
-                data[0].assocs,
-                concat_assocs,
-              );
-              data[0].assocs = other_assocs;
-              this.loadingTable = false;
-              this.bioLinkData = JSON.stringify(data);
-            });
-        } else {
-          this.loadingTable = false;
-          this.bioLinkData = JSON.stringify(data);
-        }
-      });
   }
 
-  onGroupClick(e) {
-    console.log("Group Clicked", e.detail);
+  @Listen("groupClick")
+  onGroupClick(e: CustomEvent<IRibbonGroupEvent>) {
+    if (!this.ribbonData) {
+      return;
+    }
+
+    const { group } = e.detail;
+    if (!group) {
+      void this.tableElement.setData(undefined);
+    } else {
+      void this.fetchTableData(group, this.ribbonData.subjects);
+    }
   }
 
   render() {
-    return [
-      <go-annotation-ribbon-strips
-        id="wc-go-ribbon-strips"
-        ref={(el) => (this.ribbonStrips = el)}
-        base-api-url={this.baseApiUrl}
-        subject-base-url={this.subjectBaseUrl}
-        group-base-url={this.groupBaseUrl}
-        add-cell-all={this.addCellAll}
-        binary-color={this.binaryColor}
-        color-by={this.colorBy}
-        min-color={this.minColor}
-        max-color={this.maxColor}
-        max-heat-level={this.maxHeatLevel}
-        annotation-labels={this.annotationLabels}
-        class-labels={this.classLabels}
-        data={this.data}
-        category-case={this.categoryCase}
-        category-all-style={this.categoryAllStyle}
-        categoryOtherStyle={this.categoryOtherStyle}
-        group-max-label-size={this.groupMaxLabelSize}
-        group-new-tab={this.groupNewTab}
-        group-clickable={this.groupClickable}
-        fire-event-on-empty-cells={this.fireEventOnEmptyCells}
-        subjects={this.subjects}
-        subject-open-new-tab={this.subjectOpenNewTab}
-        subject-position={this.subjectPosition}
-        subject-use-taxon-icon={this.subjectUseTaxonIcon}
-        selection-mode={this.selectionMode}
-        selected={this.selected}
-        subset={this.subset}
-        show-other-group={this.showOtherGroup}
-      />,
-
-      (this.subjects && this.subjects.length > 0) || this.data ? (
-        <div style={{ "font-style": "italic", color: "#7b7b7b" }}>
-          Cell color indicative of annotation volume
-        </div>
-      ) : (
-        ""
-      ),
-
-      this.loadingTable ? (
-        <go-spinner></go-spinner>
-      ) : (
-        <go-annotation-ribbon-table
-          id="wc-go-ribbon-table"
-          ref={(el) => (this.ribbonTable = el)}
-          base-api-url={this.baseApiUrl}
-          subject-base-url={this.subjectBaseUrl}
-          group-base-url={this.groupBaseUrl}
-          data={this.tableData}
-          bio-link-data={this.bioLinkData}
-          group-by={this.groupBy}
-          order-by={this.orderBy}
-          filter-by={this.filterBy}
-          hide-columns={this.hideColumns}
+    return (
+      <Host>
+        <go-annotation-ribbon-strips
+          ref={(el) => (this.stripsElement = el)}
+          annotationLabels={this.annotationLabels}
+          binaryColor={this.binaryColor}
+          classLabels={this.classLabels}
+          colorBy={this.colorBy}
+          groupClickable={this.groupClickable}
+          groupMaxLabelSize={this.groupMaxLabelSize}
+          maxColor={this.maxColor}
+          maxHeatLevel={this.maxHeatLevel}
+          minColor={this.minColor}
+          selected={this.selected}
+          selectionMode={this.selectionMode}
+          showAllAnnotationsGroup={this.showAllAnnotationsGroup}
+          showOtherGroup={this.showOtherGroup}
+          subjectBaseUrl={this.subjectBaseUrl}
+          subjectOpenNewTab={this.subjectOpenNewTab}
+          subjectPosition={this.subjectPosition}
         />
-      ),
-    ];
+        {this.ribbonDataLoading && <go-spinner />}
+        {this.ribbonDataLoadingError && (
+          <div class="error">Error loading ribbon data.</div>
+        )}
+
+        {this.ribbonData && (
+          <div class="muted margin-bottom">
+            Cell color indicative of annotation volume
+          </div>
+        )}
+
+        {this.tableDataLoading && <go-spinner></go-spinner>}
+        <go-annotation-ribbon-table
+          ref={(el) => (this.tableElement = el)}
+          groupBy={this.groupBy}
+          orderBy={this.orderBy}
+          filterBy={this.filterBy}
+          hideColumns={this.hideColumns}
+          filterReference={this.filterReference}
+          excludeProteinBinding={this.excludeProteinBinding}
+        />
+        {this.tableDataLoadingError && (
+          <div class="error">Error loading table data.</div>
+        )}
+      </Host>
+    );
   }
 }

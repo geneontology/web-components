@@ -48,9 +48,11 @@
   "dependencies": {
     "@geneontology/dbxrefs": "^1.1.0",
     "bbop-graph-noctua": "^0.0.35",
+    "clsx": "^2.1.1",
     "cytoscape": "3.16.1",
     "cytoscape-dagre": "2.4.0",
     "graphlib": "^2.1.8",
+    "immer": "^10.1.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "uuid": "^11.0.3"

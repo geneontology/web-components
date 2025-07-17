@@ -1,0 +1,203 @@
+:host {
+  /**
+   * @prop --cell-width: Width of each cell
+   * @prop --cell-height: Height of each cell
+   * @prop --cell-spacing: Spacing between cells (this property has no effect unless `--cell-border-collapse` is set to `separate`)
+   * @prop --cell-border-collapse: Collapse behavior of cell borders, can be `collapse` or `separate`
+   * @prop --cell-border-width: Width of cell borders
+   * @prop --cell-border-color: Color of cell borders
+   * @prop --cell-border-style: Style of cell borders
+   * @prop --cell-box-shadow: Box shadow for cells
+   * @prop --cell-selected-border-width: Width of the border when a cell is selected
+   * @prop --cell-selected-border-color: Color of the border when a cell is selected
+   * @prop --cell-selected-border-style: Style of the border when a cell is selected
+   * @prop --cell-selected-box-shadow: Box shadow when a cell is selected
+   * @prop --cell-hovered-border-width: Width of the border when a cell is hovered
+   * @prop --cell-hovered-border-color: Color of the border when a cell is hovered
+   * @prop --cell-hovered-border-style: Style of the border when a cell is hovered
+   * @prop --cell-hovered-box-shadow: Box shadow when a cell is hovered
+   * @prop --category-separator-width: Width of the separator between group categories
+   * @prop --group-height: Height of group labels
+   * @prop --group-text-transform: Text transformation for group labels
+   * @prop --group-all-color: Color for the "all" group labels in each category
+   * @prop --group-all-font-weight: Font weight for the "all" group labels in each category
+   * @prop --group-other-color: Color for the "other" group labels in each category
+   * @prop --group-other-font-weight: Font weight for the "other" group labels in each category
+   * @prop --group-selected-color: Color for the selected group labels in each category
+   * @prop --subject-width: Width of subject cells
+   * @prop --subject-color: Color of subject cells
+   * @prop --subject-padding: Padding for subject cells
+   * @prop --loading-spinner-size: Size of the loading spinner displayed when loading ribbon or table data
+   * @prop --table-border: Border style for the table
+   * @prop --table-header-background-color: Background color for the header row
+   * @prop --table-header-color: Text color for the header row
+   * @prop --table-header-cell-padding: Padding for header cells
+   * @prop --table-header-cell-font-weight: Font weight for header cells
+   * @prop --table-header-border-width: Border width for header cells
+   * @prop --table-header-border-color: Border color for header cells
+   * @prop --table-header-border-style: Border style for header cells
+   * @prop --table-row-background-color: Background color for regular rows
+   * @prop --table-row-cell-padding: Padding for regular row cells
+   * @prop --table-row-cell-height: Height for regular row cells
+   * @prop --table-row-border-width: Border width for regular rows
+   * @prop --table-row-border-color: Border color for regular rows
+   * @prop --table-row-border-style: Border style for regular rows
+   * @prop --link-decoration: Text decoration for links
+   * @prop --link-color: Color for links
+   */
+  --cell-width: 1.40625em;
+  --cell-height: 1.40625em;
+
+  --cell-spacing: 0px;
+  --cell-border-collapse: collapse;
+
+  --cell-border-width: 1px;
+  --cell-border-color: transparent;
+  --cell-border-style: solid;
+  --cell-box-shadow: none;
+
+  --cell-selected-border-width: 2px;
+  --cell-selected-border-color: #e30505;
+  --cell-selected-border-style: solid;
+  --cell-selected-box-shadow: none;
+
+  --cell-hovered-border-width: 0;
+  --cell-hovered-border-color: none;
+  --cell-hovered-border-style: solid;
+  --cell-hovered-box-shadow: none;
+
+  --category-separator-width: 2em;
+
+  --group-height: 13.5em;
+  --group-text-transform: none;
+  --group-all-color: inherit;
+  --group-all-font-weight: normal;
+  --group-other-color: inherit;
+  --group-other-font-weight: normal;
+  --group-selected-color: #055ee3;
+
+  --subject-width: auto;
+  --subject-padding: 0 0.5em 0 0;
+
+  --loading-spinner-size: 2em;
+
+  --table-border: 0px solid black;
+
+  --table-header-background-color: rgb(255, 255, 255);
+  --table-header-color: rgb(0, 0, 0);
+  --table-header-cell-padding: 2px;
+  --table-header-cell-font-weight: 800;
+  --table-header-border-width: 2px 0;
+  --table-header-border-color: #ddd;
+  --table-header-border-style: solid;
+
+  --table-row-background-color: white;
+  --table-row-cell-padding: 2px;
+  --table-row-cell-height: 1.5em;
+  --table-row-border-width: 0 0 1px 0;
+  --table-row-border-color: #ddd;
+  --table-row-border-style: solid;
+
+  --link-decoration: none;
+  --link-color: rgb(73, 101, 194);
+
+  // These are "internal" properties used to pipe the value of a property defined on the host here
+  // down to child components that have properties with the same name.
+  --ribbon-cell-width: var(--cell-width);
+  --ribbon-cell-height: var(--cell-height);
+  --ribbon-cell-spacing: var(--cell-spacing);
+  --ribbon-cell-border-collapse: var(--cell-border-collapse);
+  --ribbon-cell-border-width: var(--cell-border-width);
+  --ribbon-cell-border-color: var(--cell-border-color);
+  --ribbon-cell-border-style: var(--cell-border-style);
+  --ribbon-cell-box-shadow: var(--cell-box-shadow);
+  --ribbon-cell-selected-border-width: var(--cell-selected-border-width);
+  --ribbon-cell-selected-border-color: var(--cell-selected-border-color);
+  --ribbon-cell-selected-border-style: var(--cell-selected-border-style);
+  --ribbon-cell-selected-box-shadow: var(--cell-selected-box-shadow);
+  --ribbon-cell-hovered-border-width: var(--cell-hovered-border-width);
+  --ribbon-cell-hovered-border-color: var(--cell-hovered-border-color);
+  --ribbon-cell-hovered-border-style: var(--cell-hovered-border-style);
+  --ribbon-cell-hovered-box-shadow: var(--cell-hovered-box-shadow);
+  --ribbon-category-separator-width: var(--category-separator-width);
+  --ribbon-group-height: var(--group-height);
+  --ribbon-group-text-transform: var(--group-text-transform);
+  --ribbon-group-all-color: var(--group-all-color);
+  --ribbon-group-all-font-weight: var(--group-all-font-weight);
+  --ribbon-group-other-color: var(--group-other-color);
+  --ribbon-group-other-font-weight: var(--group-other-font-weight);
+  --ribbon-group-selected-color: var(--group-selected-color);
+  --ribbon-subject-width: var(--subject-width);
+  --ribbon-subject-padding: var(--subject-padding);
+  --table-link-decoration: var(--link-decoration);
+  --table-link-color: var(--link-color);
+
+  display: block;
+}
+
+go-annotation-ribbon-strips {
+  --cell-width: var(--ribbon-cell-width);
+  --cell-height: var(--ribbon-cell-height);
+  --cell-spacing: var(--ribbon-cell-spacing);
+  --cell-border-collapse: var(--ribbon-cell-border-collapse);
+  --cell-border-width: var(--ribbon-cell-border-width);
+  --cell-border-color: var(--ribbon-cell-border-color);
+  --cell-border-style: var(--ribbon-cell-border-style);
+  --cell-box-shadow: var(--ribbon-cell-box-shadow);
+  --cell-selected-border-width: var(--ribbon-cell-selected-border-width);
+  --cell-selected-border-color: var(--ribbon-cell-selected-border-color);
+  --cell-selected-border-style: var(--ribbon-cell-selected-border-style);
+  --cell-selected-box-shadow: var(--ribbon-cell-selected-box-shadow);
+  --cell-hovered-border-width: var(--ribbon-cell-hovered-border-width);
+  --cell-hovered-border-color: var(--ribbon-cell-hovered-border-color);
+  --cell-hovered-border-style: var(--ribbon-cell-hovered-border-style);
+  --cell-hovered-box-shadow: var(--ribbon-cell-hovered-box-shadow);
+  --category-separator-width: var(--ribbon-category-separator-width);
+  --group-height: var(--ribbon-group-height);
+  --group-text-transform: var(--ribbon-group-text-transform);
+  --group-all-color: var(--ribbon-group-all-color);
+  --group-all-font-weight: var(--ribbon-group-all-font-weight);
+  --group-other-color: var(--ribbon-group-other-color);
+  --group-other-font-weight: var(--ribbon-group-other-font-weight);
+  --group-selected-color: var(--ribbon-group-selected-color);
+  --subject-width: var(--ribbon-subject-width);
+  --subject-color: var(--link-color);
+  --subject-decoration: var(--link-decoration);
+  --subject-padding: var(--ribbon-subject-padding);
+}
+
+go-annotation-ribbon-table {
+  --border: var(--table-border);
+  --header-background-color: var(--table-header-background-color);
+  --header-color: var(--table-header-color);
+  --header-cell-padding: var(--table-header-cell-padding);
+  --header-cell-font-weight: var(--table-header-cell-font-weight);
+  --header-border-width: var(--table-header-border-width);
+  --header-border-color: var(--table-header-border-color);
+  --header-border-style: var(--table-header-border-style);
+  --row-background-color: var(--table-row-background-color);
+  --row-cell-padding: var(--table-row-cell-padding);
+  --row-cell-height: var(--table-row-cell-height);
+  --row-border-width: var(--table-row-border-width);
+  --row-border-color: var(--table-row-border-color);
+  --row-border-style: var(--table-row-border-style);
+  --link-decoration: var(--table-link-decoration);
+  --link-color: var(--table-link-color);
+}
+
+go-spinner {
+  --size: var(--loading-spinner-size);
+}
+
+.margin-bottom {
+  margin-bottom: 1em;
+}
+
+.muted {
+  font-style: italic;
+  color: #7b7b7b;
+}
+
+.error {
+  color: darkred;
+}

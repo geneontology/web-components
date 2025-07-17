@@ -1,9 +1,16 @@
-import { Component, h, Prop, Watch, State, Method } from "@stencil/core";
+import { Component, h, Method, Prop, State, Watch } from "@stencil/core";
 
-import { ITable, ISuperCell } from "../../globals/models";
-import { bioLinkToTable, addEmptyCells } from "./utils";
+import {
+  IHeaderCell,
+  ISuperCell,
+  ITable,
+  TableData,
+} from "../../globals/models";
+import { addEmptyCells, bioLinkToTable } from "./utils";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
+import { getTableData } from "../../globals/api";
+import { Draft, Immutable, produce } from "immer";
 
 /**
  * The Annotation Ribbon Table component displays a table of GO annotations. This component does not
@@ -12,275 +19,205 @@ import * as dbxrefs from "@geneontology/dbxrefs";
 @Component({
   tag: "go-annotation-ribbon-table",
   styleUrl: "annotation-ribbon-table.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonTable {
-  @Prop() baseApiUrl = "https://api.geneontology.org/api/ontology/ribbon/";
+  @State() loading: boolean = false;
+  @State() loadingError: boolean = false;
+  @State() displayTable?: Immutable<ITable>;
 
-  @Prop() subjectBaseUrl: string =
-    "http://amigo.geneontology.org/amigo/gene_product/";
-  @Prop() groupBaseUrl: string = "http://amigo.geneontology.org/amigo/term/";
+  private tableData?: Immutable<TableData>;
+  private headerMap?: Map<string, Immutable<IHeaderCell>>;
+  private dataManuallySet: boolean = false;
+
+  /**
+   * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
+   */
+  @Prop() subjects?: string;
+
+  /**
+   * Comma-separate list of GO term IDs (e.g. GO:0003674,GO:0008150,GO:0005575)
+   */
+  @Prop() slims?: string;
+
+  /**
+   * URL for the API endpoint to fetch the table data when subjects and slims are provided.
+   */
+  @Prop() apiEndpoint =
+    "https://api.geneontology.org/api/bioentityset/slimmer/function";
 
   /**
    * Using this parameter, the table rows can bee grouped based on column ids
    * A multiple step grouping is possible by using a ";" between groups
    * The grouping applies before the ordering
    * Example: hid-1,hid-3 OR hid-1,hid-3;hid-2
-   * Note: if value is "", remove any grouping
    */
-  @Prop() groupBy: string;
-
-  @Watch("groupBy")
-  groupByChanged(newValue, oldValue) {
-    // console.log("groupByChanged(" , newValue , "; " , oldValue , ")");
-    if (newValue != oldValue) {
-      this.updateTable();
-    }
-  }
+  @Prop() groupBy?: string;
 
   /**
    * This is used to sort the table depending of a column
    * The column cells must be single values
    * The ordering applies after the grouping
-   * Note: if value is "", remove any ordering
    */
-  @Prop() orderBy: string;
-
-  @Watch("orderBy")
-  orderByChanged(newValue, oldValue) {
-    // console.log("orderByChanged(" , newValue , "; " , oldValue , ")");
-    if (newValue != oldValue) {
-      this.updateTable();
-    }
-  }
+  @Prop() orderBy?: string;
 
   /**
    * Filter rows based on the presence of one or more values in a given column
    * The filtering will be based on cell label or id
    * Example: filter-by="evidence:ISS,ISO or multi-step filters: filter-by:evidence:ISS,ISO;term:xxx"
-   * Note: if value is "", remove any filtering
    */
-  @Prop() filterBy: string;
-
-  @Watch("filterBy")
-  filterByChanged(newValue, oldValue) {
-    // console.log("filterByChanged(" , newValue , "; " , oldValue , ")");
-    if (newValue != oldValue) {
-      this.updateTable();
-    }
-  }
+  @Prop() filterBy?: string;
 
   /**
    * Used to hide specific column of the table
    */
-  @Prop() hideColumns: string;
+  @Prop() hideColumns?: string;
 
+  /**
+   * Comma-separated list of reference prefixes to filter include
+   */
+  @Prop() filterReference = "PMID:,DOI:,GO_REF:,Reactome:";
+
+  /**
+   * If true, will exclude the protein binding GO term (GO:0005515) from the table
+   */
+  @Prop() excludeProteinBinding = true;
+
+  @Watch("groupBy")
+  @Watch("orderBy")
+  @Watch("filterBy")
   @Watch("hideColumns")
-  hideColumnsChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      this.updateTable();
+  @Watch("filterReference")
+  @Watch("excludeProteinBinding")
+  regenerateDisplayTable() {
+    this.produceDisplayTable();
+  }
+
+  @Watch("subjects")
+  @Watch("slims")
+  async refetchData() {
+    if (this.dataManuallySet) {
+      return;
     }
+    await this.fetchData();
+  }
+
+  async componentWillLoad() {
+    await dbxrefs.init();
+    void this.fetchData();
   }
 
   /**
-   * Must follow the appropriate JSON data model
-   * Can be given as either JSON or stringified JSON
+   * Set the table data manually.
+   *
+   * Once this method is called, changes to the subjects or slims properties will not trigger
+   * a refetch of the data.
+   *
+   * @param data The table data to set.
    */
-  @Prop() data: string;
-
-  /**
-   * Reading biolink data. This will trigger a render of the table as would changing data
-   */
-  @Prop() bioLinkData: string;
-
-  /**
-   * This contains the original table, converted from either data or bioLinkData
-   * Its value only changes when data or bioLinkData changes
-   */
-  originalTable: ITable;
-
-  /**
-   * Contains the current representation from originalTable, including any grouping or sorting
-   * Any change to this state will trigger a render
-   */
-  @State()
-  table: ITable;
-
-  /**
-   * Contains (header_id ; header)
-   * Used to speed up some cell processing (eg access baseURL)
-   */
-  headerMap;
-
-  @Watch("data")
-  dataChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      // console.log("DATA CHANGED: ", newValue);
-      this.loadFromData();
-    }
-  }
-
-  loadFromData() {
-    if (typeof this.data == "string") {
-      this.originalTable = JSON.parse(this.data);
+  @Method()
+  async setData(data?: TableData) {
+    this.dataManuallySet = true;
+    this.tableData = data;
+    if (data) {
+      this.produceDisplayTable();
     } else {
-      this.originalTable = this.data;
-    }
-    this.updateTable();
-  }
-
-  @Watch("bioLinkData")
-  bioLinkDataChanged(newValue, oldValue) {
-    if (newValue != oldValue) {
-      // console.log("BIOLINK DATA CHANGED: ", newValue);
-      this.loadFromBioLinkData();
+      this.displayTable = undefined;
     }
   }
 
-  loadFromBioLinkData() {
-    // if no data, empty the current table
-    if (this.bioLinkData == undefined || this.bioLinkData == "") {
-      this.originalTable = undefined;
-      this.table = undefined;
+  private async fetchData() {
+    if (!this.subjects || !this.slims) {
       return;
     }
 
-    if (dbxrefs.isReady()) {
-      if (typeof this.bioLinkData == "string") {
-        this.originalTable = bioLinkToTable(
-          JSON.parse(this.bioLinkData),
-          dbxrefs.getURL,
-        );
-      } else {
-        this.originalTable = bioLinkToTable(this.bioLinkData, dbxrefs.getURL);
+    try {
+      this.loading = true;
+      this.loadingError = false;
+      this.tableData = await getTableData(
+        this.apiEndpoint,
+        this.subjects,
+        this.slims,
+      );
+      this.produceDisplayTable();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      this.loadingError = true;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private produceDisplayTable() {
+    if (!this.tableData) {
+      return;
+    }
+
+    const filteredData = produce(this.tableData, (draft: Draft<TableData>) => {
+      if (this.filterReference) {
+        this.applyFilterReference(draft);
       }
-      this.updateTable();
-    } else {
-      dbxrefs.init().then(() => {
-        console.log("dbx: ", dbxrefs);
-        console.log(dbxrefs.getURL("WB", undefined, "WBGene00006575"));
-        if (typeof this.bioLinkData == "string") {
-          this.originalTable = bioLinkToTable(
-            JSON.parse(this.bioLinkData),
-            dbxrefs.getURL,
-          );
-        } else {
-          this.originalTable = bioLinkToTable(this.bioLinkData, dbxrefs.getURL);
-        }
-        this.updateTable();
+      if (this.excludeProteinBinding) {
+        this.applyFilterPB(draft);
+      }
+    });
+
+    const displayTable = bioLinkToTable(filteredData, dbxrefs.getURL);
+
+    addEmptyCells(displayTable);
+
+    // group the table rows based on provided columns (if any)
+    if (this.groupBy) {
+      const steps = this.groupBy.split(";");
+      for (const groups of steps) {
+        this.groupByColumns(displayTable, groups.split(","));
+      }
+    }
+
+    // order the table rows based on provided columns (if any)
+    if (this.orderBy) {
+      displayTable.rows.sort((a, b) => {
+        const eqa = a.cells.filter((elt) => elt.headerId == this.orderBy)[0];
+        const eqb = b.cells.filter((elt) => elt.headerId == this.orderBy)[0];
+        return eqa.values[0].label.localeCompare(eqb.values[0].label);
       });
     }
-  }
 
-  updateTable() {
-    if (this.originalTable) {
-      // deep copy required to keep the original table safe
-      let tempTable = JSON.parse(JSON.stringify(this.originalTable));
-      tempTable = addEmptyCells(tempTable);
-
-      // step-1: is grouping the table rows based on provided columns (if any)
-      if (this.groupBy && this.groupBy != "") {
-        // multiple steps grouping
-        if (this.groupBy.includes(";")) {
-          const split = this.groupBy.split(";");
-          for (const groups of split) {
-            tempTable = this.groupByColumns(
-              tempTable,
-              groups.split(","),
-              false,
-            );
-          }
-          // single step grouping
-        } else {
-          tempTable = this.groupByColumns(
-            tempTable,
-            this.groupBy.split(","),
-            false,
-          );
-        }
+    // filter the table based on provided {col, values} (if any)
+    if (this.filterBy) {
+      const steps = this.filterBy.split(";");
+      for (const filters of steps) {
+        this.filterByColumns(displayTable, filters);
       }
-
-      // step-2: order the table rows based on provided columns (if any)
-      if (this.orderBy && this.orderBy != "") {
-        tempTable.rows.sort((a, b) => {
-          // console.log("sort(", a, b, ")");
-          const eqa = a.cells.filter((elt) => elt.headerId == this.orderBy)[0];
-          const eqb = b.cells.filter((elt) => elt.headerId == this.orderBy)[0];
-          return eqa.values[0].label.localeCompare(eqb.values[0].label);
-        });
-      }
-
-      // step-3: filter the table based on provided {col, values} (if any)
-      if (this.filterBy && this.filterBy != "") {
-        // multiple steps grouping
-        if (this.filterBy.includes(";")) {
-          const split = this.filterBy.split(";");
-          for (const filters of split) {
-            tempTable = this.filterByColumns(tempTable, filters);
-          }
-          // single step grouping
-        } else {
-          tempTable = this.filterByColumns(tempTable, this.filterBy);
-        }
-      }
-
-      // step-4: hide columns based on provided hideColumns parameter
-      if (this.hideColumns && this.hideColumns != "") {
-        const cols = this.hideColumns.includes(",")
-          ? this.hideColumns.split(",")
-          : [this.hideColumns];
-        for (const header of tempTable.header) {
-          header.hide = cols.includes(header.id);
-        }
-      }
-
-      // assigning this to the state - will trigger a render
-      this.table = tempTable;
-      this.createHeaderMap();
     }
-  }
 
-  goContextURL =
-    "https://raw.githubusercontent.com/prefixcommons/biocontext/master/registry/go_context.jsonld";
-  curie;
-
-  componentWillLoad() {
-    // enter with the regular data format
-    if (this.data) {
-      this.loadFromData();
-
-      // enter with biolink data format
-    } else if (this.bioLinkData) {
-      this.loadFromBioLinkData();
+    // hide columns based on provided hideColumns parameter
+    if (this.hideColumns) {
+      const cols = this.hideColumns.split(",");
+      for (const header of displayTable.header) {
+        header.hide = cols.includes(header.id);
+      }
     }
-  }
+    this.displayTable = Object.freeze(displayTable);
 
-  createHeaderMap() {
-    this.headerMap = new Map();
-    for (const header of this.table.header) {
-      this.headerMap.set(header.id, header);
+    const map = new Map<string, Immutable<IHeaderCell>>();
+    for (const header of this.displayTable.header) {
+      map.set(header.id, header);
     }
-  }
-
-  mergeCells(cells) {
-    return cells;
+    this.headerMap = map;
   }
 
   /**
    * Will group the table rows based on unique values in specified columns
    * @param table the table to be grouped
    * @param keyColumns ids of the columns to create unique rows - will only work with cells containing single value, not array
-   * @param filterRedudancy if true, the values of merged columns will be filtered
    */
-  groupByColumns(table, keyColumns, filterRedudancy = true) {
-    // console.log("groupByColumns(", table , keyColumns, filterRedudancy , ")");
-
+  private groupByColumns(table: ITable, keyColumns: string[]) {
     const firstRow = table.rows[0].cells;
     const otherCells = firstRow.filter(
       (elt) => !keyColumns.includes(elt.headerId),
     );
     const otherColumns = otherCells.map((elt) => elt.headerId);
-    // console.log("other cols: ", otherColumns);
 
     // building the list of unique rows
     const uRows = new Map();
@@ -299,9 +236,8 @@ export class AnnotationRibbonTable {
       }
       rows.push(row);
     }
-    // console.log("unique rows: ", uRows);
 
-    const newTable = { newTab: table.newTab, header: table.header, rows: [] };
+    const newRows = [];
 
     // this was required either by stenciljs or web component
     // for an integration in alliance REACT project
@@ -313,10 +249,8 @@ export class AnnotationRibbonTable {
     for (let i = 0; i < akeys.length; i++) {
       const key = akeys[i];
       const rrows = uRows.get(key);
-      // console.log("Uniq.Row ("  , key , "): ", rrows);
       const row = { cells: [] };
       for (const header of table.header) {
-        // console.log(" --- header: ", header);
         let eqcell: ISuperCell = undefined;
         if (keyColumns.includes(header.id)) {
           eqcell = rrows[0].cells.filter((elt) => elt.headerId == header.id)[0];
@@ -336,35 +270,25 @@ export class AnnotationRibbonTable {
             eqcell.foldable = otherCell.foldable;
             eqcell.selectable = otherCell.selectable;
 
-            // TODO: can include test here for filder redudancy
             for (const val of otherCell.values) {
-              if (filterRedudancy) {
-                /* empty */
-              }
               eqcell.values.push(val);
             }
           }
         }
 
-        // console.log(" --- H: ", header , "E: ", eqcell);
         if (eqcell) {
           row.cells.push(eqcell);
         }
       }
-      newTable.rows.push(row);
+      newRows.push(row);
     }
-    return newTable;
+    table.rows = newRows;
   }
 
-  filterByColumns(table, filters) {
+  private filterByColumns(table: ITable, filters: string) {
     const split = filters.split(":");
     const key = split[0];
-    let values = split[1];
-    if (values.includes(",")) {
-      values = values.split(",");
-    } else {
-      values = [values];
-    }
+    const values = split[1].split(",");
 
     table.rows = table.rows.filter((row) => {
       const eqcell = row.cells.filter((elt) => {
@@ -379,145 +303,119 @@ export class AnnotationRibbonTable {
       });
       return hasValue;
     });
-    return table;
+  }
+
+  private applyFilterReference(data: TableData) {
+    const filters = this.filterReference.split(",");
+
+    for (let i = 0; i < data.length; i++) {
+      data[i].assocs = data[i].assocs.filter((assoc) => {
+        assoc.reference = assoc.reference.filter((ref) =>
+          filters.some((filter) => ref.includes(filter)),
+        );
+        return assoc;
+      });
+    }
+  }
+
+  private applyFilterPB(data: TableData) {
+    for (let i = 0; i < data.length; i++) {
+      data[i].assocs = data[i].assocs.filter(
+        (assoc) => assoc.object.id != "GO:0005515",
+      );
+    }
   }
 
   render() {
-    if (!this.table) {
-      return "";
+    if (!this.displayTable) {
+      return null;
     }
 
-    // console.log("TABLE:", table);
     return (
-      <div>
-        <table class="table">
-          {this.renderHeader(this.table)}
-          {this.renderRows(this.table)}
-        </table>
-      </div>
+      <table class="table">
+        {this.renderHeader(this.displayTable)}
+        {this.renderRows(this.displayTable)}
+      </table>
     );
   }
 
-  renderHeader(table) {
+  renderHeader(table: Immutable<ITable>) {
     return (
-      <tr class="table__header">
+      <tr class="header">
         {table.header.map((cell) => {
-          return [
-            cell.hide ? (
-              ""
-            ) : (
+          return (
+            !cell.hide && (
               <th
                 title={cell.description}
                 id={cell.id}
-                class="table__header__cell"
+                key={cell.id}
+                class="header-cell"
               >
                 {cell.label}
               </th>
-            ),
-          ];
+            )
+          );
         })}
       </tr>
     );
   }
 
-  renderRows(table) {
-    // console.log("Render table: ", table);
-    return table.rows.map((row) => {
-      return [
-        <tr class="table__row">
-          {row.cells.map((superCell) => {
-            if (!this.headerMap) {
-              return "";
-            }
-            const header = this.headerMap.get(superCell.headerId);
-            if (header.hide) {
-              return "";
-            }
+  renderRows(table: Immutable<ITable>) {
+    return table.rows.map((row) => (
+      <tr class="row">
+        {row.cells.map((superCell) => {
+          if (!this.headerMap) {
+            return null;
+          }
+          const header = this.headerMap.get(superCell.headerId);
+          if (header.hide) {
+            return null;
+          }
 
-            let baseURL = header.baseURL;
-            // adding automatically the ending slash cause too many problem (eg base URL that are example.com/tototo?uri=)
-            // baseURL = baseURL ? addEndingSlash(baseURL) : "";
-            baseURL = baseURL ? baseURL : "";
+          const baseURL = header.baseURL || "";
 
-            return (
-              <td class="table__row__supercell">
-                <ul class="table__row__supercell__list">
-                  {
-                    // Todo: this is where we can have a strategy for folding cells
-                    superCell.values.map((cell) => {
-                      let url = cell.url;
-                      if (url && baseURL.length > 0) {
-                        url = baseURL + url.replace(baseURL, "");
-                      }
+          return (
+            <td class="supercell">
+              <ul class="supercell-list">
+                {
+                  // Todo: this is where we can have a strategy for folding cells
+                  superCell.values.map((cell) => {
+                    let url = cell.url;
+                    if (url && baseURL.length > 0) {
+                      url = baseURL + url.replace(baseURL, "");
+                    }
 
-                      // create tags if any
-                      let tag_span = "";
-                      if (cell.tags) {
-                        tag_span = (
-                          <span class="table__row__supercell__cell--not">
-                            {cell.tags.join(", ")}
-                          </span>
-                        );
-                      }
+                    // create tags if any
+                    let tag_span = "";
+                    if (cell.tags) {
+                      tag_span = (
+                        <span class="tags">{cell.tags.join(", ")}</span>
+                      );
+                    }
 
-                      return [
-                        <li
-                          title={cell.description}
-                          class="table__row__supercell__cell"
-                        >
-                          {cell.url ? (
-                            <a
-                              class="table__row__supercell__cell__link"
-                              href={url}
-                              target={this.table.newTab ? "_blank" : "_self"}
-                            >
-                              {tag_span} {cell.label}
-                            </a>
-                          ) : (
-                            <div
-                              onClick={
-                                cell.clickable
-                                  ? () => this.onCellClick(cell)
-                                  : () => ""
-                              }
-                            >
-                              {tag_span} {cell.label}
-                            </div>
-                          )}
-                        </li>,
-                      ];
-                    })
-                  }
-                </ul>
-              </td>
-            );
-          })}
-        </tr>,
-      ];
-    });
-  }
-
-  onCellClick(cell) {
-    console.log("Cell clicked: ", cell);
-  }
-
-  @Method()
-  async showOriginalTable() {
-    console.log(this.originalTable);
-  }
-
-  @Method()
-  async showTable() {
-    console.log(this.table);
-  }
-
-  @Method()
-  async showCurie() {
-    console.log(this.curie);
-  }
-
-  @Method()
-  async showDBXrefs() {
-    console.log(dbxrefs.getDBXrefs());
+                    return [
+                      <li title={cell.description} class="supercell-list-item">
+                        {cell.url ? (
+                          <a
+                            href={url}
+                            target={table.newTab ? "_blank" : "_self"}
+                          >
+                            {tag_span} {cell.label}
+                          </a>
+                        ) : (
+                          <div>
+                            {tag_span} {cell.label}
+                          </div>
+                        )}
+                      </li>,
+                    ];
+                  })
+                }
+              </ul>
+            </td>
+          );
+        })}
+      </tr>
+    ));
   }
 }

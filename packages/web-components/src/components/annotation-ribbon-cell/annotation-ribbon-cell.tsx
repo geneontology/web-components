@@ -1,12 +1,17 @@
-import { h } from "@stencil/core";
+import { Component, h, Prop, Watch } from "@stencil/core";
+import clsx from "clsx";
 
-import { Component, Prop, Element } from "@stencil/core";
+import { darken, heatColor } from "./utils";
+import {
+  getNbAnnotations,
+  getNbClasses,
+} from "../annotation-ribbon-strips/utils";
 
-import { heatColor, darken } from "./utils";
-import { CELL_TYPES, COLOR_BY } from "../../globals/enums";
-
-import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
-import { Watch } from "@stencil/core";
+import {
+  ColorByOption,
+  IRibbonGroup,
+  IRibbonSubject,
+} from "../../globals/models";
 
 /**
  * An individual cell in the annotation ribbon.
@@ -16,17 +21,15 @@ import { Watch } from "@stencil/core";
 @Component({
   tag: "go-annotation-ribbon-cell",
   styleUrl: "annotation-ribbon-cell.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonCell {
-  @Element() el: HTMLElement;
-
   @Prop() subject: IRibbonSubject;
   @Prop() group: IRibbonGroup;
 
   @Prop() classLabels = "term,terms";
   @Prop() annotationLabels = "annotation,annotations";
-  @Prop() colorBy = COLOR_BY.CLASS_COUNT;
+  @Prop() colorBy: ColorByOption = "annotations";
   @Prop() binaryColor = false;
   @Prop() minColor = "255,255,255";
   @Prop() maxColor = "24,73,180";
@@ -100,9 +103,8 @@ export class AnnotationRibbonCell {
   @Prop() selected = false;
   @Prop() hovered = false;
 
-  cellColor(nbClasses, nbAnnotations) {
-    const levels =
-      this.colorBy == COLOR_BY.CLASS_COUNT ? nbClasses : nbAnnotations;
+  private cellColor(nbClasses: number, nbAnnotations: number) {
+    const levels = this.colorBy == "classes" ? nbClasses : nbAnnotations;
     let newColor = heatColor(
       levels,
       this.maxHeatLevel,
@@ -118,32 +120,6 @@ export class AnnotationRibbonCell {
     return newColor;
   }
 
-  getNbClasses() {
-    if (this.group.type == "GlobalAll") {
-      return this.subject.nb_classes;
-    }
-    const cellid =
-      this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
-    const cell =
-      cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
-    return cell ? cell["ALL"]["nb_classes"] : 0;
-  }
-
-  getNbAnnotations() {
-    if (this.group.type == "GlobalAll") {
-      return this.subject.nb_annotations;
-    }
-    const cellid =
-      this.group.id + (this.group.type == CELL_TYPES.OTHER ? "-other" : "");
-    const cell =
-      cellid in this.subject.groups ? this.subject.groups[cellid] : undefined;
-    return cell ? cell["ALL"]["nb_annotations"] : 0;
-  }
-
-  hasAnnotations() {
-    return this.getNbAnnotations() > 0;
-  }
-
   /**
    * This is executed once when the component gets loaded
    */
@@ -155,59 +131,58 @@ export class AnnotationRibbonCell {
   }
 
   render() {
+    let title = "";
+    const classes: (string | boolean)[] = ["cell"];
+
+    let nbAnnotations = 0;
+    let nbClasses = 0;
     if (!this.available) {
-      const title =
-        this.subject.label + " can not have data for " + this.group.label;
-      const classes = "ribbon__subject--cell unavailable";
-      return (
-        <td title={title} class={classes}>
-          {" "}
-        </td>
+      title = this.subject.label + " can not have data for " + this.group.label;
+      classes.push("unavailable");
+    } else {
+      nbClasses = getNbClasses(this.group, this.subject);
+      nbAnnotations = getNbAnnotations(this.group, this.subject);
+
+      title =
+        "Subject: " +
+        this.subject.id +
+        ":" +
+        this.subject.label +
+        "\n\nGroup: " +
+        this.group.id +
+        ": " +
+        this.group.label;
+
+      if (nbAnnotations > 0) {
+        title +=
+          "\n\n" +
+          nbClasses +
+          " " +
+          (nbClasses > 1
+            ? this.arrayClassLabels[1]
+            : this.arrayClassLabels[0]) +
+          ", " +
+          nbAnnotations +
+          " " +
+          (nbAnnotations > 1
+            ? this.arrayAnnotationLabels[1]
+            : this.arrayAnnotationLabels[0]);
+      } else {
+        title += "\n\nNo data available";
+      }
+
+      classes.push(
+        nbAnnotations === 0 && "no-annotations",
+        this.selected && nbAnnotations > 0 && "selected",
+        this.hovered && nbAnnotations > 0 && "hovered",
       );
     }
-
-    const nbClasses = this.getNbClasses();
-    const nbAnnotations = this.getNbAnnotations();
-
-    let title =
-      "Subject: " +
-      this.subject.id +
-      ":" +
-      this.subject.label +
-      "\n\nGroup: " +
-      this.group.id +
-      ": " +
-      this.group.label;
-
-    if (nbAnnotations > 0) {
-      title +=
-        "\n\n" +
-        nbClasses +
-        " " +
-        (nbClasses > 1 ? this.arrayClassLabels[1] : this.arrayClassLabels[0]) +
-        ", " +
-        nbAnnotations +
-        " " +
-        (nbAnnotations > 1
-          ? this.arrayAnnotationLabels[1]
-          : this.arrayAnnotationLabels[0]);
-    } else {
-      title += "\n\nNo data available";
-    }
-    this.el.style.setProperty(
-      "background",
-      this.cellColor(nbClasses, nbAnnotations),
-    );
-
-    let classes =
-      this.selected && nbAnnotations > 0
-        ? "ribbon__subject--cell clicked"
-        : "ribbon__subject--cell";
-    classes += this.hovered && nbAnnotations > 0 ? " hovered" : "";
     return (
-      <td title={title} class={classes}>
-        {" "}
-      </td>
+      <div
+        title={title}
+        class={clsx(classes)}
+        style={{ backgroundColor: this.cellColor(nbClasses, nbAnnotations) }}
+      />
     );
   }
 }

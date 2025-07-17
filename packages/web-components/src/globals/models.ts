@@ -2,7 +2,7 @@ export interface IRibbonGroup {
   id: string;
   label: string;
   description: string;
-  type: string;
+  type: "GlobalAll" | "All" | "Term" | "Other";
 }
 
 export interface IRibbonCategory {
@@ -29,17 +29,12 @@ export interface IRibbonModel {
 
 export interface IRibbonCellEvent {
   subjects: IRibbonSubject[];
-  group: IRibbonGroup;
+  group: IRibbonGroup | null;
 }
 
 export interface IRibbonGroupEvent {
-  subjects: IRibbonSubject[];
   category: IRibbonCategory;
   group: IRibbonGroup;
-}
-
-export interface IRibbonCellClick extends IRibbonCellEvent {
-  selected: boolean[];
 }
 
 export interface ISuperCell {
@@ -58,15 +53,11 @@ export interface ICell {
   url?: string;
   icon?: string;
   tags?: string[];
-  clickable?: boolean;
   selectable?: boolean;
 }
 
 export interface IHeaderCell extends ICell {
-  sortable?: boolean;
-  searchable?: boolean;
   baseURL?: string; // if defined, convert cell URL to use this baseURL
-  foldListThr?: number; // if defined, fold the cells that have more than X items
   hide?: boolean; // if true, won't show the column that would be considered only for treatment (eg grouping)
 }
 
@@ -81,3 +72,40 @@ export interface ITable {
   rows: IRow[];
   newTab?: boolean;
 }
+
+export interface TableDataNode {
+  id: string;
+  iri: string;
+  label: string;
+  category?: string[];
+  taxon: {
+    id: string;
+    iri: string;
+    label: string;
+  };
+}
+
+export interface TableDataAssociation {
+  id: string;
+  subject: TableDataNode;
+  object: TableDataNode;
+  negated: boolean;
+  qualifiers?: string[];
+  evidence: string;
+  evidence_label: string;
+  evidence_type: string;
+  evidence_with?: string[];
+  reference: string[];
+}
+export interface TableDataEntry {
+  subject: string;
+  slim: string;
+  assocs: TableDataAssociation[];
+}
+export type TableData = TableDataEntry[];
+
+export type ColorByOption = "classes" | "annotations";
+
+export type SubjectPositionOption = "none" | "left" | "right";
+
+export type SelectionModeOption = "cell" | "column";

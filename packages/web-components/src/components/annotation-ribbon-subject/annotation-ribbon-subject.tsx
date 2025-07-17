@@ -1,9 +1,6 @@
-import { h } from "@stencil/core";
-
-import { Component, Prop, State, Element } from "@stencil/core";
+import { Component, Event, EventEmitter, h, Prop, Watch } from "@stencil/core";
 
 import { formatTaxonLabel } from "./utils";
-import { EventEmitter, Event } from "@stencil/core";
 import { IRibbonSubject } from "../../globals/models";
 
 /**
@@ -14,27 +11,39 @@ import { IRibbonSubject } from "../../globals/models";
 @Component({
   tag: "go-annotation-ribbon-subject",
   styleUrl: "annotation-ribbon-subject.scss",
-  shadow: false,
+  shadow: true,
 })
 export class AnnotationRibbonSubject {
-  @Element() el: HTMLElement;
+  private subjectId: string;
+  private subjectBaseURLFull: string = "/";
 
-  @Prop() subject: IRibbonSubject;
+  @Prop() subject!: IRibbonSubject;
 
-  @Prop() subjectBaseURL: string;
-  @Prop() newTab: boolean;
-
-  @State() id: string;
-
-  constructor() {
-    if (!this.subjectBaseURL.endsWith("/")) {
-      this.subjectBaseURL += "/";
+  @Prop()
+  get subjectBaseURL(): string {
+    return this.subjectBaseURLFull;
+  }
+  set subjectBaseURL(value: string) {
+    let newValue = value;
+    if (!newValue.endsWith("/")) {
+      newValue += "/";
     }
+    this.subjectBaseURLFull = newValue;
+  }
+
+  @Prop() newTab: boolean = true;
+
+  @Watch("subject")
+  subjectChanged() {
     // fix due to doubling MGI:MGI: in GO
-    this.id = this.subject.id;
-    if (this.subject.id.startsWith("MGI:")) {
-      this.id = "MGI:" + this.subject.id;
+    this.subjectId = this.subject.id;
+    if (this.subjectId.startsWith("MGI:")) {
+      this.subjectId = "MGI:" + this.subject.id;
     }
+  }
+
+  async componentDidLoad() {
+    this.subjectChanged();
   }
 
   /**
@@ -51,21 +60,19 @@ export class AnnotationRibbonSubject {
 
   render() {
     return (
-      <td>
-        <a
-          class="ribbon__subject__label--link"
-          href={this.subjectBaseURL + this.id}
-          onClick={(e) => {
-            this.onSubjectClick(e, this.subject);
-          }}
-          target={this.newTab ? "_blank" : "_self"}
-        >
-          {this.subject.label +
-            " (" +
-            formatTaxonLabel(this.subject.taxon_label) +
-            ")"}
-        </a>
-      </td>
+      <a
+        class="label"
+        href={this.subjectBaseURL + this.subjectId}
+        onClick={(e) => {
+          this.onSubjectClick(e, this.subject);
+        }}
+        target={this.newTab ? "_blank" : "_self"}
+      >
+        {this.subject.label +
+          " (" +
+          formatTaxonLabel(this.subject.taxon_label) +
+          ")"}
+      </a>
     );
   }
 }

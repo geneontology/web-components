@@ -15,68 +15,93 @@ Events are fired when cells or cell headers (groups) are clicked or hovered over
 
 ## Properties
 
-| Property                | Attribute                   | Description                                                                                                                                                                                                                                                      | Type           | Default                                               |
-| ----------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------- |
-| `addCellAll`            | `add-cell-all`              | add a cell at the beginning of each row/subject to show all annotations                                                                                                                                                                                          | `boolean`      | `true`                                                |
-| `annotationLabels`      | `annotation-labels`         |                                                                                                                                                                                                                                                                  | `string`       | `"annotation,annotations"`                            |
-| `baseApiUrl`            | `base-api-url`              |                                                                                                                                                                                                                                                                  | `string`       | `"https://api.geneontology.org/api/ontology/ribbon/"` |
-| `binaryColor`           | `binary-color`              | false = show a gradient of colors to indicate the value of a cell true = show only two colors (minColor; maxColor) to indicate the values of a cell                                                                                                              | `boolean`      | `false`                                               |
-| `categoryAllStyle`      | `category-all-style`        | 0 = Normal 1 = Bold                                                                                                                                                                                                                                              | `number`       | `FONT_STYLE.NORMAL`                                   |
-| `categoryCase`          | `category-case`             | Override of the category case 0 (default) = unchanged 1 = to lower case 2 = to upper case                                                                                                                                                                        | `number`       | `FONT_CASE.LOWER_CASE`                                |
-| `categoryOtherStyle`    | `category-other-style`      | 0 = Normal 1 = Bold                                                                                                                                                                                                                                              | `number`       | `FONT_STYLE.NORMAL`                                   |
-| `classLabels`           | `class-labels`              |                                                                                                                                                                                                                                                                  | `string`       | `"term,terms"`                                        |
-| `colorBy`               | `color-by`                  | Which value to base the cell color on 0 = class count 1 = annotation count                                                                                                                                                                                       | `number`       | `COLOR_BY.ANNOTATION_COUNT`                           |
-| `data`                  | `data`                      | if provided, will override any value provided in subjects and subset                                                                                                                                                                                             | `string`       | `undefined`                                           |
-| `fireEventOnEmptyCells` | `fire-event-on-empty-cells` | If true, the ribbon will fire an event if a user click an empty cell If false, the ribbon will not fire the event on an empty cell Note: if selectionMode == SELECTION.COLUMN, then the event will trigger if at least one of the selected cells has annotations | `boolean`      | `false`                                               |
-| `groupBaseUrl`          | `group-base-url`            |                                                                                                                                                                                                                                                                  | `string`       | `"http://amigo.geneontology.org/amigo/term/"`         |
-| `groupClickable`        | `group-clickable`           |                                                                                                                                                                                                                                                                  | `boolean`      | `true`                                                |
-| `groupMaxLabelSize`     | `group-max-label-size`      |                                                                                                                                                                                                                                                                  | `number`       | `60`                                                  |
-| `groupNewTab`           | `group-new-tab`             |                                                                                                                                                                                                                                                                  | `boolean`      | `true`                                                |
-| `maxColor`              | `max-color`                 |                                                                                                                                                                                                                                                                  | `string`       | `"24,73,180"`                                         |
-| `maxHeatLevel`          | `max-heat-level`            |                                                                                                                                                                                                                                                                  | `number`       | `48`                                                  |
-| `minColor`              | `min-color`                 |                                                                                                                                                                                                                                                                  | `string`       | `"255,255,255"`                                       |
-| `ribbonSummary`         | `ribbon-summary`            |                                                                                                                                                                                                                                                                  | `IRibbonModel` | `undefined`                                           |
-| `selected`              | `selected`                  | If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected                                                    | `any`          | `undefined`                                           |
-| `selectionMode`         | `selection-mode`            | Click handling of a cell. 0 = select only the cell (1 subject, 1 group) 1 = select the whole column (all subjects, 1 group)                                                                                                                                      | `number`       | `SELECTION.CELL`                                      |
-| `showOtherGroup`        | `show-other-group`          |                                                                                                                                                                                                                                                                  | `boolean`      | `false`                                               |
-| `subjectBaseUrl`        | `subject-base-url`          |                                                                                                                                                                                                                                                                  | `string`       | `"http://amigo.geneontology.org/amigo/gene_product/"` |
-| `subjectOpenNewTab`     | `subject-open-new-tab`      |                                                                                                                                                                                                                                                                  | `boolean`      | `true`                                                |
-| `subjectPosition`       | `subject-position`          | Position the subject label of each row 0 = None 1 = Left 2 = Right 3 = Bottom                                                                                                                                                                                    | `number`       | `POSITION.LEFT`                                       |
-| `subjectUseTaxonIcon`   | `subject-use-taxon-icon`    |                                                                                                                                                                                                                                                                  | `boolean`      | `undefined`                                           |
-| `subjects`              | `subjects`                  | provide gene ids (e.g. RGD:620474,RGD:3889 or as a list ["RGD:620474", "RGD:3889"])                                                                                                                                                                              | `string`       | `undefined`                                           |
-| `subset`                | `subset`                    |                                                                                                                                                                                                                                                                  | `string`       | `"goslim_agr"`                                        |
-| `updateOnSubjectChange` | `update-on-subject-change`  | When this is set to false, changing the subjects Prop won't trigger the reload of the ribbon This is necessary when the ribbon is showing data other than GO or not using the internal fetchData mechanism                                                       | `boolean`      | `true`                                                |
+| Property                  | Attribute                    | Description                                                                                                                                                                                                                        | Type                          | Default                                                |
+| ------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------ |
+| `annotationLabels`        | `annotation-labels`          | Labels used with annotation counts.                                                                                                                                                                                                | `string`                      | `"annotation,annotations"`                             |
+| `apiEndpoint`             | `api-endpoint`               | URL for the API endpoint to fetch the ribbon data when subjects are provided.                                                                                                                                                      | `string`                      | `"https://api.geneontology.org/api/ontology/ribbon/"`  |
+| `binaryColor`             | `binary-color`               | If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes. | `boolean`                     | `false`                                                |
+| `classLabels`             | `class-labels`               | Labels used with class counts.                                                                                                                                                                                                     | `string`                      | `"term,terms"`                                         |
+| `colorBy`                 | `color-by`                   | Whether to color cells by annotations or classes.                                                                                                                                                                                  | `"annotations" \| "classes"`  | `"annotations"`                                        |
+| `groupClickable`          | `group-clickable`            | If `true`, the group labels are clickable and will trigger the `groupClick` event                                                                                                                                                  | `boolean`                     | `true`                                                 |
+| `groupMaxLabelSize`       | `group-max-label-size`       | Maximum size of group labels in characters.                                                                                                                                                                                        | `number`                      | `60`                                                   |
+| `maxColor`                | `max-color`                  | Color of cells with the most number of annotations or classes.                                                                                                                                                                     | `string`                      | `"24,73,180"`                                          |
+| `maxHeatLevel`            | `max-heat-level`             | Maximum number of annotations or classes before `maxColor` is applied.                                                                                                                                                             | `number`                      | `48`                                                   |
+| `minColor`                | `min-color`                  | Color of cells with the least number of annotations or classes.                                                                                                                                                                    | `string`                      | `"255,255,255"`                                        |
+| `selected`                | `selected`                   | If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected                      | `string`                      | `undefined`                                            |
+| `selectionMode`           | `selection-mode`             | Selection mode for the ribbon cells.                                                                                                                                                                                               | `"cell" \| "column"`          | `"cell"`                                               |
+| `showAllAnnotationsGroup` | `show-all-annotations-group` | If `true`, show the "all annotations" group.                                                                                                                                                                                       | `boolean`                     | `true`                                                 |
+| `showOtherGroup`          | `show-other-group`           | If `true`, show the "Other" group for each category.                                                                                                                                                                               | `boolean`                     | `false`                                                |
+| `subjectBaseUrl`          | `subject-base-url`           | Base URL used when rendering subject label links.                                                                                                                                                                                  | `string`                      | `"https://amigo.geneontology.org/amigo/gene_product/"` |
+| `subjectOpenNewTab`       | `subject-open-new-tab`       | If `true`, clicking a subject label will open the link in a new tab.                                                                                                                                                               | `boolean`                     | `true`                                                 |
+| `subjectPosition`         | `subject-position`           | Position subject labels.                                                                                                                                                                                                           | `"left" \| "none" \| "right"` | `"left"`                                               |
+| `subjects`                | `subjects`                   | Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)                                                                                                                                                                        | `string`                      | `undefined`                                            |
+| `subset`                  | `subset`                     | Name of the GO subset used for grouping annotations.                                                                                                                                                                               | `string`                      | `"goslim_agr"`                                         |
 
 
 ## Events
 
-| Event        | Description                                                         | Type               |
-| ------------ | ------------------------------------------------------------------- | ------------------ |
-| `cellClick`  | This event is triggered whenever a ribbon cell is clicked           | `CustomEvent<any>` |
-| `cellEnter`  | This event is triggered whenever the mouse enters a cell area       | `CustomEvent<any>` |
-| `cellLeave`  | This event is triggered whenever the mouse leaves a cell area       | `CustomEvent<any>` |
-| `groupClick` | This event is triggered whenever a group cell is clicked            | `CustomEvent<any>` |
-| `groupEnter` | This event is triggered whenever the mouse enters a group cell area | `CustomEvent<any>` |
-| `groupLeave` | This event is triggered whenever the mouse leaves a group cell area | `CustomEvent<any>` |
+| Event        | Description                                  | Type                             |
+| ------------ | -------------------------------------------- | -------------------------------- |
+| `cellClick`  | Emitted when a ribbon cell is clicked.       | `CustomEvent<IRibbonCellEvent>`  |
+| `cellEnter`  | Emitted when the mouse enters a ribbon cell. | `CustomEvent<IRibbonCellEvent>`  |
+| `cellLeave`  | Emitted when the mouse leaves a ribbon cell. | `CustomEvent<IRibbonCellEvent>`  |
+| `groupClick` | Emitted when a group label is clicked.       | `CustomEvent<IRibbonGroupEvent>` |
+| `groupEnter` | Emitted when the mouse enters a group label. | `CustomEvent<IRibbonGroupEvent>` |
+| `groupLeave` | Emitted when the mouse leaves a group label. | `CustomEvent<IRibbonGroupEvent>` |
 
 
 ## Methods
 
-### `selectGroup(group_id: any) => Promise<void>`
+### `setData(data: IRibbonModel) => Promise<void>`
 
+Sets the data for the ribbon manually.
 
+Once this method is called, the provided data will be used and changes to the subjects,
+subset, or apiEndpoint properties will not trigger a data fetch.
 
 #### Parameters
 
-| Name       | Type  | Description |
-| ---------- | ----- | ----------- |
-| `group_id` | `any` |             |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| `data` | `IRibbonModel` |             |
 
 #### Returns
 
 Type: `Promise<void>`
 
 
+
+
+## CSS Custom Properties
+
+| Name                           | Description                                                                                              |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `--category-separator-width`   | Width of the separator between group categories                                                          |
+| `--cell-border-collapse`       | Collapse behavior of cell borders, can be `collapse` or `separate`                                       |
+| `--cell-border-color`          | Color of cell borders                                                                                    |
+| `--cell-border-style`          | Style of cell borders                                                                                    |
+| `--cell-border-width`          | Width of cell borders                                                                                    |
+| `--cell-box-shadow`            | Box shadow for cells                                                                                     |
+| `--cell-height`                | Height of each cell                                                                                      |
+| `--cell-hovered-border-color`  | Color of the border when a cell is hovered                                                               |
+| `--cell-hovered-border-style`  | Style of the border when a cell is hovered                                                               |
+| `--cell-hovered-border-width`  | Width of the border when a cell is hovered                                                               |
+| `--cell-hovered-box-shadow`    | Box shadow when a cell is hovered                                                                        |
+| `--cell-selected-border-color` | Color of the border when a cell is selected                                                              |
+| `--cell-selected-border-style` | Style of the border when a cell is selected                                                              |
+| `--cell-selected-border-width` | Width of the border when a cell is selected                                                              |
+| `--cell-selected-box-shadow`   | Box shadow when a cell is selected                                                                       |
+| `--cell-spacing`               | Spacing between cells (this property has no effect unless `--cell-border-collapse` is set to `separate`) |
+| `--cell-width`                 | Width of each cell                                                                                       |
+| `--group-all-color`            | Color for the "all" group labels in each category                                                        |
+| `--group-all-font-weight`      | Font weight for the "all" group labels in each category                                                  |
+| `--group-height`               | Height of group labels                                                                                   |
+| `--group-other-color`          | Color for the "other" group labels in each category                                                      |
+| `--group-other-font-weight`    | Font weight for the "other" group labels in each category                                                |
+| `--group-text-transform`       | Text transformation for group labels                                                                     |
+| `--loading-spinner-size`       | Size of the loading spinner                                                                              |
+| `--subject-padding`            | Padding for subject cells                                                                                |
+| `--subject-width`              | Width of subject cells                                                                                   |
 
 
 ----------------------------------------------

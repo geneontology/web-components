@@ -1,26 +1,70 @@
-.clicked {
-  border: 1px solid #002eff;
-  box-shadow: 0px 0px 8px #002eff;
+:host {
+  /**
+   * @prop --height: Height of the cell
+   * @prop --width: Width of the cell
+   *
+   * @prop --hovered-border-color: Border color when the cell is hovered
+   * @prop --hovered-border-style: Border style when the cell is hovered
+   * @prop --hovered-border-width: Border width when the cell is hovered
+   * @prop --hovered-box-shadow: Box shadow when the cell is hovered
+   *
+   * @prop --selected-border-color: Border color when the cell is selected
+   * @prop --selected-border-style: Border style when the cell is selected
+   * @prop --selected-border-width: Border width when the cell is selected
+   * @prop --selected-box-shadow: Box shadow when the cell is selected
+   */
+  --height: 18px;
+  --width: 18px;
+
+  --hovered-border-color: none;
+  --hovered-border-style: solid;
+  --hovered-border-width: 0;
+  --hovered-box-shadow: none;
+
+  --selected-border-color: #e30505;
+  --selected-border-style: solid;
+  --selected-border-width: 2px;
+  --selected-box-shadow: none;
 }
 
-.hovered {
-  // border: 1px solid black;
-}
+.cell {
+  display: block;
+  width: var(--width);
+  height: var(--height);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
 
-.unavailable {
-  cursor: not-allowed;
-  background: linear-gradient(
-    to top left,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) calc(50% - 0.8px),
-    rgba(240, 32, 32, 0.5) 50%,
-    rgba(0, 0, 0, 0) calc(50% + 0.8px),
-    rgba(0, 0, 0, 0) 100%
-  );
-  //    linear-gradient(to top right,
-  //        rgba(0,0,0,0) 0%,
-  //        rgba(0,0,0,0) calc(50% - 0.8px),
-  //        rgba(0,0,0,1) 50%,
-  //        rgba(0,0,0,0) calc(50% + 0.8px),
-  //        rgba(0,0,0,0) 100%);
+  &.no-annotations {
+    cursor: not-allowed;
+  }
+
+  &.selected {
+    border-color: var(--selected-border-color);
+    border-style: var(--selected-border-style);
+    border-width: var(--selected-border-width);
+    box-shadow: var(--selected-box-shadow);
+    z-index: 2;
+  }
+
+  &.hovered {
+    border-color: var(--hovered-border-color);
+    border-style: var(--hovered-border-style);
+    border-width: var(--hovered-border-width);
+    box-shadow: var(--hovered-box-shadow);
+    z-index: 3;
+  }
+
+  &.unavailable {
+    cursor: not-allowed;
+    background: linear-gradient(
+      to top left,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) calc(50% - 0.8px),
+      rgba(240, 32, 32, 0.5) 50%,
+      rgba(0, 0, 0, 0) calc(50% + 0.8px),
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
 }
