@@ -107,6 +107,14 @@ export class AnnotationRibbonTable {
     void this.fetchData();
   }
 
+  /**
+   * Set the table data manually.
+   *
+   * Once this method is called, changes to the subjects or slims properties will not trigger
+   * a refetch of the data.
+   *
+   * @param data The table data to set.
+   */
   @Method()
   async setData(data?: TableData) {
     this.dataManuallySet = true;
@@ -324,7 +332,7 @@ export class AnnotationRibbonTable {
     }
 
     return (
-      <table class="table" part="table">
+      <table class="table">
         {this.renderHeader(this.displayTable)}
         {this.renderRows(this.displayTable)}
       </table>

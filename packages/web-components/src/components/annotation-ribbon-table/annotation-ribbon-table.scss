@@ -1,6 +1,26 @@
 :host {
+  /**
+   * @prop --border: Border style for the table
+   *
+   * @prop --header-background-color: Background color for the header row
+   * @prop --header-color: Text color for the header row
+   * @prop --header-cell-padding: Padding for header cells
+   * @prop --header-cell-font-weight: Font weight for header cells
+   * @prop --header-border-width: Border width for header cells
+   * @prop --header-border-color: Border color for header cells
+   * @prop --header-border-style: Border style for header cells
+   *
+   * @prop --row-background-color: Background color for regular rows
+   * @prop --row-cell-padding: Padding for regular row cells
+   * @prop --row-cell-height: Height for regular row cells
+   * @prop --row-border-width: Border width for regular rows
+   * @prop --row-border-color: Border color for regular rows
+   * @prop --row-border-style: Border style for regular rows
+   *
+   * @prop --link-decoration: Text decoration for links
+   * @prop --link-color: Color for links
+    */
   --border: 0px solid black;
-  --border-radius: 5px;
 
   --header-background-color: rgb(255, 255, 255);
   --header-color: rgb(0, 0, 0);
@@ -12,7 +32,7 @@
 
   --row-background-color: white;
   --row-cell-padding: 2px;
-  --row-cell-height: 20px;
+  --row-cell-height: 1.5em;
   --row-border-width: 0 0 1px 0;
   --row-border-color: #ddd;
   --row-border-style: solid;
@@ -27,12 +47,15 @@
   width: 100%;
   border-collapse: collapse;
   border: var(--border);
-  border-radius: var(--border-radius);
 }
 
 a {
   text-decoration: var(--link-decoration);
-  color: var(--link-color);
+  color: var(--link-color, currentColor);
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .header {

@@ -368,7 +368,9 @@ export class AnnotationRibbon {
         )}
 
         {this.ribbonData && (
-          <div class="muted">Cell color indicative of annotation volume</div>
+          <div class="muted margin-bottom">
+            Cell color indicative of annotation volume
+          </div>
         )}
 
         {this.tableDataLoading && <go-spinner></go-spinner>}

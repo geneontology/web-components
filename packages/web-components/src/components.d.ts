@@ -272,6 +272,10 @@ export namespace Components {
           * @default "cell"
          */
         "selectionMode": SelectionModeOption;
+        /**
+          * Sets the data for the ribbon manually.  Once this method is called, the provided data will be used and changes to the subjects, subset, or apiEndpoint properties will not trigger a data fetch.
+          * @param data
+         */
         "setData": (data: IRibbonModel) => Promise<void>;
         /**
           * If `true`, show the "all annotations" group.
@@ -358,6 +362,10 @@ export namespace Components {
           * This is used to sort the table depending of a column The column cells must be single values The ordering applies after the grouping
          */
         "orderBy"?: string;
+        /**
+          * Set the table data manually.  Once this method is called, changes to the subjects or slims properties will not trigger a refetch of the data.
+          * @param data The table data to set.
+         */
         "setData": (data?: TableData) => Promise<void>;
         /**
           * Comma-separate list of GO term IDs (e.g. GO:0003674,GO:0008150,GO:0005575)

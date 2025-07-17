@@ -1,4 +1,4 @@
-import { Component, Element, h, Prop, Watch } from "@stencil/core";
+import { Component, h, Prop, Watch } from "@stencil/core";
 import clsx from "clsx";
 
 import { darken, heatColor } from "./utils";
@@ -20,8 +20,6 @@ import {
   shadow: true,
 })
 export class AnnotationRibbonCell {
-  @Element() el: HTMLElement;
-
   @Prop() subject: IRibbonSubject;
   @Prop() group: IRibbonGroup;
 
@@ -158,12 +156,14 @@ export class AnnotationRibbonCell {
     let title = "";
     const classes: (string | boolean)[] = ["cell"];
 
+    let nbAnnotations = 0;
+    let nbClasses = 0;
     if (!this.available) {
       title = this.subject.label + " can not have data for " + this.group.label;
       classes.push("unavailable");
     } else {
-      const nbClasses = this.getNbClasses();
-      const nbAnnotations = this.getNbAnnotations();
+      nbClasses = this.getNbClasses();
+      nbAnnotations = this.getNbAnnotations();
 
       title =
         "Subject: " +
@@ -192,10 +192,6 @@ export class AnnotationRibbonCell {
       } else {
         title += "\n\nNo data available";
       }
-      this.el.style.setProperty(
-        "background",
-        this.cellColor(nbClasses, nbAnnotations),
-      );
 
       classes.push(
         nbAnnotations === 0 && "no-annotations",
@@ -203,6 +199,12 @@ export class AnnotationRibbonCell {
         this.hovered && nbAnnotations > 0 && "hovered",
       );
     }
-    return <div title={title} class={clsx(classes)} />;
+    return (
+      <div
+        title={title}
+        class={clsx(classes)}
+        style={{ backgroundColor: this.cellColor(nbClasses, nbAnnotations) }}
+      />
+    );
   }
 }

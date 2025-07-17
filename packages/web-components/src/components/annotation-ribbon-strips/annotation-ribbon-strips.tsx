@@ -2,6 +2,7 @@ import {
   Component,
   Event,
   EventEmitter,
+  Fragment,
   h,
   Host,
   Method,
@@ -237,6 +238,13 @@ export class AnnotationRibbonStrips {
     this.fetchData().then(() => this.selectedChanged());
   }
 
+  /**
+   * Sets the data for the ribbon manually.
+   *
+   * Once this method is called, the provided data will be used and changes to the subjects,
+   * subset, or apiEndpoint properties will not trigger a data fetch.
+   * @param data
+   */
   @Method()
   async setData(data: IRibbonModel) {
     this.dataManuallySet = true;
@@ -409,141 +417,112 @@ export class AnnotationRibbonStrips {
     // Data is present, show the ribbon
     return (
       <Host>
-        <div class="ribbon">
+        <table class="ribbon">
           {this.renderCategories()}
           {this.renderSubjects()}
-        </div>
+        </table>
       </Host>
     );
   }
 
   renderCategories() {
     return (
-      <div
-        class={clsx(
-          "categories",
-          this.subjectPosition === "left" && "offset-left",
-        )}
-      >
-        {this.showAllAnnotationsGroup && (
-          <div
-            class={clsx({
-              group: true,
-              "category-all": true,
-              clickable: this.groupClickable,
-              hovered: this.isGroupHovered(GROUP_ALL),
-              selected: this.isGroupSelected(GROUP_ALL),
-            })}
-            title={this.formatGroupTitle(GROUP_ALL)}
-            onMouseEnter={() => this.onGroupEnter(null, GROUP_ALL)}
-            onMouseLeave={() => this.onGroupLeave(null, GROUP_ALL)}
-            onClick={() => this.onGroupClick(undefined, GROUP_ALL)}
-          >
-            {this.formatGroupLabel(GROUP_ALL.label)}
-          </div>
-        )}
-
-        {this.data.categories.map((category: IRibbonCategory, categoryIndex) =>
-          category.groups.map((group: IRibbonGroup, groupIndex) =>
-            group.type === "Other" && !this.showOtherGroup ? null : (
+      <thead>
+        <tr class="categories">
+          {this.subjectPosition === "left" && <th />}
+          {this.showAllAnnotationsGroup && (
+            <th
+              class={clsx({
+                group: true,
+                "category-all": true,
+                hovered: this.isGroupHovered(GROUP_ALL),
+                selected: this.isGroupSelected(GROUP_ALL),
+              })}
+              title={this.formatGroupTitle(GROUP_ALL)}
+            >
               <div
                 class={clsx({
-                  group: true,
-                  "category-all": group.type === "All",
-                  "category-other": group.type === "Other",
+                  label: true,
                   clickable: this.groupClickable,
-                  hovered: this.isGroupHovered(group),
-                  selected: this.isGroupSelected(group),
-                  separated:
-                    groupIndex === 0 &&
-                    (categoryIndex > 0 || this.showAllAnnotationsGroup),
                 })}
-                key={groupKey(group)}
-                title={this.formatGroupTitle(group)}
-                onMouseEnter={() => this.onGroupEnter(category, group)}
-                onMouseLeave={() => this.onGroupLeave(category, group)}
-                onClick={
-                  this.groupClickable
-                    ? () => this.onGroupClick(category, group)
-                    : undefined
-                }
+                onMouseEnter={() => this.onGroupEnter(null, GROUP_ALL)}
+                onMouseLeave={() => this.onGroupLeave(null, GROUP_ALL)}
+                onClick={() => this.onGroupClick(undefined, GROUP_ALL)}
               >
-                {this.formatGroupLabel(group.label)}
+                {this.formatGroupLabel(GROUP_ALL.label)}
               </div>
-            ),
-          ),
-        )}
-      </div>
-    );
-  }
-
-  renderSubjects() {
-    return this.data.subjects.map((subject: IRibbonSubject) => {
-      return (
-        <div class="subject" key={subject.id}>
-          {this.subjectPosition === "left" && (
-            <go-annotation-ribbon-subject
-              subject={subject}
-              subjectBaseURL={this.subjectBaseUrl}
-              newTab={this.subjectOpenNewTab}
-            />
-          )}
-
-          {this.showAllAnnotationsGroup && (
-            <go-annotation-ribbon-cell
-              subject={subject}
-              group={GROUP_ALL}
-              hovered={this.isCellHovered(subject, GROUP_ALL)}
-              selected={this.isCellSelected(subject, GROUP_ALL)}
-              colorBy={this.colorBy}
-              binaryColor={this.binaryColor}
-              minColor={this.minColor}
-              maxColor={this.maxColor}
-              maxHeatLevel={this.maxHeatLevel}
-              annotationLabels={this.annotationLabels}
-              classLabels={this.classLabels}
-              onClick={() => this.onCellClick(subject, GROUP_ALL)}
-              onMouseEnter={() => this.onCellEnter(subject, GROUP_ALL)}
-              onMouseLeave={() => this.onCellLeave()}
-            />
+            </th>
           )}
 
           {this.data.categories.map(
             (category: IRibbonCategory, categoryIndex) =>
-              category.groups.map((group: IRibbonGroup, groupIndex) => {
-                const cellid =
-                  group.id + (group.type === "Other" ? "-other" : "");
-                const cell =
-                  cellid in subject.groups ? subject.groups[cellid] : undefined;
+              category.groups.map((group: IRibbonGroup, groupIndex) =>
+                group.type === "Other" && !this.showOtherGroup ? null : (
+                  <Fragment>
+                    {groupIndex === 0 &&
+                      (categoryIndex > 0 || this.showAllAnnotationsGroup) && (
+                        <th class="separator" />
+                      )}
+                    <th
+                      class={clsx({
+                        group: true,
+                        "category-all": group.type === "All",
+                        "category-other": group.type === "Other",
+                        hovered: this.isGroupHovered(group),
+                        selected: this.isGroupSelected(group),
+                      })}
+                      key={groupKey(group)}
+                      title={this.formatGroupTitle(group)}
+                    >
+                      <div
+                        class={clsx({
+                          label: true,
+                          clickable: this.groupClickable,
+                        })}
+                        onMouseEnter={() => this.onGroupEnter(category, group)}
+                        onMouseLeave={() => this.onGroupLeave(category, group)}
+                        onClick={
+                          this.groupClickable
+                            ? () => this.onGroupClick(category, group)
+                            : undefined
+                        }
+                      >
+                        {this.formatGroupLabel(group.label)}
+                      </div>
+                    </th>
+                  </Fragment>
+                ),
+              ),
+          )}
+          {this.subjectPosition === "right" && <th />}
+        </tr>
+      </thead>
+    );
+  }
 
-                // by default the group should be available
-                let available = true;
-
-                // if a value was given, then override the default value
-                if (
-                  cell &&
-                  Object.prototype.hasOwnProperty.call(cell, "available")
-                ) {
-                  available = cell.available;
-                }
-
-                if (group.type === "Other" && !this.showOtherGroup) {
-                  return;
-                }
-
-                return (
-                  <go-annotation-ribbon-cell
-                    class={clsx({
-                      separated:
-                        groupIndex === 0 &&
-                        (categoryIndex > 0 || this.showAllAnnotationsGroup),
-                    })}
-                    key={cellKey(subject, group)}
+  renderSubjects() {
+    return (
+      <tbody>
+        {this.data.subjects.map((subject: IRibbonSubject) => {
+          return (
+            <tr key={subject.id}>
+              {this.subjectPosition === "left" && (
+                <td class="subject">
+                  <go-annotation-ribbon-subject
                     subject={subject}
-                    group={group}
-                    available={available}
-                    hovered={this.isCellHovered(subject, group)}
-                    selected={this.isCellSelected(subject, group)}
+                    subjectBaseURL={this.subjectBaseUrl}
+                    newTab={this.subjectOpenNewTab}
+                  />
+                </td>
+              )}
+
+              {this.showAllAnnotationsGroup && (
+                <td class="cell">
+                  <go-annotation-ribbon-cell
+                    subject={subject}
+                    group={GROUP_ALL}
+                    hovered={this.isCellHovered(subject, GROUP_ALL)}
+                    selected={this.isCellSelected(subject, GROUP_ALL)}
                     colorBy={this.colorBy}
                     binaryColor={this.binaryColor}
                     minColor={this.minColor}
@@ -551,23 +530,89 @@ export class AnnotationRibbonStrips {
                     maxHeatLevel={this.maxHeatLevel}
                     annotationLabels={this.annotationLabels}
                     classLabels={this.classLabels}
-                    onClick={() => this.onCellClick(subject, group)}
-                    onMouseEnter={() => this.onCellEnter(subject, group)}
+                    onClick={() => this.onCellClick(subject, GROUP_ALL)}
+                    onMouseEnter={() => this.onCellEnter(subject, GROUP_ALL)}
                     onMouseLeave={() => this.onCellLeave()}
                   />
-                );
-              }),
-          )}
+                </td>
+              )}
 
-          {this.subjectPosition === "right" && (
-            <go-annotation-ribbon-subject
-              subject={subject}
-              subjectBaseURL={this.subjectBaseUrl}
-              newTab={this.subjectOpenNewTab}
-            />
-          )}
-        </div>
-      );
-    });
+              {this.data.categories.map(
+                (category: IRibbonCategory, categoryIndex) =>
+                  category.groups.map((group: IRibbonGroup, groupIndex) => {
+                    const cellid =
+                      group.id + (group.type === "Other" ? "-other" : "");
+                    const cell =
+                      cellid in subject.groups
+                        ? subject.groups[cellid]
+                        : undefined;
+
+                    // by default the group should be available
+                    let available = true;
+
+                    // if a value was given, then override the default value
+                    if (
+                      cell &&
+                      Object.prototype.hasOwnProperty.call(cell, "available")
+                    ) {
+                      available = cell.available;
+                    }
+
+                    if (group.type === "Other" && !this.showOtherGroup) {
+                      return;
+                    }
+
+                    return (
+                      <Fragment>
+                        {groupIndex === 0 &&
+                          (categoryIndex > 0 ||
+                            this.showAllAnnotationsGroup) && (
+                            <td class="separator" />
+                          )}
+                        <td
+                          class={clsx({
+                            cell: true,
+                          })}
+                        >
+                          <go-annotation-ribbon-cell
+                            key={cellKey(subject, group)}
+                            subject={subject}
+                            group={group}
+                            available={available}
+                            hovered={this.isCellHovered(subject, group)}
+                            selected={this.isCellSelected(subject, group)}
+                            colorBy={this.colorBy}
+                            binaryColor={this.binaryColor}
+                            minColor={this.minColor}
+                            maxColor={this.maxColor}
+                            maxHeatLevel={this.maxHeatLevel}
+                            annotationLabels={this.annotationLabels}
+                            classLabels={this.classLabels}
+                            onClick={() => this.onCellClick(subject, group)}
+                            onMouseEnter={() =>
+                              this.onCellEnter(subject, group)
+                            }
+                            onMouseLeave={() => this.onCellLeave()}
+                          />
+                        </td>
+                      </Fragment>
+                    );
+                  }),
+              )}
+
+              {this.subjectPosition === "right" && (
+                <td class="subject">
+                  <go-annotation-ribbon-subject
+                    subject={subject}
+                    subjectBaseURL={this.subjectBaseUrl}
+                    newTab={this.subjectOpenNewTab}
+                  />
+                </td>
+              )}
+            </tr>
+          );
+        })}
+      </tbody>
+    );
   }
 }

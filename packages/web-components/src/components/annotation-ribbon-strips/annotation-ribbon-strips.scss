@@ -1,85 +1,162 @@
 :host {
+  /**
+   * @prop --cell-width: Width of each cell
+   * @prop --cell-height: Height of each cell
+   *
+   * @prop --cell-spacing: Spacing between cells (this property has no effect unless `--cell-border-collapse` is set to `separate`)
+   * @prop --cell-border-collapse: Collapse behavior of cell borders, can be `collapse` or `separate`
+   *
+   * @prop --cell-border-width: Width of cell borders
+   * @prop --cell-border-color: Color of cell borders
+   * @prop --cell-border-style: Style of cell borders
+   * @prop --cell-box-shadow: Box shadow for cells
+   *
+   * @prop --cell-selected-border-width: Width of the border when a cell is selected
+   * @prop --cell-selected-border-color: Color of the border when a cell is selected
+   * @prop --cell-selected-border-style: Style of the border when a cell is selected
+   * @prop --cell-selected-box-shadow: Box shadow when a cell is selected
+   *
+   * @prop --cell-hovered-border-width: Width of the border when a cell is hovered
+   * @prop --cell-hovered-border-color: Color of the border when a cell is hovered
+   * @prop --cell-hovered-border-style: Style of the border when a cell is hovered
+   * @prop --cell-hovered-box-shadow: Box shadow when a cell is hovered
+   *
+   * @prop --category-separator-width: Width of the separator between group categories
+   *
+   * @prop --group-height: Height of group labels
+   * @prop --group-text-transform: Text transformation for group labels
+   * @prop --group-all-color: Color for the "all" group labels in each category
+   * @prop --group-all-font-weight: Font weight for the "all" group labels in each category
+   * @prop --group-other-color: Color for the "other" group labels in each category
+   * @prop --group-other-font-weight: Font weight for the "other" group labels in each category
+   *
+   * @prop --subject-width: Width of subject cells
+   * @prop --subject-padding: Padding for subject cells
+   *
+   * @prop --loading-spinner-size: Size of the loading spinner
+   */
   --cell-width: 1.40625em;
   --cell-height: 1.40625em;
 
-  --category-height: 13.5em;
-  --category-margin-bottom: 0.25em;
+  --cell-spacing: 0px;
+  --cell-border-collapse: collapse;
+
+  --cell-border-width: 1px;
+  --cell-border-color: transparent;
+  --cell-border-style: solid;
+  --cell-box-shadow: none;
+
+  --cell-selected-border-width: 2px;
+  --cell-selected-border-color: #e30505;
+  --cell-selected-border-style: solid;
+  --cell-selected-box-shadow: none;
+
+  --cell-hovered-border-width: 0;
+  --cell-hovered-border-color: none;
+  --cell-hovered-border-style: solid;
+  --cell-hovered-box-shadow: none;
+
   --category-separator-width: 2em;
 
+  --group-height: 13.5em;
   --group-text-transform: none;
   --group-all-color: inherit;
   --group-all-font-weight: normal;
   --group-other-color: inherit;
   --group-other-font-weight: normal;
+  --group-selected-color: #055ee3;
 
-  --subject-width: 10em;
+  --subject-width: auto;
+  --subject-color: inherit;
+  --subject-decoration: none;
+  --subject-padding: 0 0.5em 0 0;
+
+  --loading-spinner-size: 2em;
 
   display: block;
 }
 
 .ribbon {
-  &,
-  & * {
-    box-sizing: border-box;
-  }
-}
-
-.categories {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-
-  height: var(--category-height);
-  margin-bottom: var(--category-margin-bottom);
-
-  &.offset-left {
-    margin-left: var(--subject-width);
-  }
+  border-collapse: var(--cell-border-collapse);
+  border-spacing: var(--cell-spacing);
 }
 
 .group {
   width: var(--cell-width);
-  outline: none;
+  max-width: var(--cell-width);
+  min-width: var(--cell-width);
+  height: var(--group-height);
   text-align: left;
+  font-weight: normal;
   white-space: nowrap;
-  transform: translateX(calc(var(--cell-width) / 2)) rotate(-45deg);
-  transform-origin: left bottom;
+  vertical-align: bottom;
   line-height: 1;
-  cursor: help;
   text-transform: var(--group-text-transform);
+  padding: 0 0 0.25em 0;
 
   &.hovered {
     font-weight: bold;
   }
+
+  &.selected {
+    font-weight: bold;
+    color: var(--group-selected-color);
+  }
+
+  .label {
+    transform: translateX(50%) rotate(-45deg);
+    transform-origin: left bottom;
+    cursor: help;
+  }
+}
+
+.cell {
+  border-width: var(--cell-border-width);
+  border-color: var(--cell-border-color);
+  border-style: var(--cell-border-style);
+  box-shadow: var(--cell-box-shadow);
+  padding: 0;
+}
+
+.separator {
+  width: var(--category-separator-width);
+  min-width: var(--category-separator-width);
+  max-width: var(--category-separator-width);
+  padding: 0;
 }
 
 .subject {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  width: var(--subject-width);
+  min-width: var(--subject-width);
+  max-width: var(--subject-width);
+  max-height: var(--cell-height);
+  padding: var(--subject-padding);
+  vertical-align: middle;
+  line-height: 1;
 }
 
 go-annotation-ribbon-subject {
-  --width: var(--subject-width);
-  --height: var(--cell-height);
+  --color: var(--subject-color);
+  --text-decoration: var(--subject-decoration);
 }
 
 go-annotation-ribbon-cell {
   --width: var(--cell-width);
   --height: var(--cell-height);
+
+  --hovered-border-color: var(--cell-hovered-border-color);
+  --hovered-border-width: var(--cell-hovered-border-width);
+  --hovered-border-style: var(--cell-hovered-border-style);
+  --hovered-box-shadow: var(--cell-hovered-box-shadow);
+
+  --selected-border-color: var(--cell-selected-border-color);
+  --selected-border-width: var(--cell-selected-border-width);
+  --selected-border-style: var(--cell-selected-border-style);
+  --selected-box-shadow: var(--cell-selected-box-shadow);
 }
 
-b {
-  font-weight: 800;
-}
-
-.separated {
-  margin-left: var(--category-separator-width);
-}
-
-.selected {
-  font-weight: bold;
-  color: #002eff;
+go-spinner {
+  --size: var(--loading-spinner-size);
 }
 
 .clickable {

@@ -1,11 +1,34 @@
 :host {
+  /**
+   * @prop --height: Height of the cell
+   * @prop --width: Width of the cell
+   *
+   * @prop --hovered-border-color: Border color when the cell is hovered
+   * @prop --hovered-border-style: Border style when the cell is hovered
+   * @prop --hovered-border-width: Border width when the cell is hovered
+   * @prop --hovered-box-shadow: Box shadow when the cell is hovered
+   *
+   * @prop --selected-border-color: Border color when the cell is selected
+   * @prop --selected-border-style: Border style when the cell is selected
+   * @prop --selected-border-width: Border width when the cell is selected
+   * @prop --selected-box-shadow: Box shadow when the cell is selected
+   */
   --height: 18px;
   --width: 18px;
+
+  --hovered-border-color: none;
+  --hovered-border-style: solid;
+  --hovered-border-width: 0;
+  --hovered-box-shadow: none;
+
+  --selected-border-color: #e30505;
+  --selected-border-style: solid;
+  --selected-border-width: 2px;
+  --selected-box-shadow: none;
 }
 
 .cell {
   display: block;
-  flex: 0 0 auto;
   width: var(--width);
   height: var(--height);
   box-sizing: border-box;
@@ -18,12 +41,19 @@
   }
 
   &.selected {
-    border: 1px solid #002eff;
-    box-shadow: 0 0 8px #002eff;
+    border-color: var(--selected-border-color);
+    border-style: var(--selected-border-style);
+    border-width: var(--selected-border-width);
+    box-shadow: var(--selected-box-shadow);
     z-index: 2;
   }
 
   &.hovered {
+    border-color: var(--hovered-border-color);
+    border-style: var(--hovered-border-style);
+    border-width: var(--hovered-border-width);
+    box-shadow: var(--hovered-box-shadow);
+    z-index: 3;
   }
 
   &.unavailable {
