@@ -14,7 +14,8 @@
       label {
         margin-right: 0.25rem;
       }
-      input, select {
+      input,
+      select {
         margin-bottom: 0.5rem;
       }
       go-annotation-ribbon-strips {
@@ -33,7 +34,7 @@
         checkbox.type = "checkbox";
         checkbox.id = prop;
         checkbox.checked = ribbon[prop] || false;
-        checkbox.addEventListener("change", function() {
+        checkbox.addEventListener("change", function () {
           ribbon[prop] = checkbox.checked;
         });
 
@@ -53,11 +54,11 @@
         }
         let select = document.createElement("select");
         select.id = prop;
-        select.addEventListener("change", function() {
+        select.addEventListener("change", function () {
           ribbon[prop] = select.value;
         });
 
-        options.forEach(option => {
+        options.forEach((option) => {
           let opt = document.createElement("option");
           opt.value = option.value;
           opt.textContent = option.label || option.value;
@@ -84,8 +85,8 @@
         let input = document.createElement("input");
         input.type = type;
         input.id = prop;
-        input.value = ribbon[prop] || '';
-        input.addEventListener("change", function() {
+        input.value = ribbon[prop] || "";
+        input.addEventListener("change", function () {
           ribbon[prop] = input.value;
         });
 
@@ -97,33 +98,27 @@
         container.appendChild(labelElement);
         container.appendChild(input);
         document.body.insertBefore(container, ribbon);
-      };
+      }
 
       const ribbon = document.querySelector("go-annotation-ribbon-strips");
 
-      window.addEventListener('appload', (event) => {
+      window.addEventListener("appload", (event) => {
         addCheckbox("showAllAnnotationsGroup");
         addCheckbox("showOtherGroup");
         addCheckbox("groupClickable");
         addCheckbox("binaryColor");
-        addSelect("selectionMode", [
-          { value: "cell" },
-          { value: "column" },
-        ])
+        addSelect("selectionMode", [{ value: "cell" }, { value: "column" }]);
         addSelect("selected", [
           { value: "" },
           { value: "all" },
-          { value: "GO:0030234" }
-        ])
+          { value: "GO:0030234" },
+        ]);
         addSelect("subjectPosition", [
           { value: "none" },
           { value: "left" },
           { value: "right" },
         ]);
-        addSelect("colorBy", [
-          { value: "classes" },
-          { value: "annotations" },
-        ]);
+        addSelect("colorBy", [{ value: "classes" }, { value: "annotations" }]);
         addInput("groupMaxLabelSize", "number");
       });
     </script>
