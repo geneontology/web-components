@@ -14,14 +14,19 @@ $offset: -4px;
 
 .trigger {
   display: flex;
+  box-sizing: border-box;
+  padding: 0;
   justify-content: center;
   align-items: center;
-  width: 1em;
-  height: 1em;
+  width: 18px;
+  height: 18px;
+  background: none;
   color: rgba(128, 128, 128, 0.5);
   border: 2px solid currentColor;
   border-radius: 9999px;
   cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .popover {
