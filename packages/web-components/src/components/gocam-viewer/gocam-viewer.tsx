@@ -776,6 +776,7 @@ export class GocamViewer {
                     : "Expand Protein Complexes"}
                 </button>
                 <button onClick={() => this.resetView()}>Reset View</button>
+                <go-info-popover placement="bottom-end"></go-info-popover>
               </div>
             </div>
             <div class="panel-body">

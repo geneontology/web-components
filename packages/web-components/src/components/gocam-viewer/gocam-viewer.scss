@@ -169,6 +169,8 @@
 
 .gocam-panel-header-buttons {
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 button {
@@ -220,4 +222,8 @@ go-gocam-viewer-legend {
 
 go-gocam-viewer-sidebar {
   --height: var(--graph-height);
+}
+
+go-info-popover {
+  padding: 0 0.6em;
 }

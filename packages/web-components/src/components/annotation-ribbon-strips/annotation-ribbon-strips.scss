@@ -74,6 +74,12 @@
   --loading-spinner-size: 2em;
 
   display: block;
+  overflow-x: auto;
+}
+
+.container {
+  width: fit-content;
+  position: relative;
 }
 
 .ribbon {
@@ -157,6 +163,12 @@ go-annotation-ribbon-cell {
 
 go-spinner {
   --size: var(--loading-spinner-size);
+}
+
+go-info-popover {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .clickable {

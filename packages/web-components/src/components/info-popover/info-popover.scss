@@ -1,0 +1,101 @@
+$offset: -4px;
+
+:host {
+  display: inline-block;
+}
+
+.container {
+  position: relative;
+  font-family: sans-serif;
+  font-size: 0.9em;
+  font-weight: normal;
+  display: inline-block;
+}
+
+.trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1em;
+  height: 1em;
+  color: rgba(128, 128, 128, 0.5);
+  border: 2px solid currentColor;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.popover {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+  padding: 0.5em;
+  line-height: 1.5;
+
+  &.top {
+    top: $offset;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+  }
+  &.top-start {
+    top: $offset;
+    left: 0;
+    transform: translateY(-100%);
+  }
+  &.top-end {
+    top: $offset;
+    right: 0;
+    transform: translateY(-100%);
+  }
+  &.right {
+    top: 50%;
+    right: $offset;
+    transform: translateY(-50%) translateX(100%);
+  }
+  &.right-start {
+    top: 0;
+    right: $offset;
+    transform: translateX(100%);
+  }
+  &.right-end {
+    bottom: 0;
+    right: $offset;
+    transform: translateX(100%);
+  }
+  &.bottom {
+    bottom: $offset;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+  }
+  &.bottom-start {
+    bottom: $offset;
+    left: 0;
+    transform: translateY(100%);
+  }
+  &.bottom-end {
+    bottom: $offset;
+    right: 0;
+    transform: translateY(100%);
+  }
+  &.left {
+    top: 50%;
+    left: $offset;
+    transform: translateY(-50%) translateX(-100%);
+  }
+  &.left-start {
+    top: 0;
+    left: $offset;
+    transform: translateX(-100%);
+  }
+  &.left-end {
+    bottom: 0;
+    left: $offset;
+    transform: translateX(-100%);
+  }
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
