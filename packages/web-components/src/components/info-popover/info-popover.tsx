@@ -26,14 +26,14 @@ export class InfoPopover {
   render() {
     return (
       <div class="container">
-        <buttton
+        <button
           class="trigger"
           id="popover-trigger"
           onClick={this.handleTriggerClick}
           aria-label="Information about component library"
         >
           ?
-        </buttton>
+        </button>
         {this.isOpen && (
           <div
             class={`popover ${this.placement}`}
