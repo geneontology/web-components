@@ -26,14 +26,24 @@
       <option>left-start</option>
       <option>left-end</option>
     </select>
-    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 400px;
+      "
+    >
       <go-info-popover placement="top"></go-info-popover>
     </div>
     <script>
       const popover = document.querySelector("go-info-popover");
-      document.getElementById("placement").addEventListener("change", function (e) {
-        popover.placement = e.target.value;
-      });
+      document
+        .getElementById("placement")
+        .addEventListener("change", function (e) {
+          popover.placement = e.target.value;
+        });
     </script>
   </body>
 </html>
