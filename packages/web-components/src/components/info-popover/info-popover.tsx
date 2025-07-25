@@ -18,20 +18,29 @@ export class InfoPopover {
 
   @Prop() placement: Placement = "bottom-start";
 
-  private handleTriggerClick(event: MouseEvent) {
-    console.log("click", this.isOpen);
+  private handleTriggerClick = (event: MouseEvent) => {
     event.preventDefault();
     this.isOpen = !this.isOpen;
-  }
+  };
 
   render() {
     return (
       <div class="container">
-        <div class="trigger" onClick={(e) => this.handleTriggerClick(e)}>
+        <buttton
+          class="trigger"
+          id="popover-trigger"
+          onClick={this.handleTriggerClick}
+          aria-label="Information about component library"
+        >
           ?
-        </div>
+        </buttton>
         {this.isOpen && (
-          <div class={`popover ${this.placement}`}>
+          <div
+            class={`popover ${this.placement}`}
+            role="tooltip"
+            aria-describedby="popover-trigger"
+            aria-hidden={!this.isOpen ? "true" : "false"}
+          >
             <a
               href="https://geneontology.github.io/web-components/"
               target="_blank"
