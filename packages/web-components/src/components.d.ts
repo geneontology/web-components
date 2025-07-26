@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, Placement, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, Placement, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -459,6 +459,15 @@ export namespace Components {
         "parentCy": any;
     }
     /**
+     * A popover component that displays information about the web components library.
+     */
+    interface GoInfoPopover {
+        /**
+          * @default "bottom-start"
+         */
+        "placement": Placement;
+    }
+    /**
      * The Spinner component displays a loading spinner with an optional message.
      */
     interface GoSpinner {
@@ -654,6 +663,15 @@ declare global {
         new (): HTMLGoGocamViewerSidebarElement;
     };
     /**
+     * A popover component that displays information about the web components library.
+     */
+    interface HTMLGoInfoPopoverElement extends Components.GoInfoPopover, HTMLStencilElement {
+    }
+    var HTMLGoInfoPopoverElement: {
+        prototype: HTMLGoInfoPopoverElement;
+        new (): HTMLGoInfoPopoverElement;
+    };
+    /**
      * The Spinner component displays a loading spinner with an optional message.
      */
     interface HTMLGoSpinnerElement extends Components.GoSpinner, HTMLStencilElement {
@@ -672,6 +690,7 @@ declare global {
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
         "go-gocam-viewer-sidebar": HTMLGoGocamViewerSidebarElement;
+        "go-info-popover": HTMLGoInfoPopoverElement;
         "go-spinner": HTMLGoSpinnerElement;
     }
 }
@@ -1136,6 +1155,15 @@ declare namespace LocalJSX {
         "parentCy"?: any;
     }
     /**
+     * A popover component that displays information about the web components library.
+     */
+    interface GoInfoPopover {
+        /**
+          * @default "bottom-start"
+         */
+        "placement"?: Placement;
+    }
+    /**
      * The Spinner component displays a loading spinner with an optional message.
      */
     interface GoSpinner {
@@ -1151,6 +1179,7 @@ declare namespace LocalJSX {
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
         "go-gocam-viewer-sidebar": GoGocamViewerSidebar;
+        "go-info-popover": GoInfoPopover;
         "go-spinner": GoSpinner;
     }
 }
@@ -1217,6 +1246,10 @@ declare module "@stencil/core" {
              * The GO-CAM Viewer Sidebar
              */
             "go-gocam-viewer-sidebar": LocalJSX.GoGocamViewerSidebar & JSXBase.HTMLAttributes<HTMLGoGocamViewerSidebarElement>;
+            /**
+             * A popover component that displays information about the web components library.
+             */
+            "go-info-popover": LocalJSX.GoInfoPopover & JSXBase.HTMLAttributes<HTMLGoInfoPopoverElement>;
             /**
              * The Spinner component displays a loading spinner with an optional message.
              */

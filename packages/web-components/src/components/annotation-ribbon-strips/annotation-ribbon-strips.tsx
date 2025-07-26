@@ -428,10 +428,13 @@ export class AnnotationRibbonStrips {
     // Data is present, show the ribbon
     return (
       <Host>
-        <table class="ribbon">
-          {this.renderCategories()}
-          {this.renderSubjects()}
-        </table>
+        <div class="container">
+          <table class="ribbon">
+            {this.renderCategories()}
+            {this.renderSubjects()}
+          </table>
+          <go-info-popover placement="bottom-end"></go-info-popover>
+        </div>
       </Host>
     );
   }
