@@ -200,11 +200,16 @@ export class AnnotationRibbon {
 
   /**
    * This method is automatically called whenever the value of "subjects" changes
-   * @param newValue a new subject is submitted (e.g. gene)
-   * @param oldValue old value of the subject (e.g. gene or genes)
    */
   @Watch("subjects")
   subjectsChanged() {
+    if (!this.subjects) {
+      this.ribbonData = undefined;
+      this.ribbonDataLoading = false;
+      this.ribbonDataLoadingError = false;
+      void this.stripsElement.setData(this.ribbonData);
+      return void this.tableElement.setData(undefined);
+    }
     void this.fetchRibbonData();
   }
 

@@ -52,7 +52,7 @@ Events are fired when cells or cell headers (groups) are clicked or hovered over
 
 ## Methods
 
-### `setData(data: IRibbonModel) => Promise<void>`
+### `setData(data: IRibbonModel | undefined) => Promise<void>`
 
 Sets the data for the ribbon manually.
 
