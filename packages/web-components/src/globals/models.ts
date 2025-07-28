@@ -1,18 +1,18 @@
-export interface IRibbonGroup {
+export interface RibbonGroup {
   id: string;
   label: string;
   description: string;
   type: "GlobalAll" | "All" | "Term" | "Other";
 }
 
-export interface IRibbonCategory {
+export interface RibbonCategory {
   id: string;
   label: string;
   description: string;
-  groups: IRibbonGroup[];
+  groups: RibbonGroup[];
 }
 
-export interface IRibbonSubject {
+export interface RibbonSubject {
   id: string;
   label: string;
   taxon_id: string;
@@ -22,31 +22,31 @@ export interface IRibbonSubject {
   groups: Record<string, never>;
 }
 
-export interface IRibbonModel {
-  categories: IRibbonCategory[];
-  subjects: IRibbonSubject[];
+export interface RibbonData {
+  categories: RibbonCategory[];
+  subjects: RibbonSubject[];
 }
 
-export interface IRibbonCellEvent {
-  subjects: IRibbonSubject[];
-  group: IRibbonGroup | null;
+export interface RibbonCellEvent {
+  subjects: RibbonSubject[];
+  group: RibbonGroup | null;
 }
 
-export interface IRibbonGroupEvent {
-  category: IRibbonCategory;
-  group: IRibbonGroup;
+export interface RibbonGroupEvent {
+  category: RibbonCategory;
+  group: RibbonGroup;
 }
 
-export interface ISuperCell {
+export interface DisplaySuperCell {
   id?: string;
   headerId: string;
   clickable?: boolean;
   selectable?: boolean;
   foldable?: boolean;
-  values: ICell[];
+  values: DisplayCell[];
 }
 
-export interface ICell {
+export interface DisplayCell {
   id?: string;
   label: string;
   description?: string;
@@ -56,20 +56,20 @@ export interface ICell {
   selectable?: boolean;
 }
 
-export interface IHeaderCell extends ICell {
+export interface DisplayHeaderCell extends DisplayCell {
   baseURL?: string; // if defined, convert cell URL to use this baseURL
   hide?: boolean; // if true, won't show the column that would be considered only for treatment (eg grouping)
 }
 
-export interface IRow {
+export interface DisplayRow {
   foldable?: boolean;
   // id?: string;
-  cells: ISuperCell[];
+  cells: DisplaySuperCell[];
 }
 
-export interface ITable {
-  header: IHeaderCell[];
-  rows: IRow[];
+export interface DisplayTable {
+  header: DisplayHeaderCell[];
+  rows: DisplayRow[];
   newTab?: boolean;
 }
 

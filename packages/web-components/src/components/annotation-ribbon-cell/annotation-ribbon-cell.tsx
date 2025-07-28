@@ -9,8 +9,8 @@ import {
 
 import {
   ColorByOption,
-  IRibbonGroup,
-  IRibbonSubject,
+  RibbonGroup,
+  RibbonSubject,
 } from "../../globals/models";
 
 /**
@@ -24,8 +24,8 @@ import {
   shadow: true,
 })
 export class AnnotationRibbonCell {
-  @Prop() subject: IRibbonSubject;
-  @Prop() group: IRibbonGroup;
+  @Prop() subject: RibbonSubject;
+  @Prop() group: RibbonGroup;
 
   @Prop() classLabels = "term,terms";
   @Prop() annotationLabels = "annotation,annotations";

@@ -1,4 +1,4 @@
-import { IRibbonGroup, IRibbonSubject } from "../../globals/models";
+import { RibbonGroup, RibbonSubject } from "../../globals/models";
 
 export function truncate(text, size, ending) {
   if (size == null) {
@@ -18,15 +18,15 @@ export function transformID(txt) {
   return txt.replace(":", "_");
 }
 
-export function groupKey(group: IRibbonGroup) {
+export function groupKey(group: RibbonGroup) {
   return `category-${transformID(group.id)}-${group.type}`;
 }
 
-export function cellKey(subject: IRibbonSubject, group: IRibbonGroup) {
+export function cellKey(subject: RibbonSubject, group: RibbonGroup) {
   return `subject-${transformID(subject.id)}-${groupKey(group)}`;
 }
 
-export function getNbClasses(group: IRibbonGroup, subject: IRibbonSubject) {
+export function getNbClasses(group: RibbonGroup, subject: RibbonSubject) {
   if (group.type == "GlobalAll") {
     return subject.nb_classes;
   }
@@ -35,7 +35,7 @@ export function getNbClasses(group: IRibbonGroup, subject: IRibbonSubject) {
   return cell ? cell["ALL"]["nb_classes"] : 0;
 }
 
-export function getNbAnnotations(group: IRibbonGroup, subject: IRibbonSubject) {
+export function getNbAnnotations(group: RibbonGroup, subject: RibbonSubject) {
   if (group.type == "GlobalAll") {
     return subject.nb_annotations;
   }

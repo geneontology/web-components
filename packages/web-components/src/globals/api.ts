@@ -1,4 +1,4 @@
-import { IRibbonModel, TableData } from "./models";
+import { RibbonData, TableData } from "./models";
 
 async function getJson<T>(url: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(url, options);
@@ -24,7 +24,7 @@ export async function getRibbonSummary(
   });
 
   const url = endpointUrl + "?" + params.toString();
-  return await getJson<IRibbonModel>(url);
+  return await getJson<RibbonData>(url);
 }
 
 export async function getTableData(

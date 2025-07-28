@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, Placement, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+import { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroup, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, IRibbonCellEvent, IRibbonGroup, IRibbonGroupEvent, IRibbonModel, IRibbonSubject, Placement, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+export { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroup, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -181,7 +181,7 @@ export namespace Components {
           * @default "annotations"
          */
         "colorBy": ColorByOption;
-        "group": IRibbonGroup;
+        "group": RibbonGroup;
         /**
           * @default false
          */
@@ -202,7 +202,7 @@ export namespace Components {
           * @default false
          */
         "selected": boolean;
-        "subject": IRibbonSubject;
+        "subject": RibbonSubject;
     }
     /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
@@ -276,7 +276,7 @@ export namespace Components {
           * Sets the data for the ribbon manually.  Once this method is called, the provided data will be used and changes to the subjects, subset, or apiEndpoint properties will not trigger a data fetch.
           * @param data
          */
-        "setData": (data: IRibbonModel | undefined) => Promise<void>;
+        "setData": (data: RibbonData | undefined) => Promise<void>;
         /**
           * If `true`, show the "all annotations" group.
           * @default true
@@ -320,7 +320,7 @@ export namespace Components {
           * @default true
          */
         "newTab": boolean;
-        "subject": IRibbonSubject;
+        "subject": RibbonSubject;
         /**
           * @default "/"
          */
@@ -523,12 +523,12 @@ declare global {
         new (): HTMLGoAnnotationRibbonCellElement;
     };
     interface HTMLGoAnnotationRibbonStripsElementEventMap {
-        "cellClick": IRibbonCellEvent;
-        "cellEnter": IRibbonCellEvent;
-        "cellLeave": IRibbonCellEvent;
-        "groupClick": IRibbonGroupEvent;
-        "groupEnter": IRibbonGroupEvent;
-        "groupLeave": IRibbonGroupEvent;
+        "cellClick": RibbonCellEvent;
+        "cellEnter": RibbonCellEvent;
+        "cellLeave": RibbonCellEvent;
+        "groupClick": RibbonGroupEvent;
+        "groupEnter": RibbonGroupEvent;
+        "groupLeave": RibbonGroupEvent;
     }
     /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
@@ -866,7 +866,7 @@ declare namespace LocalJSX {
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
-        "group"?: IRibbonGroup;
+        "group"?: RibbonGroup;
         /**
           * @default false
          */
@@ -887,7 +887,7 @@ declare namespace LocalJSX {
           * @default false
          */
         "selected"?: boolean;
-        "subject"?: IRibbonSubject;
+        "subject"?: RibbonSubject;
     }
     /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
@@ -951,27 +951,27 @@ declare namespace LocalJSX {
         /**
           * Emitted when a ribbon cell is clicked.
          */
-        "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
+        "onCellClick"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonCellEvent>) => void;
         /**
           * Emitted when the mouse enters a ribbon cell.
          */
-        "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
+        "onCellEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonCellEvent>) => void;
         /**
           * Emitted when the mouse leaves a ribbon cell.
          */
-        "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonCellEvent>) => void;
+        "onCellLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonCellEvent>) => void;
         /**
           * Emitted when a group label is clicked.
          */
-        "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
+        "onGroupClick"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonGroupEvent>) => void;
         /**
           * Emitted when the mouse enters a group label.
          */
-        "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
+        "onGroupEnter"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonGroupEvent>) => void;
         /**
           * Emitted when the mouse leaves a group label.
          */
-        "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<IRibbonGroupEvent>) => void;
+        "onGroupLeave"?: (event: GoAnnotationRibbonStripsCustomEvent<RibbonGroupEvent>) => void;
         /**
           * If no value is provided, the ribbon will load without any group selected. If a value is provided, the ribbon will show the requested group as selected The value should be the id of the group to be selected
          */
@@ -1028,7 +1028,7 @@ declare namespace LocalJSX {
           * This event is triggered whenever a subject label is clicked Can call preventDefault() to avoid the default behavior (opening the linked subject page)
          */
         "onSubjectClick"?: (event: GoAnnotationRibbonSubjectCustomEvent<any>) => void;
-        "subject": IRibbonSubject;
+        "subject": RibbonSubject;
         /**
           * @default "/"
          */
