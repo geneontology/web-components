@@ -24,3 +24,24 @@ In v1, the custom element names have been standardized to follow a consistent na
 | `wc-go-ribbon`        | `go-annotation-ribbon`        |
 | `wc-ribbon-strips`    | `go-annotation-ribbon-strips` |
 | `wc-ribbon-table`     | `go-annotation-ribbon-table`  |
+
+## Annotation Ribbon API Changes
+
+The `go-annotation-ribbon` component has undergone some API changes. Some attributes have been renamed, modified. or removed. Below is a summary of the changes:
+
+| Previous Attribute Name     | Description                                                                                                                                                                 |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `add-cell-all`              | Renamed `show-all-annotations-group`                                                                                                                                        |
+| `base-api-url`              | Renamed `ribbon-data-api-endpoint`                                                                                                                                          |
+| `category-all-style`        | Replaced by `--group-all-font-weight` CSS custom property                                                                                                                   |
+| `category-case`             | Replaced by `--group-text-transform` CSS custom property                                                                                                                    |
+| `category-other-style`      | Replaced by `--group-other-font-weight` CSS custom property                                                                                                                 |
+| `color-by`                  | Now accepts strings (`"annotations"` or `"classes"`) instead of integers (`0` or `1`)                                                                                       |
+| `data`                      | Removed. Use `setData()` method instead.                                                                                                                                    |
+| `exclude-p-b`               | Renamed `exclude-protein-binding`                                                                                                                                           |
+| `fire-event-on-empty-cells` | Removed because it previously had inconsistent behavior.                                                                                                                    |
+| `group-base-url`            | Removed because it was previously unimplemented.                                                                                                                            |
+| `group-new-tab`             | Removed because it was previously unimplemented.                                                                                                                            |
+| `selection-mode`            | Now accepts strings (`"cell"` or `"column"`) instead of integers (`0` or `1`)                                                                                               |
+| `subject-position`          | Now accepts strings (`"none"`, `"left"` or `"right"`) instead of integers (`0`, `1` or `2`). The "bottom" option (`3`) was removed because it was previously unimplemented. |
+| `subject-use-taxon-icon`    | Removed because it was previously unimplemented.                                                                                                                            |
