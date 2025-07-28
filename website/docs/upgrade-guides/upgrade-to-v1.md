@@ -27,9 +27,9 @@ In v1, the custom element names have been standardized to follow a consistent na
 
 ## Annotation Ribbon API Changes
 
-The `go-annotation-ribbon` component has undergone some API changes. Some attributes have been renamed, modified. or removed. Below is a summary of the changes:
+The `go-annotation-ribbon` component has undergone some API changes. Some attributes have been renamed, modified, or removed. Below is a summary of the changes:
 
-| Previous Attribute Name     | Description                                                                                                                                                                 |
+| Previous Attribute Name     | New Attribute/Migration Path                                                                                                                                               |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `add-cell-all`              | Renamed `show-all-annotations-group`                                                                                                                                        |
 | `base-api-url`              | Renamed `ribbon-data-api-endpoint`                                                                                                                                          |
