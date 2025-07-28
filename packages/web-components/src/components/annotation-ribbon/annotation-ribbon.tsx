@@ -2,11 +2,11 @@ import { Component, h, Host, Listen, Prop, State, Watch } from "@stencil/core";
 
 import {
   ColorByOption,
-  IRibbonCellEvent,
-  IRibbonGroup,
-  IRibbonGroupEvent,
-  IRibbonModel,
-  IRibbonSubject,
+  RibbonCellEvent,
+  RibbonGroup,
+  RibbonGroupEvent,
+  RibbonData,
+  RibbonSubject,
   SelectionModeOption,
   SubjectPositionOption,
   TableData,
@@ -38,7 +38,7 @@ export class AnnotationRibbon {
   private stripsElement: HTMLGoAnnotationRibbonStripsElement;
   private tableElement: HTMLGoAnnotationRibbonTableElement;
 
-  @State() ribbonData?: IRibbonModel;
+  @State() ribbonData?: RibbonData;
   @State() ribbonDataLoading = false;
   @State() ribbonDataLoadingError = false;
 
@@ -239,10 +239,7 @@ export class AnnotationRibbon {
     }
   }
 
-  private async fetchTableData(
-    group: IRibbonGroup,
-    subjects: IRibbonSubject[],
-  ) {
+  private async fetchTableData(group: RibbonGroup, subjects: RibbonSubject[]) {
     if (!this.ribbonData) {
       return;
     }
@@ -295,13 +292,13 @@ export class AnnotationRibbon {
     }
   }
 
-  private applyTableFilters(data: TableData, group: IRibbonGroup) {
+  private applyTableFilters(data: TableData, group: RibbonGroup) {
     if (this.filterCrossAspect) {
       this.applyFilterCrossAspect(data, group);
     }
   }
 
-  private applyFilterCrossAspect(data: TableData, group: IRibbonGroup) {
+  private applyFilterCrossAspect(data: TableData, group: RibbonGroup) {
     if (!this.ribbonData) {
       return;
     }
@@ -318,7 +315,7 @@ export class AnnotationRibbon {
   }
 
   @Listen("cellClick")
-  onCellClick(e: CustomEvent<IRibbonCellEvent>) {
+  onCellClick(e: CustomEvent<RibbonCellEvent>) {
     if (!this.ribbonData) {
       return;
     }
@@ -332,7 +329,7 @@ export class AnnotationRibbon {
   }
 
   @Listen("groupClick")
-  onGroupClick(e: CustomEvent<IRibbonGroupEvent>) {
+  onGroupClick(e: CustomEvent<RibbonGroupEvent>) {
     if (!this.ribbonData) {
       return;
     }

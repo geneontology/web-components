@@ -1,7 +1,7 @@
 import { Component, Event, EventEmitter, h, Prop, Watch } from "@stencil/core";
 
 import { formatTaxonLabel } from "./utils";
-import { IRibbonSubject } from "../../globals/models";
+import { RibbonSubject } from "../../globals/models";
 
 /**
  * An individual subject in the annotation ribbon.
@@ -17,7 +17,7 @@ export class AnnotationRibbonSubject {
   private subjectId: string;
   private subjectBaseURLFull: string = "/";
 
-  @Prop() subject!: IRibbonSubject;
+  @Prop() subject!: RibbonSubject;
 
   @Prop()
   get subjectBaseURL(): string {

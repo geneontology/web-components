@@ -1,4 +1,4 @@
-import { ITable, TableData } from "../../globals/models";
+import { DisplayTable, TableData } from "../../globals/models";
 import { Immutable } from "immer";
 
 /**
@@ -8,7 +8,7 @@ import { Immutable } from "immer";
  * Note: Should only be launched once on a table
  * @param table
  */
-export function addEmptyCells(table: ITable) {
+export function addEmptyCells(table: DisplayTable) {
   for (const row of table.rows) {
     let nbMax = 0;
     for (const header of table.header) {
@@ -38,8 +38,8 @@ export function aspectShortLabel(txt) {
 export function bioLinkToTable(
   data: Immutable<TableData>,
   getURL: (db: string, type: string | undefined, id: string) => string,
-): ITable {
-  const table: ITable = {
+): DisplayTable {
+  const table: DisplayTable = {
     newTab: true,
     header: [
       {

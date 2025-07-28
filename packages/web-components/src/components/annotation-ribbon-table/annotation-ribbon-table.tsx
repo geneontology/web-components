@@ -1,9 +1,9 @@
 import { Component, h, Method, Prop, State, Watch } from "@stencil/core";
 
 import {
-  IHeaderCell,
-  ISuperCell,
-  ITable,
+  DisplayHeaderCell,
+  DisplaySuperCell,
+  DisplayTable,
   TableData,
 } from "../../globals/models";
 import { addEmptyCells, bioLinkToTable } from "./utils";
@@ -24,10 +24,10 @@ import { Draft, Immutable, produce } from "immer";
 export class AnnotationRibbonTable {
   @State() loading: boolean = false;
   @State() loadingError: boolean = false;
-  @State() displayTable?: Immutable<ITable>;
+  @State() displayTable?: Immutable<DisplayTable>;
 
   private tableData?: Immutable<TableData>;
-  private headerMap?: Map<string, Immutable<IHeaderCell>>;
+  private headerMap?: Map<string, Immutable<DisplayHeaderCell>>;
   private dataManuallySet: boolean = false;
 
   /**
@@ -200,7 +200,7 @@ export class AnnotationRibbonTable {
     }
     this.displayTable = Object.freeze(displayTable);
 
-    const map = new Map<string, Immutable<IHeaderCell>>();
+    const map = new Map<string, Immutable<DisplayHeaderCell>>();
     for (const header of this.displayTable.header) {
       map.set(header.id, header);
     }
@@ -212,7 +212,7 @@ export class AnnotationRibbonTable {
    * @param table the table to be grouped
    * @param keyColumns ids of the columns to create unique rows - will only work with cells containing single value, not array
    */
-  private groupByColumns(table: ITable, keyColumns: string[]) {
+  private groupByColumns(table: DisplayTable, keyColumns: string[]) {
     const firstRow = table.rows[0].cells;
     const otherCells = firstRow.filter(
       (elt) => !keyColumns.includes(elt.headerId),
@@ -251,7 +251,7 @@ export class AnnotationRibbonTable {
       const rrows = uRows.get(key);
       const row = { cells: [] };
       for (const header of table.header) {
-        let eqcell: ISuperCell = undefined;
+        let eqcell: DisplaySuperCell = undefined;
         if (keyColumns.includes(header.id)) {
           eqcell = rrows[0].cells.filter((elt) => elt.headerId == header.id)[0];
         } else if (otherColumns.includes(header.id)) {
@@ -285,7 +285,7 @@ export class AnnotationRibbonTable {
     table.rows = newRows;
   }
 
-  private filterByColumns(table: ITable, filters: string) {
+  private filterByColumns(table: DisplayTable, filters: string) {
     const split = filters.split(":");
     const key = split[0];
     const values = split[1].split(",");
@@ -339,7 +339,7 @@ export class AnnotationRibbonTable {
     );
   }
 
-  renderHeader(table: Immutable<ITable>) {
+  renderHeader(table: Immutable<DisplayTable>) {
     return (
       <tr class="header">
         {table.header.map((cell) => {
@@ -360,7 +360,7 @@ export class AnnotationRibbonTable {
     );
   }
 
-  renderRows(table: Immutable<ITable>) {
+  renderRows(table: Immutable<DisplayTable>) {
     return table.rows.map((row) => (
       <tr class="row">
         {row.cells.map((superCell) => {

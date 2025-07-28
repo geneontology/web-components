@@ -1,16 +1,13 @@
 import {
-  IRibbonCategory,
-  IRibbonGroup,
+  RibbonCategory,
+  RibbonGroup,
   TableDataAssociation,
 } from "../../globals/models";
 
 /**
  * Return the category object for a given group
  */
-export function getCategory(
-  group: IRibbonGroup,
-  categories: IRibbonCategory[],
-) {
+export function getCategory(group: RibbonGroup, categories: RibbonCategory[]) {
   const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);
   });
@@ -21,8 +18,8 @@ export function getCategory(
  * Return the category [id, label] for a given group
  */
 export function getCategoryIdLabel(
-  group: IRibbonGroup,
-  categories: IRibbonCategory[],
+  group: RibbonGroup,
+  categories: RibbonCategory[],
 ) {
   const cat = categories.filter((cat) => {
     return cat.groups.some((gp) => gp.id == group.id);

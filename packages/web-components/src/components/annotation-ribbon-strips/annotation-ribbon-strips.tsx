@@ -16,19 +16,19 @@ import { groupKey, cellKey, truncate, getNbAnnotations } from "./utils";
 
 import {
   ColorByOption,
-  IRibbonCategory,
-  IRibbonCellEvent,
-  IRibbonGroup,
-  IRibbonGroupEvent,
-  IRibbonModel,
-  IRibbonSubject,
+  RibbonCategory,
+  RibbonCellEvent,
+  RibbonGroup,
+  RibbonGroupEvent,
+  RibbonData,
+  RibbonSubject,
   SelectionModeOption,
   SubjectPositionOption,
 } from "../../globals/models";
 import { sameArray } from "../../globals/utils";
 import { getRibbonSummary } from "../../globals/api";
 
-const GROUP_ALL: IRibbonGroup = {
+const GROUP_ALL: RibbonGroup = {
   id: "all",
   label: "all annotations",
   description: "Show all annotations for all categories",
@@ -52,14 +52,14 @@ const GROUP_ALL: IRibbonGroup = {
 export class AnnotationRibbonStrips {
   private dataManuallySet: boolean = false;
 
-  @State() selectedGroup: IRibbonGroup | null = null;
-  @State() selectedSubjects: IRibbonSubject[] = [];
-  @State() hoveredGroup: IRibbonGroup | null = null;
-  @State() hoveredSubjects: IRibbonSubject[] = [];
+  @State() selectedGroup: RibbonGroup | null = null;
+  @State() selectedSubjects: RibbonSubject[] = [];
+  @State() hoveredGroup: RibbonGroup | null = null;
+  @State() hoveredSubjects: RibbonSubject[] = [];
 
   @State() loading: boolean = false;
   @State() loadingError: boolean = false;
-  @State() data?: IRibbonModel;
+  @State() data?: RibbonData;
 
   /**
    * Comma-separated list of gene IDs (e.g. RGD:620474,RGD:3889)
@@ -203,37 +203,37 @@ export class AnnotationRibbonStrips {
    * Emitted when a ribbon cell is clicked.
    */
   @Event({ eventName: "cellClick", cancelable: true, bubbles: true })
-  cellClick: EventEmitter<IRibbonCellEvent>;
+  cellClick: EventEmitter<RibbonCellEvent>;
 
   /**
    * Emitted when the mouse enters a ribbon cell.
    */
   @Event({ eventName: "cellEnter", cancelable: true, bubbles: true })
-  cellEnter: EventEmitter<IRibbonCellEvent>;
+  cellEnter: EventEmitter<RibbonCellEvent>;
 
   /**
    * Emitted when the mouse leaves a ribbon cell.
    */
   @Event({ eventName: "cellLeave", cancelable: true, bubbles: true })
-  cellLeave: EventEmitter<IRibbonCellEvent>;
+  cellLeave: EventEmitter<RibbonCellEvent>;
 
   /**
    * Emitted when a group label is clicked.
    */
   @Event({ eventName: "groupClick", cancelable: true, bubbles: true })
-  groupClick: EventEmitter<IRibbonGroupEvent>;
+  groupClick: EventEmitter<RibbonGroupEvent>;
 
   /**
    * Emitted when the mouse enters a group label.
    */
   @Event({ eventName: "groupEnter", cancelable: true, bubbles: true })
-  groupEnter: EventEmitter<IRibbonGroupEvent>;
+  groupEnter: EventEmitter<RibbonGroupEvent>;
 
   /**
    * Emitted when the mouse leaves a group label.
    */
   @Event({ eventName: "groupLeave", cancelable: true, bubbles: true })
-  groupLeave: EventEmitter<IRibbonGroupEvent>;
+  groupLeave: EventEmitter<RibbonGroupEvent>;
 
   /**
    * Lifecycle method called when the component has loaded.
@@ -253,7 +253,7 @@ export class AnnotationRibbonStrips {
    * @param data
    */
   @Method()
-  async setData(data: IRibbonModel | undefined) {
+  async setData(data: RibbonData | undefined) {
     this.dataManuallySet = true;
     if (!data) {
       this.selectedGroup = null;
@@ -283,7 +283,7 @@ export class AnnotationRibbonStrips {
     }
   }
 
-  private groupsEqual(a: IRibbonGroup | null, b: IRibbonGroup | null): boolean {
+  private groupsEqual(a: RibbonGroup | null, b: RibbonGroup | null): boolean {
     // If objects are the same reference, return true
     if (a === b) {
       return true;
@@ -296,11 +296,11 @@ export class AnnotationRibbonStrips {
     return a.id === b.id && a.type === b.type;
   }
 
-  private subjectsEqual(a: IRibbonSubject[], b: IRibbonSubject[]): boolean {
+  private subjectsEqual(a: RibbonSubject[], b: RibbonSubject[]): boolean {
     return sameArray(a, b, (s1, s2) => s1.id === s2.id);
   }
 
-  private onCellEnter(subject: IRibbonSubject, group: IRibbonGroup) {
+  private onCellEnter(subject: RibbonSubject, group: RibbonGroup) {
     if (this.selectionMode === "column") {
       this.hoveredSubjects = this.data.subjects;
     } else {
@@ -323,7 +323,7 @@ export class AnnotationRibbonStrips {
     this.hoveredGroup = null;
   }
 
-  private onCellClick(subject: IRibbonSubject, group: IRibbonGroup) {
+  private onCellClick(subject: RibbonSubject, group: RibbonGroup) {
     const numberOfAnnotations = getNbAnnotations(group, subject);
     if (numberOfAnnotations === 0) {
       return;
@@ -346,7 +346,7 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  private onGroupClick(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupClick(category: RibbonCategory, group: RibbonGroup) {
     if (!this.groupClickable) {
       return;
     }
@@ -370,7 +370,7 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  private onGroupEnter(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupEnter(category: RibbonCategory, group: RibbonGroup) {
     this.hoveredGroup = group;
     this.hoveredSubjects = this.data.subjects;
     this.groupEnter.emit({
@@ -379,7 +379,7 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  private onGroupLeave(category: IRibbonCategory, group: IRibbonGroup) {
+  private onGroupLeave(category: RibbonCategory, group: RibbonGroup) {
     this.hoveredGroup = null;
     this.hoveredSubjects = [];
     this.groupLeave.emit({
@@ -388,25 +388,22 @@ export class AnnotationRibbonStrips {
     });
   }
 
-  private isGroupHovered(group: IRibbonGroup): boolean {
+  private isGroupHovered(group: RibbonGroup): boolean {
     return this.groupsEqual(this.hoveredGroup, group);
   }
 
-  private isCellHovered(subject: IRibbonSubject, group: IRibbonGroup): boolean {
+  private isCellHovered(subject: RibbonSubject, group: RibbonGroup): boolean {
     return (
       this.isGroupHovered(group) &&
       this.hoveredSubjects.findIndex((s) => s.id === subject.id) >= 0
     );
   }
 
-  private isGroupSelected(group: IRibbonGroup): boolean {
+  private isGroupSelected(group: RibbonGroup): boolean {
     return this.groupsEqual(this.selectedGroup, group);
   }
 
-  private isCellSelected(
-    subject: IRibbonSubject,
-    group: IRibbonGroup,
-  ): boolean {
+  private isCellSelected(subject: RibbonSubject, group: RibbonGroup): boolean {
     return (
       this.isGroupSelected(group) &&
       this.selectedSubjects.findIndex((s) => s.id === subject.id) >= 0
@@ -417,7 +414,7 @@ export class AnnotationRibbonStrips {
     return truncate(category, this.groupMaxLabelSize, "...");
   }
 
-  private formatGroupTitle(group: IRibbonGroup): string {
+  private formatGroupTitle(group: RibbonGroup): string {
     return `${group.id}: ${group.label}\n\n${group.description}`;
   }
 
@@ -479,45 +476,44 @@ export class AnnotationRibbonStrips {
             </th>
           )}
 
-          {this.data.categories.map(
-            (category: IRibbonCategory, categoryIndex) =>
-              category.groups.map((group: IRibbonGroup, groupIndex) =>
-                group.type === "Other" && !this.showOtherGroup ? null : (
-                  <Fragment>
-                    {groupIndex === 0 &&
-                      (categoryIndex > 0 || this.showAllAnnotationsGroup) && (
-                        <th class="separator" />
-                      )}
-                    <th
+          {this.data.categories.map((category: RibbonCategory, categoryIndex) =>
+            category.groups.map((group: RibbonGroup, groupIndex) =>
+              group.type === "Other" && !this.showOtherGroup ? null : (
+                <Fragment>
+                  {groupIndex === 0 &&
+                    (categoryIndex > 0 || this.showAllAnnotationsGroup) && (
+                      <th class="separator" />
+                    )}
+                  <th
+                    class={clsx({
+                      group: true,
+                      "category-all": group.type === "All",
+                      "category-other": group.type === "Other",
+                      hovered: this.isGroupHovered(group),
+                      selected: this.isGroupSelected(group),
+                    })}
+                    key={groupKey(group)}
+                    title={this.formatGroupTitle(group)}
+                  >
+                    <div
                       class={clsx({
-                        group: true,
-                        "category-all": group.type === "All",
-                        "category-other": group.type === "Other",
-                        hovered: this.isGroupHovered(group),
-                        selected: this.isGroupSelected(group),
+                        label: true,
+                        clickable: this.groupClickable,
                       })}
-                      key={groupKey(group)}
-                      title={this.formatGroupTitle(group)}
+                      onMouseEnter={() => this.onGroupEnter(category, group)}
+                      onMouseLeave={() => this.onGroupLeave(category, group)}
+                      onClick={
+                        this.groupClickable
+                          ? () => this.onGroupClick(category, group)
+                          : undefined
+                      }
                     >
-                      <div
-                        class={clsx({
-                          label: true,
-                          clickable: this.groupClickable,
-                        })}
-                        onMouseEnter={() => this.onGroupEnter(category, group)}
-                        onMouseLeave={() => this.onGroupLeave(category, group)}
-                        onClick={
-                          this.groupClickable
-                            ? () => this.onGroupClick(category, group)
-                            : undefined
-                        }
-                      >
-                        {this.formatGroupLabel(group.label)}
-                      </div>
-                    </th>
-                  </Fragment>
-                ),
+                      {this.formatGroupLabel(group.label)}
+                    </div>
+                  </th>
+                </Fragment>
               ),
+            ),
           )}
           {this.subjectPosition === "right" && <th />}
         </tr>
@@ -528,7 +524,7 @@ export class AnnotationRibbonStrips {
   renderSubjects() {
     return (
       <tbody>
-        {this.data.subjects.map((subject: IRibbonSubject) => {
+        {this.data.subjects.map((subject: RibbonSubject) => {
           return (
             <tr key={subject.id}>
               {this.subjectPosition === "left" && (
@@ -563,8 +559,8 @@ export class AnnotationRibbonStrips {
               )}
 
               {this.data.categories.map(
-                (category: IRibbonCategory, categoryIndex) =>
-                  category.groups.map((group: IRibbonGroup, groupIndex) => {
+                (category: RibbonCategory, categoryIndex) =>
+                  category.groups.map((group: RibbonGroup, groupIndex) => {
                     const cellid =
                       group.id + (group.type === "Other" ? "-other" : "");
                     const cell =

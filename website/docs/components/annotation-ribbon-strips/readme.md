@@ -40,19 +40,19 @@ Events are fired when cells or cell headers (groups) are clicked or hovered over
 
 ## Events
 
-| Event        | Description                                  | Type                             |
-| ------------ | -------------------------------------------- | -------------------------------- |
-| `cellClick`  | Emitted when a ribbon cell is clicked.       | `CustomEvent<IRibbonCellEvent>`  |
-| `cellEnter`  | Emitted when the mouse enters a ribbon cell. | `CustomEvent<IRibbonCellEvent>`  |
-| `cellLeave`  | Emitted when the mouse leaves a ribbon cell. | `CustomEvent<IRibbonCellEvent>`  |
-| `groupClick` | Emitted when a group label is clicked.       | `CustomEvent<IRibbonGroupEvent>` |
-| `groupEnter` | Emitted when the mouse enters a group label. | `CustomEvent<IRibbonGroupEvent>` |
-| `groupLeave` | Emitted when the mouse leaves a group label. | `CustomEvent<IRibbonGroupEvent>` |
+| Event        | Description                                  | Type                            |
+| ------------ | -------------------------------------------- | ------------------------------- |
+| `cellClick`  | Emitted when a ribbon cell is clicked.       | `CustomEvent<RibbonCellEvent>`  |
+| `cellEnter`  | Emitted when the mouse enters a ribbon cell. | `CustomEvent<RibbonCellEvent>`  |
+| `cellLeave`  | Emitted when the mouse leaves a ribbon cell. | `CustomEvent<RibbonCellEvent>`  |
+| `groupClick` | Emitted when a group label is clicked.       | `CustomEvent<RibbonGroupEvent>` |
+| `groupEnter` | Emitted when the mouse enters a group label. | `CustomEvent<RibbonGroupEvent>` |
+| `groupLeave` | Emitted when the mouse leaves a group label. | `CustomEvent<RibbonGroupEvent>` |
 
 
 ## Methods
 
-### `setData(data: IRibbonModel | undefined) => Promise<void>`
+### `setData(data: RibbonData | undefined) => Promise<void>`
 
 Sets the data for the ribbon manually.
 
@@ -61,9 +61,9 @@ subset, or apiEndpoint properties will not trigger a data fetch.
 
 #### Parameters
 
-| Name   | Type           | Description |
-| ------ | -------------- | ----------- |
-| `data` | `IRibbonModel` |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| `data` | `RibbonData` |             |
 
 #### Returns
 
