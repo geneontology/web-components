@@ -189,6 +189,13 @@ export class AnnotationRibbonStrips {
       // If data was manually set, do not fetch again
       return;
     }
+    if (!this.subjects) {
+      // If no subjects are provided, reset selection state and clear data
+      this.selectedGroup = null;
+      this.selectedSubjects = [];
+      this.data = undefined;
+      return;
+    }
     return this.fetchData();
   }
 
@@ -246,8 +253,12 @@ export class AnnotationRibbonStrips {
    * @param data
    */
   @Method()
-  async setData(data: IRibbonModel) {
+  async setData(data: IRibbonModel | undefined) {
     this.dataManuallySet = true;
+    if (!data) {
+      this.selectedGroup = null;
+      this.selectedSubjects = [];
+    }
     this.data = data;
   }
 

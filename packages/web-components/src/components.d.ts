@@ -276,7 +276,7 @@ export namespace Components {
           * Sets the data for the ribbon manually.  Once this method is called, the provided data will be used and changes to the subjects, subset, or apiEndpoint properties will not trigger a data fetch.
           * @param data
          */
-        "setData": (data: IRibbonModel) => Promise<void>;
+        "setData": (data: IRibbonModel | undefined) => Promise<void>;
         /**
           * If `true`, show the "all annotations" group.
           * @default true
