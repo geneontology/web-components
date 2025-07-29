@@ -11,6 +11,7 @@ import {
   Watch,
 } from "@stencil/core";
 import clsx from "clsx";
+import Color, { Range } from "colorjs.io";
 
 import { groupKey, cellKey, truncate, getNbAnnotations } from "./utils";
 
@@ -27,6 +28,7 @@ import {
 } from "../../globals/models";
 import { sameArray } from "../../globals/utils";
 import { getRibbonSummary } from "../../globals/api";
+import { Cell } from "./components/cell";
 
 const GROUP_ALL: RibbonGroup = {
   id: "all",
@@ -51,6 +53,10 @@ const GROUP_ALL: RibbonGroup = {
 })
 export class AnnotationRibbonStrips {
   private dataManuallySet: boolean = false;
+  private colorInterpolator: Range;
+
+  @State() maxNumClasses: number;
+  @State() maxNumAnnotations: number;
 
   @State() selectedGroup: RibbonGroup | null = null;
   @State() selectedSubjects: RibbonSubject[] = [];
@@ -83,16 +89,6 @@ export class AnnotationRibbonStrips {
     "https://amigo.geneontology.org/amigo/gene_product/";
 
   /**
-   * Labels used with class counts.
-   */
-  @Prop() classLabels = "term,terms";
-
-  /**
-   * Labels used with annotation counts.
-   */
-  @Prop() annotationLabels = "annotation,annotations";
-
-  /**
    * Whether to color cells by annotations or classes.
    */
   @Prop() colorBy: ColorByOption = "annotations";
@@ -105,19 +101,29 @@ export class AnnotationRibbonStrips {
   @Prop() binaryColor = false;
 
   /**
-   * Color of cells with the least number of annotations or classes.
+   * Color of cells with the least number of annotations or classes. Any valid CSS color string
+   * can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
    */
-  @Prop() minColor = "255,255,255";
+  @Prop() minColor = "rgb(255,255,255)";
 
   /**
-   * Color of cells with the most number of annotations or classes.
+   * Color of cells with the most number of annotations or classes. Any valid CSS color string
+   * can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
    */
-  @Prop() maxColor = "24,73,180";
+  @Prop() maxColor = "rgb(24,73,180)";
 
   /**
-   * Maximum number of annotations or classes before `maxColor` is applied.
+   * Maximum number of annotations or classes before `maxColor` is applied. If
+   * 0, the maximum value is determined from the data.
    */
-  @Prop() maxHeatLevel = 48;
+  @Prop() maxColorLevel: number = 0;
+
+  /**
+   * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values
+   * less than 1 will make the color scale more sensitive to smaller values, while values greater
+   * than 1 will make it more sensitive to larger values.
+   */
+  @Prop() colorScaleExponent: number = 0.25;
 
   /**
    * Maximum size of group labels in characters.
@@ -199,6 +205,60 @@ export class AnnotationRibbonStrips {
     return this.fetchData();
   }
 
+  @Watch("minColor")
+  @Watch("maxColor")
+  @Watch("colorScaleExponent")
+  updateColorInterpolator() {
+    const c1 = new Color(this.minColor);
+    const c2 = new Color(this.maxColor);
+    this.colorInterpolator = c1.range(c2, {
+      space: "oklch",
+      hue: "shorter",
+      progression: (p) => p ** this.colorScaleExponent,
+    });
+  }
+
+  @Watch("data")
+  @Watch("showAllAnnotationsGroup")
+  @Watch("maxColorLevel")
+  updateMaxValues() {
+    if (!this.data) {
+      return;
+    }
+
+    if (this.maxColorLevel > 0) {
+      // If maxColorLevel not the "auto" value (0), use it directly
+      this.maxNumClasses = this.maxColorLevel;
+      this.maxNumAnnotations = this.maxColorLevel;
+    } else if (this.showAllAnnotationsGroup) {
+      // If showAllAnnotationsGroup is true, use the max values from the data
+      this.maxNumClasses = Math.max(
+        ...this.data.subjects.map((s) => s.nb_classes),
+      );
+      this.maxNumAnnotations = Math.max(
+        ...this.data.subjects.map((s) => s.nb_annotations),
+      );
+    } else {
+      // If showAllAnnotationsGroup is false, calculate max values from groups
+      this.maxNumClasses = Math.max(
+        ...this.data.subjects.map((s) =>
+          Object.values(s.groups).reduce(
+            (max, group) => Math.max(max, group["ALL"].nb_classes),
+            0,
+          ),
+        ),
+      );
+      this.maxNumAnnotations = Math.max(
+        ...this.data.subjects.map((s) =>
+          Object.values(s.groups).reduce(
+            (max, group) => Math.max(max, group["ALL"].nb_annotations),
+            0,
+          ),
+        ),
+      );
+    }
+  }
+
   /**
    * Emitted when a ribbon cell is clicked.
    */
@@ -243,6 +303,8 @@ export class AnnotationRibbonStrips {
     // Use .then() instead of await in order to not block the initial
     // render while the call to fetchData resolves.
     this.fetchData().then(() => this.selectedChanged());
+    this.updateColorInterpolator();
+    this.updateMaxValues();
   }
 
   /**
@@ -418,6 +480,21 @@ export class AnnotationRibbonStrips {
     return `${group.id}: ${group.label}\n\n${group.description}`;
   }
 
+  private getCellColor(nbClasses: number, nbAnnotations: number): string {
+    const value = this.colorBy === "annotations" ? nbAnnotations : nbClasses;
+    if (this.binaryColor) {
+      return value > 0 ? this.maxColor : this.minColor;
+    }
+    const maxValue =
+      this.colorBy === "annotations"
+        ? this.maxNumAnnotations
+        : this.maxNumClasses;
+    if (maxValue === 0) {
+      return this.minColor;
+    }
+    return this.colorInterpolator(Math.min(value / maxValue, 1)).toString();
+  }
+
   render() {
     if (this.loading) {
       return <go-spinner></go-spinner>;
@@ -538,47 +615,21 @@ export class AnnotationRibbonStrips {
               )}
 
               {this.showAllAnnotationsGroup && (
-                <td class="cell">
-                  <go-annotation-ribbon-cell
-                    subject={subject}
-                    group={GROUP_ALL}
-                    hovered={this.isCellHovered(subject, GROUP_ALL)}
-                    selected={this.isCellSelected(subject, GROUP_ALL)}
-                    colorBy={this.colorBy}
-                    binaryColor={this.binaryColor}
-                    minColor={this.minColor}
-                    maxColor={this.maxColor}
-                    maxHeatLevel={this.maxHeatLevel}
-                    annotationLabels={this.annotationLabels}
-                    classLabels={this.classLabels}
-                    onClick={() => this.onCellClick(subject, GROUP_ALL)}
-                    onMouseEnter={() => this.onCellEnter(subject, GROUP_ALL)}
-                    onMouseLeave={() => this.onCellLeave()}
-                  />
-                </td>
+                <Cell
+                  subject={subject}
+                  group={GROUP_ALL}
+                  hovered={this.isCellHovered(subject, GROUP_ALL)}
+                  selected={this.isCellSelected(subject, GROUP_ALL)}
+                  getColor={this.getCellColor.bind(this)}
+                  onClick={() => this.onCellClick(subject, GROUP_ALL)}
+                  onMouseEnter={() => this.onCellEnter(subject, GROUP_ALL)}
+                  onMouseLeave={() => this.onCellLeave()}
+                />
               )}
 
               {this.data.categories.map(
                 (category: RibbonCategory, categoryIndex) =>
                   category.groups.map((group: RibbonGroup, groupIndex) => {
-                    const cellid =
-                      group.id + (group.type === "Other" ? "-other" : "");
-                    const cell =
-                      cellid in subject.groups
-                        ? subject.groups[cellid]
-                        : undefined;
-
-                    // by default the group should be available
-                    let available = true;
-
-                    // if a value was given, then override the default value
-                    if (
-                      cell &&
-                      Object.prototype.hasOwnProperty.call(cell, "available")
-                    ) {
-                      available = cell.available;
-                    }
-
                     if (group.type === "Other" && !this.showOtherGroup) {
                       return;
                     }
@@ -590,32 +641,17 @@ export class AnnotationRibbonStrips {
                             this.showAllAnnotationsGroup) && (
                             <td class="separator" />
                           )}
-                        <td
-                          class={clsx({
-                            cell: true,
-                          })}
-                        >
-                          <go-annotation-ribbon-cell
-                            key={cellKey(subject, group)}
-                            subject={subject}
-                            group={group}
-                            available={available}
-                            hovered={this.isCellHovered(subject, group)}
-                            selected={this.isCellSelected(subject, group)}
-                            colorBy={this.colorBy}
-                            binaryColor={this.binaryColor}
-                            minColor={this.minColor}
-                            maxColor={this.maxColor}
-                            maxHeatLevel={this.maxHeatLevel}
-                            annotationLabels={this.annotationLabels}
-                            classLabels={this.classLabels}
-                            onClick={() => this.onCellClick(subject, group)}
-                            onMouseEnter={() =>
-                              this.onCellEnter(subject, group)
-                            }
-                            onMouseLeave={() => this.onCellLeave()}
-                          />
-                        </td>
+                        <Cell
+                          key={cellKey(subject, group)}
+                          subject={subject}
+                          group={group}
+                          hovered={this.isCellHovered(subject, group)}
+                          selected={this.isCellSelected(subject, group)}
+                          getColor={this.getCellColor.bind(this)}
+                          onClick={() => this.onCellClick(subject, group)}
+                          onMouseEnter={() => this.onCellEnter(subject, group)}
+                          onMouseLeave={() => this.onCellLeave()}
+                        />
                       </Fragment>
                     );
                   }),

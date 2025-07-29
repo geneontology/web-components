@@ -12,14 +12,24 @@ export interface RibbonCategory {
   groups: RibbonGroup[];
 }
 
-export interface RibbonSubject {
+export interface RibbonGroupCounts {
+  nb_classes: number;
+  nb_annotations: number;
+}
+
+// The key of this record is an evidence type, e.g. "IEA", "EXP", or "ALL". There may also be a
+// special "available" key that indicates whether the group is available for the subject.
+export type RibbonSubjectGroupCounts = Record<string, RibbonGroupCounts> & {
+  available?: boolean;
+};
+
+export interface RibbonSubject extends RibbonGroupCounts {
   id: string;
   label: string;
   taxon_id: string;
   taxon_label: string;
-  nb_classes: number;
-  nb_annotations: number;
-  groups: Record<string, never>;
+  // The key of this record is a group id, e.g. "GO:0008150"
+  groups: Record<string, RibbonSubjectGroupCounts>;
 }
 
 export interface RibbonData {

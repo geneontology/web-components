@@ -48,11 +48,11 @@
   --cell-width: 1.40625em;
   --cell-height: 1.40625em;
 
-  --cell-spacing: 0px;
-  --cell-border-collapse: collapse;
+  --cell-spacing: 1px;
+  --cell-border-collapse: separate;
 
-  --cell-border-width: 1px;
-  --cell-border-color: transparent;
+  --cell-border-width: 0px;
+  --cell-border-color: none;
   --cell-border-style: solid;
   --cell-box-shadow: none;
 
@@ -61,10 +61,10 @@
   --cell-selected-border-style: solid;
   --cell-selected-box-shadow: none;
 
-  --cell-hovered-border-width: 0;
-  --cell-hovered-border-color: none;
-  --cell-hovered-border-style: solid;
-  --cell-hovered-box-shadow: none;
+  --cell-hovered-border-width: var(--cell-border-width);
+  --cell-hovered-border-color: var(--cell-border-color);
+  --cell-hovered-border-style: var(--cell-border-style);
+  --cell-hovered-box-shadow: var(--cell-box-shadow);
 
   --category-separator-width: 2em;
 
