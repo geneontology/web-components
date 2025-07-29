@@ -100,6 +100,36 @@
         document.body.insertBefore(container, ribbon);
       }
 
+      function addSlider(prop, min, max, step) {
+        if (document.getElementById(prop)) {
+          return;
+        }
+        let slider = document.createElement("input");
+        let valueLabel = document.createElement("span");
+
+        slider.type = "range";
+        slider.id = prop;
+        slider.min = min;
+        slider.max = max;
+        slider.step = step;
+        slider.value = ribbon[prop] || min;
+        slider.addEventListener("input", function (event) {
+          valueLabel.textContent = `${slider.value}`;
+          ribbon[prop] = slider.value;
+        });
+        valueLabel.textContent = `${slider.value}`;
+
+        let labelElement = document.createElement("label");
+        labelElement.htmlFor = prop;
+        labelElement.textContent = prop;
+
+        let container = document.createElement("div");
+        container.appendChild(labelElement);
+        container.appendChild(slider);
+        container.appendChild(valueLabel);
+        document.body.insertBefore(container, ribbon);
+      }
+
       const ribbon = document.querySelector("go-annotation-ribbon-strips");
 
       window.addEventListener("appload", (event) => {
@@ -120,6 +150,10 @@
         ]);
         addSelect("colorBy", [{ value: "classes" }, { value: "annotations" }]);
         addInput("groupMaxLabelSize", "number");
+        addInput("minColor");
+        addInput("maxColor");
+        addSlider("maxColorLevel", 0, 1000, 10);
+        addSlider("colorScaleExponent", 0.1, 2, 0.05);
       });
     </script>
   </body>

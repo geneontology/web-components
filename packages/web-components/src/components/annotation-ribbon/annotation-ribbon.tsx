@@ -75,16 +75,6 @@ export class AnnotationRibbon {
   @Prop() subjects?: string;
 
   /**
-   * Labels used with class counts.
-   */
-  @Prop() classLabels = "term,terms";
-
-  /**
-   * Labels used with annotation counts.
-   */
-  @Prop() annotationLabels = "annotation,annotations";
-
-  /**
    * Whether to color cells by annotations or classes.
    */
   @Prop() colorBy: ColorByOption = "annotations";
@@ -97,19 +87,29 @@ export class AnnotationRibbon {
   @Prop() binaryColor = false;
 
   /**
-   * Color of cells with the least number of annotations or classes.
+   * Color of cells with the least number of annotations or classes. Any valid CSS color string
+   * can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
    */
-  @Prop() minColor = "255,255,255";
+  @Prop() minColor = "rgb(255,255,255)";
 
   /**
-   * Color of cells with the most number of annotations or classes.
+   * Color of cells with the most number of annotations or classes. Any valid CSS color string
+   * can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
    */
-  @Prop() maxColor = "24,73,180";
+  @Prop() maxColor = "rgb(24,73,180)";
 
   /**
-   * Maximum number of annotations or classes before `maxColor` is applied.
+   * Maximum number of annotations or classes before `maxColor` is applied. If
+   * 0, the maximum value is determined from the data.
    */
-  @Prop() maxHeatLevel = 48;
+  @Prop() maxColorLevel: number = 0;
+
+  /**
+   * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values
+   * less than 1 will make the color scale more sensitive to smaller values, while values greater
+   * than 1 will make it more sensitive to larger values.
+   */
+  @Prop() colorScaleExponent: number = 0.25;
 
   /**
    * Maximum size of group labels in characters.
@@ -347,14 +347,12 @@ export class AnnotationRibbon {
       <Host>
         <go-annotation-ribbon-strips
           ref={(el) => (this.stripsElement = el)}
-          annotationLabels={this.annotationLabels}
           binaryColor={this.binaryColor}
-          classLabels={this.classLabels}
           colorBy={this.colorBy}
           groupClickable={this.groupClickable}
           groupMaxLabelSize={this.groupMaxLabelSize}
           maxColor={this.maxColor}
-          maxHeatLevel={this.maxHeatLevel}
+          maxColorLevel={this.maxColorLevel}
           minColor={this.minColor}
           selected={this.selected}
           selectionMode={this.selectionMode}
@@ -371,7 +369,8 @@ export class AnnotationRibbon {
 
         {this.ribbonData && (
           <div class="muted margin-bottom">
-            Cell color indicative of annotation volume
+            Cell color indicative of number of{" "}
+            {this.colorBy === "annotations" ? "annotations" : "GO terms"}
           </div>
         )}
 

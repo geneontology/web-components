@@ -2,15 +2,9 @@
 
 Many visual aspects of GO Web Components can be customized using [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables) (also known as CSS variables) and [CSS shadow parts](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_shadow_parts). This allows you to change their visual appearance to better fit your application's design.
 
-:::warning
-
-These features are only available in the GO-CAM Viewer and related components. Support for customizing the GO Annotation Ribbon is still in development.
-
-:::
-
 ## CSS Custom Properties
 
-Refer to the CSS Custom Properties section of each component's documentation page to see which CSS custom properties are available for customization. For example, the `go-gocam-viewer` component has a property called `--graph-height` which controls the height of the overall display. If your want to change the height to suit your application better, you can add the following to your application's CSS:
+Refer to the CSS Custom Properties section of each component's documentation page to see which CSS custom properties are available for customization. For example, the `go-gocam-viewer` component has a CSS custom property called `--graph-height` which controls the height of the overall display. If your want to change the height to suit your application better, you can add the following to your application's CSS:
 
 ```css
 go-gocam-viewer {

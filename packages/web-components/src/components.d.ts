@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroup, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+import { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 import { Cam } from "./globals/@noctua.form";
-export { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroup, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
+export { ColorByOption, Placement, RibbonCellEvent, RibbonData, RibbonGroupEvent, RibbonSubject, SelectionModeOption, SubjectPositionOption, TableData } from "./globals/models";
 export { Cam } from "./globals/@noctua.form";
 export namespace Components {
     /**
@@ -24,25 +24,20 @@ export namespace Components {
      */
     interface GoAnnotationRibbon {
         /**
-          * Labels used with annotation counts.
-          * @default "annotation,annotations"
-         */
-        "annotationLabels": string;
-        /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor": boolean;
         /**
-          * Labels used with class counts.
-          * @default "term,terms"
-         */
-        "classLabels": string;
-        /**
           * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy": ColorByOption;
+        /**
+          * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values less than 1 will make the color scale more sensitive to smaller values, while values greater than 1 will make it more sensitive to larger values.
+          * @default 0.25
+         */
+        "colorScaleExponent": number;
         /**
           * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true
@@ -83,18 +78,18 @@ export namespace Components {
          */
         "hideColumns": string;
         /**
-          * Color of cells with the most number of annotations or classes.
-          * @default "24,73,180"
+          * Color of cells with the most number of annotations or classes. Any valid CSS color string can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
+          * @default "rgb(24,73,180)"
          */
         "maxColor": string;
         /**
-          * Maximum number of annotations or classes before `maxColor` is applied.
-          * @default 48
+          * Maximum number of annotations or classes before `maxColor` is applied. If 0, the maximum value is determined from the data.
+          * @default 0
          */
-        "maxHeatLevel": number;
+        "maxColorLevel": number;
         /**
-          * Color of cells with the least number of annotations or classes.
-          * @default "255,255,255"
+          * Color of cells with the least number of annotations or classes. Any valid CSS color string can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
+          * @default "rgb(255,255,255)"
          */
         "minColor": string;
         /**
@@ -157,54 +152,6 @@ export namespace Components {
         "tableDataApiEndpoint": string;
     }
     /**
-     * An individual cell in the annotation ribbon.
-     */
-    interface GoAnnotationRibbonCell {
-        /**
-          * @default "annotation,annotations"
-         */
-        "annotationLabels": string;
-        /**
-          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
-          * @default true
-         */
-        "available": boolean;
-        /**
-          * @default false
-         */
-        "binaryColor": boolean;
-        /**
-          * @default "term,terms"
-         */
-        "classLabels": string;
-        /**
-          * @default "annotations"
-         */
-        "colorBy": ColorByOption;
-        "group": RibbonGroup;
-        /**
-          * @default false
-         */
-        "hovered": boolean;
-        /**
-          * @default "24,73,180"
-         */
-        "maxColor": string;
-        /**
-          * @default 48
-         */
-        "maxHeatLevel": number;
-        /**
-          * @default "255,255,255"
-         */
-        "minColor": string;
-        /**
-          * @default false
-         */
-        "selected": boolean;
-        "subject": RibbonSubject;
-    }
-    /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
      * a subject (typically a gene), and each column represents a GO term. The color of each cell
      * indicates the relative number of GO annotations for that subject to the term or one of its
@@ -213,11 +160,6 @@ export namespace Components {
      * Events are fired when cells or cell headers (groups) are clicked or hovered over.
      */
     interface GoAnnotationRibbonStrips {
-        /**
-          * Labels used with annotation counts.
-          * @default "annotation,annotations"
-         */
-        "annotationLabels": string;
         /**
           * URL for the API endpoint to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
@@ -229,15 +171,15 @@ export namespace Components {
          */
         "binaryColor": boolean;
         /**
-          * Labels used with class counts.
-          * @default "term,terms"
-         */
-        "classLabels": string;
-        /**
           * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy": ColorByOption;
+        /**
+          * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values less than 1 will make the color scale more sensitive to smaller values, while values greater than 1 will make it more sensitive to larger values.
+          * @default 0.25
+         */
+        "colorScaleExponent": number;
         /**
           * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
@@ -249,18 +191,18 @@ export namespace Components {
          */
         "groupMaxLabelSize": number;
         /**
-          * Color of cells with the most number of annotations or classes.
-          * @default "24,73,180"
+          * Color of cells with the most number of annotations or classes. Any valid CSS color string can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
+          * @default "rgb(24,73,180)"
          */
         "maxColor": string;
         /**
-          * Maximum number of annotations or classes before `maxColor` is applied.
-          * @default 48
+          * Maximum number of annotations or classes before `maxColor` is applied. If 0, the maximum value is determined from the data.
+          * @default 0
          */
-        "maxHeatLevel": number;
+        "maxColorLevel": number;
         /**
-          * Color of cells with the least number of annotations or classes.
-          * @default "255,255,255"
+          * Color of cells with the least number of annotations or classes. Any valid CSS color string can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
+          * @default "rgb(255,255,255)"
          */
         "minColor": string;
         /**
@@ -513,15 +455,6 @@ declare global {
         prototype: HTMLGoAnnotationRibbonElement;
         new (): HTMLGoAnnotationRibbonElement;
     };
-    /**
-     * An individual cell in the annotation ribbon.
-     */
-    interface HTMLGoAnnotationRibbonCellElement extends Components.GoAnnotationRibbonCell, HTMLStencilElement {
-    }
-    var HTMLGoAnnotationRibbonCellElement: {
-        prototype: HTMLGoAnnotationRibbonCellElement;
-        new (): HTMLGoAnnotationRibbonCellElement;
-    };
     interface HTMLGoAnnotationRibbonStripsElementEventMap {
         "cellClick": RibbonCellEvent;
         "cellEnter": RibbonCellEvent;
@@ -682,7 +615,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "go-annotation-ribbon": HTMLGoAnnotationRibbonElement;
-        "go-annotation-ribbon-cell": HTMLGoAnnotationRibbonCellElement;
         "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
         "go-annotation-ribbon-subject": HTMLGoAnnotationRibbonSubjectElement;
         "go-annotation-ribbon-table": HTMLGoAnnotationRibbonTableElement;
@@ -709,25 +641,20 @@ declare namespace LocalJSX {
      */
     interface GoAnnotationRibbon {
         /**
-          * Labels used with annotation counts.
-          * @default "annotation,annotations"
-         */
-        "annotationLabels"?: string;
-        /**
           * If `true`, show only two colors (`minColor` and `maxColor`) to indicate the values of a cell. Otherwise, the color of a cell will be interpolated between `minColor` and `maxColor` based on the number of annotations or classes.
           * @default false
          */
         "binaryColor"?: boolean;
         /**
-          * Labels used with class counts.
-          * @default "term,terms"
-         */
-        "classLabels"?: string;
-        /**
           * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
+        /**
+          * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values less than 1 will make the color scale more sensitive to smaller values, while values greater than 1 will make it more sensitive to larger values.
+          * @default 0.25
+         */
+        "colorScaleExponent"?: number;
         /**
           * If true, will exclude the protein binding GO term (GO:0005515) from the table
           * @default true
@@ -768,18 +695,18 @@ declare namespace LocalJSX {
          */
         "hideColumns"?: string;
         /**
-          * Color of cells with the most number of annotations or classes.
-          * @default "24,73,180"
+          * Color of cells with the most number of annotations or classes. Any valid CSS color string can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
+          * @default "rgb(24,73,180)"
          */
         "maxColor"?: string;
         /**
-          * Maximum number of annotations or classes before `maxColor` is applied.
-          * @default 48
+          * Maximum number of annotations or classes before `maxColor` is applied. If 0, the maximum value is determined from the data.
+          * @default 0
          */
-        "maxHeatLevel"?: number;
+        "maxColorLevel"?: number;
         /**
-          * Color of cells with the least number of annotations or classes.
-          * @default "255,255,255"
+          * Color of cells with the least number of annotations or classes. Any valid CSS color string can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
+          * @default "rgb(255,255,255)"
          */
         "minColor"?: string;
         /**
@@ -842,54 +769,6 @@ declare namespace LocalJSX {
         "tableDataApiEndpoint"?: string;
     }
     /**
-     * An individual cell in the annotation ribbon.
-     */
-    interface GoAnnotationRibbonCell {
-        /**
-          * @default "annotation,annotations"
-         */
-        "annotationLabels"?: string;
-        /**
-          * If set to true, won't show any color and can not be hovered or selected This is used for group that can not have annotation for a given subject
-          * @default true
-         */
-        "available"?: boolean;
-        /**
-          * @default false
-         */
-        "binaryColor"?: boolean;
-        /**
-          * @default "term,terms"
-         */
-        "classLabels"?: string;
-        /**
-          * @default "annotations"
-         */
-        "colorBy"?: ColorByOption;
-        "group"?: RibbonGroup;
-        /**
-          * @default false
-         */
-        "hovered"?: boolean;
-        /**
-          * @default "24,73,180"
-         */
-        "maxColor"?: string;
-        /**
-          * @default 48
-         */
-        "maxHeatLevel"?: number;
-        /**
-          * @default "255,255,255"
-         */
-        "minColor"?: string;
-        /**
-          * @default false
-         */
-        "selected"?: boolean;
-        "subject"?: RibbonSubject;
-    }
-    /**
      * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
      * a subject (typically a gene), and each column represents a GO term. The color of each cell
      * indicates the relative number of GO annotations for that subject to the term or one of its
@@ -898,11 +777,6 @@ declare namespace LocalJSX {
      * Events are fired when cells or cell headers (groups) are clicked or hovered over.
      */
     interface GoAnnotationRibbonStrips {
-        /**
-          * Labels used with annotation counts.
-          * @default "annotation,annotations"
-         */
-        "annotationLabels"?: string;
         /**
           * URL for the API endpoint to fetch the ribbon data when subjects are provided.
           * @default "https://api.geneontology.org/api/ontology/ribbon/"
@@ -914,15 +788,15 @@ declare namespace LocalJSX {
          */
         "binaryColor"?: boolean;
         /**
-          * Labels used with class counts.
-          * @default "term,terms"
-         */
-        "classLabels"?: string;
-        /**
           * Whether to color cells by annotations or classes.
           * @default "annotations"
          */
         "colorBy"?: ColorByOption;
+        /**
+          * Exponent used to scale the color interpolation. A value of 1 will make the scale linear. Values less than 1 will make the color scale more sensitive to smaller values, while values greater than 1 will make it more sensitive to larger values.
+          * @default 0.25
+         */
+        "colorScaleExponent"?: number;
         /**
           * If `true`, the group labels are clickable and will trigger the `groupClick` event
           * @default true
@@ -934,18 +808,18 @@ declare namespace LocalJSX {
          */
         "groupMaxLabelSize"?: number;
         /**
-          * Color of cells with the most number of annotations or classes.
-          * @default "24,73,180"
+          * Color of cells with the most number of annotations or classes. Any valid CSS color string can be used, such as "rgb(24,73,180)", "#1849b4", or "blue".
+          * @default "rgb(24,73,180)"
          */
         "maxColor"?: string;
         /**
-          * Maximum number of annotations or classes before `maxColor` is applied.
-          * @default 48
+          * Maximum number of annotations or classes before `maxColor` is applied. If 0, the maximum value is determined from the data.
+          * @default 0
          */
-        "maxHeatLevel"?: number;
+        "maxColorLevel"?: number;
         /**
-          * Color of cells with the least number of annotations or classes.
-          * @default "255,255,255"
+          * Color of cells with the least number of annotations or classes. Any valid CSS color string can be used, such as "rgb(255,255,255)", "#ffffff", or "white".
+          * @default "rgb(255,255,255)"
          */
         "minColor"?: string;
         /**
@@ -1171,7 +1045,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "go-annotation-ribbon": GoAnnotationRibbon;
-        "go-annotation-ribbon-cell": GoAnnotationRibbonCell;
         "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
         "go-annotation-ribbon-subject": GoAnnotationRibbonSubject;
         "go-annotation-ribbon-table": GoAnnotationRibbonTable;
@@ -1200,10 +1073,6 @@ declare module "@stencil/core" {
              * [strips](./annotation-ribbon-strips), [table](./annotation-ribbon-table).
              */
             "go-annotation-ribbon": LocalJSX.GoAnnotationRibbon & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonElement>;
-            /**
-             * An individual cell in the annotation ribbon.
-             */
-            "go-annotation-ribbon-cell": LocalJSX.GoAnnotationRibbonCell & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonCellElement>;
             /**
              * The Annotation Ribbon Strips component displays a grid of cells. Each row in the grid represents
              * a subject (typically a gene), and each column represents a GO term. The color of each cell
