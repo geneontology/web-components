@@ -489,6 +489,9 @@ export class AnnotationRibbonStrips {
       this.colorBy === "annotations"
         ? this.maxNumAnnotations
         : this.maxNumClasses;
+    if (maxValue === 0) {
+      return this.minColor;
+    }
     return this.colorInterpolator(Math.min(value / maxValue, 1)).toString();
   }
 
