@@ -319,6 +319,13 @@ export namespace Components {
         "subjects"?: string;
     }
     /**
+     * A component that displays an error message when GO data fails to load.
+     */
+    interface GoDataLoadError {
+        "componentName": string;
+        "error": Error;
+    }
+    /**
      * The Entity Autocomplete component provides an input field that allows users to search for
      * entities (genes or GO terms) using the GO API.
      */
@@ -515,6 +522,15 @@ declare global {
         prototype: HTMLGoAnnotationRibbonTableElement;
         new (): HTMLGoAnnotationRibbonTableElement;
     };
+    /**
+     * A component that displays an error message when GO data fails to load.
+     */
+    interface HTMLGoDataLoadErrorElement extends Components.GoDataLoadError, HTMLStencilElement {
+    }
+    var HTMLGoDataLoadErrorElement: {
+        prototype: HTMLGoDataLoadErrorElement;
+        new (): HTMLGoDataLoadErrorElement;
+    };
     interface HTMLGoEntityAutocompleteElementEventMap {
         "itemSelected": any;
     }
@@ -618,6 +634,7 @@ declare global {
         "go-annotation-ribbon-strips": HTMLGoAnnotationRibbonStripsElement;
         "go-annotation-ribbon-subject": HTMLGoAnnotationRibbonSubjectElement;
         "go-annotation-ribbon-table": HTMLGoAnnotationRibbonTableElement;
+        "go-data-load-error": HTMLGoDataLoadErrorElement;
         "go-entity-autocomplete": HTMLGoEntityAutocompleteElement;
         "go-gocam-viewer": HTMLGoGocamViewerElement;
         "go-gocam-viewer-legend": HTMLGoGocamViewerLegendElement;
@@ -954,6 +971,13 @@ declare namespace LocalJSX {
         "subjects"?: string;
     }
     /**
+     * A component that displays an error message when GO data fails to load.
+     */
+    interface GoDataLoadError {
+        "componentName"?: string;
+        "error"?: Error;
+    }
+    /**
      * The Entity Autocomplete component provides an input field that allows users to search for
      * entities (genes or GO terms) using the GO API.
      */
@@ -1048,6 +1072,7 @@ declare namespace LocalJSX {
         "go-annotation-ribbon-strips": GoAnnotationRibbonStrips;
         "go-annotation-ribbon-subject": GoAnnotationRibbonSubject;
         "go-annotation-ribbon-table": GoAnnotationRibbonTable;
+        "go-data-load-error": GoDataLoadError;
         "go-entity-autocomplete": GoEntityAutocomplete;
         "go-gocam-viewer": GoGocamViewer;
         "go-gocam-viewer-legend": GoGocamViewerLegend;
@@ -1091,6 +1116,10 @@ declare module "@stencil/core" {
              * fetch data by itself, it expects the data to be provided in the `data` attribute.
              */
             "go-annotation-ribbon-table": LocalJSX.GoAnnotationRibbonTable & JSXBase.HTMLAttributes<HTMLGoAnnotationRibbonTableElement>;
+            /**
+             * A component that displays an error message when GO data fails to load.
+             */
+            "go-data-load-error": LocalJSX.GoDataLoadError & JSXBase.HTMLAttributes<HTMLGoDataLoadErrorElement>;
             /**
              * The Entity Autocomplete component provides an input field that allows users to search for
              * entities (genes or GO terms) using the GO API.

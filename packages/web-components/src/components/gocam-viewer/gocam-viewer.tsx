@@ -87,7 +87,7 @@ export class GocamViewer {
   /**
    * Indicates if the component has encountered an error while loading some data
    */
-  @State() error: boolean = false;
+  @State() error: Error | undefined = undefined;
 
   configService = new NoctuaFormConfigService();
 
@@ -293,14 +293,14 @@ export class GocamViewer {
   /**
    * Will request the gocam from the bbop manager; if manager approves, will trigger renderGoCam
    */
-  loadGoCam() {
+  async loadGoCam() {
     if (!this.gocamId || !this.apiUrl) {
       return;
     }
 
     this.graphDiv.innerHTML = "";
     this.loading = true;
-    this.error = false;
+    this.error = undefined;
     this.cam = undefined;
 
     let gocamCurie = this.gocamId;
@@ -309,14 +309,17 @@ export class GocamViewer {
     }
     const url = this.apiUrl.replace("%ID", gocamCurie);
 
-    ky.get(url)
-      .json()
-      .then((graph: any) => {
-        const model = graph.activeModel ?? graph;
-        if (model) {
-          this.setModelData(model);
-        }
-      });
+    try {
+      const graph: any = await ky.get(url).json();
+      const model = graph.activeModel ?? graph;
+      if (model) {
+        this.setModelData(model);
+      }
+    } catch (error: unknown) {
+      this.error = error as Error;
+    } finally {
+      this.loading = false;
+    }
   }
 
   renderGoCam(cam: Cam, expandComplex = false, layout = "dagre") {
@@ -757,6 +760,15 @@ export class GocamViewer {
   render() {
     if (this.genesPanel && !this.genesPanel.parentCy) {
       this.genesPanel.parentCy = this.cy;
+    }
+
+    if (this.error) {
+      return (
+        <go-data-load-error
+          componentName={this.constructor.name}
+          error={this.error}
+        />
+      );
     }
 
     return (

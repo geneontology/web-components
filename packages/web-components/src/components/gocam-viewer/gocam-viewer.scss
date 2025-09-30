@@ -77,6 +77,8 @@
    * @prop --node-align-items: Align-items of related node info
    *
    * @prop --function-nodes-padding: Padding of related nodes container in processes and activities panel
+   *
+   * @prop --loading-spinner-size: Size of loading spinner shown while loading GO-CAM data
    */
   --border-color: rgba(0, 0, 0, 0.125);
 
@@ -143,6 +145,8 @@
   @include standard-var-declarations(node, $border-color: var(--border-color));
 
   --function-nodes-padding: 0;
+
+  --loading-spinner-size: 2em;
 }
 
 .gocam-graph-and-activities-container {
@@ -206,6 +210,9 @@ button {
   height: var(--graph-height);
   box-sizing: border-box;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 go-gocam-viewer-legend {
@@ -226,4 +233,8 @@ go-gocam-viewer-sidebar {
 
 go-info-popover {
   padding: 0 0.6em;
+}
+
+go-spinner {
+  --size: var(--loading-spinner-size);
 }
