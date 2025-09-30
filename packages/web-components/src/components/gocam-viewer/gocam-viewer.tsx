@@ -12,6 +12,7 @@ import {
 import { Listen, Method, State } from "@stencil/core";
 import cytoscape from "cytoscape";
 import dagre from "cytoscape-dagre";
+import ky from "ky";
 import {
   Activity,
   ActivityType,
@@ -308,14 +309,9 @@ export class GocamViewer {
     }
     const url = this.apiUrl.replace("%ID", gocamCurie);
 
-    fetch(url)
-      .then((data) => {
-        return data.json();
-      })
-      .catch(() => {
-        console.error("Error while fetching gocam ", url);
-      })
-      .then((graph) => {
+    ky.get(url)
+      .json()
+      .then((graph: any) => {
         const model = graph.activeModel ?? graph;
         if (model) {
           this.setModelData(model);
