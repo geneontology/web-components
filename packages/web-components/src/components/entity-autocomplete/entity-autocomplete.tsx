@@ -86,6 +86,10 @@ export class EntityAutocomplete {
       .then((data) => {
         this.docs = data["docs"];
         // console.log(this.docs);
+      })
+      .catch((error) => {
+        console.error("Autocomplete request failed:", error);
+        this.docs = undefined;
       });
   }
 
