@@ -43,12 +43,6 @@ const config: Config = {
       disableSwitch: true,
       respectPrefersColorScheme: false,
     },
-    announcementBar: {
-      content:
-        "This package is an experimental prototype. Do not use in production. See <a href='https://github.com/geneontology/go-technical-announcements' target='_blank' rel='noopener noreferrer'>go-technical-annoucements</a> to get updates on the status of this package.",
-      backgroundColor: "orange",
-      isCloseable: false,
-    },
     navbar: {
       title: "GO Web Components",
       logo: {
