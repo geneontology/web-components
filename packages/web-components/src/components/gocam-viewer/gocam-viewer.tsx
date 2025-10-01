@@ -310,6 +310,8 @@ export class GocamViewer {
     const url = this.apiUrl.replace("%ID", gocamCurie);
 
     try {
+      // TODO: Define types for go-cam API response
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const graph: any = await ky.get(url).json();
       const model = graph.activeModel ?? graph;
       if (model) {
