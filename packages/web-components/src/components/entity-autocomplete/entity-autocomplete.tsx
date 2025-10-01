@@ -1,4 +1,5 @@
 import { Component, Prop, State, Event, EventEmitter, h } from "@stencil/core";
+import ky from "ky";
 
 import * as dbxrefs from "@geneontology/dbxrefs";
 
@@ -80,17 +81,15 @@ export class EntityAutocomplete {
         "&rows=" +
         this.maxResults;
     }
-    fetch(url)
-      .then((response) => {
-        if (response.status != 200) {
-          console.error("Not a 200 response: ", response);
-        } else {
-          return response.json();
-        }
-      })
+    ky.get(url)
+      .json()
       .then((data) => {
         this.docs = data["docs"];
         // console.log(this.docs);
+      })
+      .catch((error) => {
+        console.error("Autocomplete request failed:", error);
+        this.docs = undefined;
       });
   }
 

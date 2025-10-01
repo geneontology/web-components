@@ -1,11 +1,8 @@
+import ky from "ky";
 import { RibbonData, TableData } from "./models";
 
 async function getJson<T>(url: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return (await response.json()) as T;
+  return ky.get<T>(url, options).json();
 }
 
 export async function getRibbonSummary(

@@ -144,6 +144,7 @@ Type: `Promise<void>`
 | `--legend-header-padding`       | Padding of legend header                                                             |
 | `--legend-margin`               | Margin of legend container                                                           |
 | `--legend-padding`              | Padding of legend container                                                          |
+| `--loading-spinner-size`        | Size of loading spinner shown while loading GO-CAM data                              |
 | `--node-align-items`            | Align-items of related node info                                                     |
 | `--node-background`             | Background of related node info in processes and activities panel                    |
 | `--node-border-color`           | Border color of related node info in processes and activities panel                  |

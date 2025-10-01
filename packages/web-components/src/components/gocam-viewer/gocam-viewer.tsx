@@ -12,6 +12,7 @@ import {
 import { Listen, Method, State } from "@stencil/core";
 import cytoscape from "cytoscape";
 import dagre from "cytoscape-dagre";
+import ky from "ky";
 import {
   Activity,
   ActivityType,
@@ -86,7 +87,7 @@ export class GocamViewer {
   /**
    * Indicates if the component has encountered an error while loading some data
    */
-  @State() error: boolean = false;
+  @State() error: Error | undefined = undefined;
 
   configService = new NoctuaFormConfigService();
 
@@ -292,14 +293,14 @@ export class GocamViewer {
   /**
    * Will request the gocam from the bbop manager; if manager approves, will trigger renderGoCam
    */
-  loadGoCam() {
+  async loadGoCam() {
     if (!this.gocamId || !this.apiUrl) {
       return;
     }
 
     this.graphDiv.innerHTML = "";
     this.loading = true;
-    this.error = false;
+    this.error = undefined;
     this.cam = undefined;
 
     let gocamCurie = this.gocamId;
@@ -308,19 +309,19 @@ export class GocamViewer {
     }
     const url = this.apiUrl.replace("%ID", gocamCurie);
 
-    fetch(url)
-      .then((data) => {
-        return data.json();
-      })
-      .catch(() => {
-        console.error("Error while fetching gocam ", url);
-      })
-      .then((graph) => {
-        const model = graph.activeModel ?? graph;
-        if (model) {
-          this.setModelData(model);
-        }
-      });
+    try {
+      // TODO: Define types for go-cam API response
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const graph: any = await ky.get(url).json();
+      const model = graph.activeModel ?? graph;
+      if (model) {
+        this.setModelData(model);
+      }
+    } catch (error: unknown) {
+      this.error = error as Error;
+    } finally {
+      this.loading = false;
+    }
   }
 
   renderGoCam(cam: Cam, expandComplex = false, layout = "dagre") {
@@ -761,6 +762,15 @@ export class GocamViewer {
   render() {
     if (this.genesPanel && !this.genesPanel.parentCy) {
       this.genesPanel.parentCy = this.cy;
+    }
+
+    if (this.error) {
+      return (
+        <go-data-load-error
+          componentName={this.constructor.name}
+          error={this.error}
+        />
+      );
     }
 
     return (

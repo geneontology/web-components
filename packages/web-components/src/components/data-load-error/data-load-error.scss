@@ -1,0 +1,25 @@
+$background: #fff5f5;
+$border: #dbbdbd;
+$text: #721c24;
+
+.error {
+  border: 1px solid $border;
+  border-radius: 4px;
+  background: $background;
+  color: $text;
+  padding: 1em;
+
+  .error-header {
+    font-weight: bold;
+    padding-bottom: 1em;
+    border-bottom: 1px solid $border;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+
+  pre {
+    margin: 0;
+  }
+}

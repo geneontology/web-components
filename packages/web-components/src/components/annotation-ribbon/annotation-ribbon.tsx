@@ -40,10 +40,10 @@ export class AnnotationRibbon {
 
   @State() ribbonData?: RibbonData;
   @State() ribbonDataLoading = false;
-  @State() ribbonDataLoadingError = false;
+  @State() ribbonDataLoadingError: Error | undefined = undefined;
 
   @State() tableDataLoading = false;
-  @State() tableDataLoadingError = false;
+  @State() tableDataLoadingError: Error | undefined = undefined;
 
   /**
    * URL for the API endpoint to fetch the ribbon data when subjects are provided.
@@ -206,7 +206,7 @@ export class AnnotationRibbon {
     if (!this.subjects) {
       this.ribbonData = undefined;
       this.ribbonDataLoading = false;
-      this.ribbonDataLoadingError = false;
+      this.ribbonDataLoadingError = undefined;
       void this.stripsElement.setData(this.ribbonData);
       return void this.tableElement.setData(undefined);
     }
@@ -224,16 +224,15 @@ export class AnnotationRibbon {
 
     try {
       this.ribbonDataLoading = true;
-      this.ribbonDataLoadingError = false;
+      this.ribbonDataLoadingError = undefined;
       this.ribbonData = await getRibbonSummary(
         this.ribbonDataApiEndpoint,
         this.subjects,
         this.subset,
       );
       return this.stripsElement.setData(this.ribbonData);
-    } catch (error) {
-      console.error("Error loading ribbon data:", error);
-      this.ribbonDataLoadingError = true;
+    } catch (error: unknown) {
+      this.ribbonDataLoadingError = error as Error;
     } finally {
       this.ribbonDataLoading = false;
     }
@@ -253,7 +252,7 @@ export class AnnotationRibbon {
     try {
       await this.tableElement.setData(undefined);
       this.tableDataLoading = true;
-      this.tableDataLoadingError = false;
+      this.tableDataLoadingError = undefined;
       const tableData = await getTableData(
         this.tableDataApiEndpoint,
         subjectIds,
@@ -283,9 +282,8 @@ export class AnnotationRibbon {
         );
       }
       await this.tableElement.setData(tableData);
-    } catch (error) {
-      console.error("Error loading table data:", error);
-      this.tableDataLoadingError = true;
+    } catch (error: unknown) {
+      this.tableDataLoadingError = error as Error;
       await this.tableElement.setData(undefined);
     } finally {
       this.tableDataLoading = false;
@@ -364,7 +362,10 @@ export class AnnotationRibbon {
         />
         {this.ribbonDataLoading && <go-spinner />}
         {this.ribbonDataLoadingError && (
-          <div class="error">Error loading ribbon data.</div>
+          <go-data-load-error
+            componentName={this.constructor.name}
+            error={this.ribbonDataLoadingError}
+          />
         )}
 
         {this.ribbonData && (
@@ -385,7 +386,10 @@ export class AnnotationRibbon {
           excludeProteinBinding={this.excludeProteinBinding}
         />
         {this.tableDataLoadingError && (
-          <div class="error">Error loading table data.</div>
+          <go-data-load-error
+            componentName={this.constructor.name}
+            error={this.tableDataLoadingError}
+          />
         )}
       </Host>
     );
