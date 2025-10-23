@@ -141,3 +141,5 @@ A new version of this package can be published to NPM via GitHub Actions.
 
 5. Click the green "Run workflow" button.
 6. Verify that the workflow completes successfully and that the new version is available on NPM.
+7. If this release has publicly relevant changes, make an announcement on https://github.com/geneontology/go-technical-announcements/issues ("Widget library release" template).
+8. If this release has internally relevant changes, make a tracking issue in this repo to coordinate/track the rollout (TBD). 
