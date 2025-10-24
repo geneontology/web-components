@@ -8,4 +8,4 @@ Get started by checking out the [full documentation](https://geneontology.github
 
 ## Development
 
-For instructions on how to build and develop these components, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+For instructions on how to build, develop, and release these components, please see [CONTRIBUTING.md](CONTRIBUTING.md).
