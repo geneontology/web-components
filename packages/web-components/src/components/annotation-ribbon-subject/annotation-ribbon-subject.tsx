@@ -34,10 +34,17 @@ export class AnnotationRibbonSubject {
   @Prop() newTab: boolean = true;
 
   @Watch("subject")
+  @Watch("subjectBaseURL")
   subjectChanged() {
-    // fix due to doubling MGI:MGI: in GO
+    // AmiGO's bioentity URL scheme expects <db>:<curie>, so mouse genes need
+    // an extra "MGI:" prepended (e.g. MGI:107461 -> /gene_product/MGI:MGI:107461).
+    // Only apply when targeting AmiGO; other consumers (e.g. Alliance) use the
+    // bare CURIE.
     this.subjectId = this.subject.id;
-    if (this.subjectId.startsWith("MGI:")) {
+    if (
+      this.subjectBaseURLFull.includes("amigo.geneontology.org") &&
+      this.subjectId.startsWith("MGI:")
+    ) {
       this.subjectId = "MGI:" + this.subject.id;
     }
   }
