@@ -122,7 +122,7 @@ export namespace Components {
          */
         "showOtherGroup": boolean;
         /**
-          * Base URL used when rendering subject label links.
+          * Base URL used when rendering subject label links. When this targets AmiGO, mouse CURIEs are rewritten as `MGI:MGI:<id>` to match AmiGO's bioentity URL convention.
           * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
@@ -230,7 +230,7 @@ export namespace Components {
          */
         "showOtherGroup": boolean;
         /**
-          * Base URL used when rendering subject label links.
+          * Base URL used when rendering subject label links. When this targets AmiGO, mouse CURIEs are rewritten as `MGI:MGI:<id>` to match AmiGO's bioentity URL convention.
           * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl": string;
@@ -756,7 +756,7 @@ declare namespace LocalJSX {
          */
         "showOtherGroup"?: boolean;
         /**
-          * Base URL used when rendering subject label links.
+          * Base URL used when rendering subject label links. When this targets AmiGO, mouse CURIEs are rewritten as `MGI:MGI:<id>` to match AmiGO's bioentity URL convention.
           * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
@@ -883,7 +883,7 @@ declare namespace LocalJSX {
          */
         "showOtherGroup"?: boolean;
         /**
-          * Base URL used when rendering subject label links.
+          * Base URL used when rendering subject label links. When this targets AmiGO, mouse CURIEs are rewritten as `MGI:MGI:<id>` to match AmiGO's bioentity URL convention.
           * @default "https://amigo.geneontology.org/amigo/gene_product/"
          */
         "subjectBaseUrl"?: string;
