@@ -59,7 +59,9 @@ export class AnnotationRibbon {
     "https://api.geneontology.org/api/bioentityset/slimmer/function";
 
   /**
-   * Base URL used when rendering subject label links.
+   * Base URL used when rendering subject label links. When this targets
+   * AmiGO, mouse CURIEs are rewritten as `MGI:MGI:<id>` to match AmiGO's
+   * bioentity URL convention.
    */
   @Prop()
   subjectBaseUrl: string = "https://amigo.geneontology.org/amigo/gene_product/";
