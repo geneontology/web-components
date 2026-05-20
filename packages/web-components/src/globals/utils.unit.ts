@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { sameArray } from "./utils";
+import { describe, expect, it } from "vitest";
+
+import { normalizeRibbonSubjectIdForUrl, sameArray } from "./utils";
 
 describe("sameArray", () => {
   it("should return true for two empty arrays", () => {
@@ -34,5 +35,38 @@ describe("sameArray", () => {
     const obj2 = { id: 1 };
     const customEqFn = (a, b) => a.id === b.id;
     expect(sameArray([obj1], [obj2], customEqFn)).toBe(true);
+  });
+});
+
+describe("normalizeRibbonSubjectIdForUrl", () => {
+  it("prepends an extra MGI prefix for AmiGO MGI subject ids", () => {
+    expect(
+      normalizeRibbonSubjectIdForUrl(
+        "MGI:107461",
+        "https://amigo.geneontology.org/amigo/gene_product/",
+      ),
+    ).toBe("MGI:MGI:107461");
+  });
+
+  it("leaves MGI subject ids unchanged for non-AmiGO base urls", () => {
+    expect(
+      normalizeRibbonSubjectIdForUrl(
+        "MGI:107461",
+        "https://www.alliancegenome.org/gene/",
+      ),
+    ).toBe("MGI:107461");
+  });
+
+  it("leaves non-MGI subject ids unchanged for AmiGO base urls", () => {
+    expect(
+      normalizeRibbonSubjectIdForUrl(
+        "RGD:620474",
+        "https://amigo.geneontology.org/amigo/gene_product/",
+      ),
+    ).toBe("RGD:620474");
+  });
+
+  it("leaves subject ids unchanged when no base url is provided", () => {
+    expect(normalizeRibbonSubjectIdForUrl("MGI:107461")).toBe("MGI:107461");
   });
 });

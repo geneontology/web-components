@@ -2,6 +2,7 @@ import { Component, Event, EventEmitter, h, Prop, Watch } from "@stencil/core";
 
 import { formatTaxonLabel } from "./utils";
 import { RibbonSubject } from "../../globals/models";
+import { normalizeRibbonSubjectIdForUrl } from "../../globals/utils";
 
 /**
  * An individual subject in the annotation ribbon.
@@ -36,17 +37,10 @@ export class AnnotationRibbonSubject {
   @Watch("subject")
   @Watch("subjectBaseURL")
   subjectChanged() {
-    // AmiGO's bioentity URL scheme expects <db>:<curie>, so mouse genes need
-    // an extra "MGI:" prepended (e.g. MGI:107461 -> /gene_product/MGI:MGI:107461).
-    // Only apply when targeting AmiGO; other consumers (e.g. Alliance) use the
-    // bare CURIE.
-    this.subjectId = this.subject.id;
-    if (
-      this.subjectBaseURLFull.includes("amigo.geneontology.org") &&
-      this.subjectId.startsWith("MGI:")
-    ) {
-      this.subjectId = "MGI:" + this.subject.id;
-    }
+    this.subjectId = normalizeRibbonSubjectIdForUrl(
+      this.subject.id,
+      this.subjectBaseURLFull,
+    );
   }
 
   async componentDidLoad() {

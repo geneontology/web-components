@@ -54,7 +54,9 @@ describe("go-annotation-ribbon-strips", () => {
 
     expect(root.shadowRoot?.textContent).toContain("all annotations");
     expect(root.shadowRoot?.textContent).toContain("cellular process");
-    expect(root.shadowRoot?.querySelectorAll(".cell").length).toBeGreaterThan(0);
+    expect(root.shadowRoot?.querySelectorAll(".cell").length).toBeGreaterThan(
+      0,
+    );
 
     const subject =
       root.shadowRoot?.querySelector<HTMLGoAnnotationRibbonSubjectElement>(

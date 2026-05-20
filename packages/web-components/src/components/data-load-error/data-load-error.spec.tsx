@@ -5,10 +5,7 @@ describe("go-data-load-error", () => {
   it("renders the help text and diagnostic details", async () => {
     const error = new Error("Request failed");
     const { root } = await render(
-      <go-data-load-error
-        componentName="AnnotationRibbon"
-        error={error}
-      />,
+      <go-data-load-error componentName="AnnotationRibbon" error={error} />,
     );
 
     expect(root.shadowRoot?.textContent).toContain("Failed to load GO data");

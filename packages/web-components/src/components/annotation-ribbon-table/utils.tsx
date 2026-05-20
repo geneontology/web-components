@@ -1,5 +1,6 @@
 import { DisplayTable, TableData } from "../../globals/models";
 import { Immutable } from "immer";
+import { normalizeRibbonSubjectIdForUrl } from "../../globals/utils";
 
 /**
  * For table that have cells with multiple values
@@ -39,6 +40,7 @@ export function bioLinkToTable(
   data: Immutable<TableData>,
   getURL: (db: string, type: string | undefined, id: string) => string,
 ): DisplayTable {
+  const geneBaseURL = "http://amigo.geneontology.org/amigo/gene_product/";
   const table: DisplayTable = {
     newTab: true,
     header: [
@@ -52,7 +54,7 @@ export function bioLinkToTable(
         label: "Gene",
         id: "gene",
         description: "Gene or gene product",
-        baseURL: "http://amigo.geneontology.org/amigo/gene_product/",
+        baseURL: geneBaseURL,
       },
       {
         label: "Qualifier",
@@ -110,7 +112,10 @@ export function bioLinkToTable(
             values: [
               {
                 label: assoc.subject.label,
-                url: assoc.subject.id,
+                url: normalizeRibbonSubjectIdForUrl(
+                  assoc.subject.id,
+                  geneBaseURL,
+                ),
               },
             ],
           },

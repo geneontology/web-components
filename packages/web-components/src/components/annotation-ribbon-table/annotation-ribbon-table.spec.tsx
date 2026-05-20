@@ -64,9 +64,9 @@ describe("go-annotation-ribbon-table", () => {
     await root.setData(mockTableData);
     await waitForChanges();
 
-    const headers = Array.from(root.shadowRoot?.querySelectorAll("th") ?? []).map(
-      (header) => header.textContent?.trim(),
-    );
+    const headers = Array.from(
+      root.shadowRoot?.querySelectorAll("th") ?? [],
+    ).map((header) => header.textContent?.trim());
     expect(headers).toContain("Aspect");
     expect(headers).toContain("Gene");
     expect(headers).toContain("Term");
@@ -76,10 +76,41 @@ describe("go-annotation-ribbon-table", () => {
       (link) => link.getAttribute("href"),
     );
     expect(links).toContain(
-      "http://amigo.geneontology.org/amigo/gene_product/MGI:107461",
+      "http://amigo.geneontology.org/amigo/gene_product/MGI:MGI:107461",
     );
-    expect(links).toContain("http://amigo.geneontology.org/amigo/term/GO:0009987");
+    expect(links).toContain(
+      "http://amigo.geneontology.org/amigo/term/GO:0009987",
+    );
     expect(root.shadowRoot?.textContent).toContain("Pax6");
     expect(root.shadowRoot?.textContent).toContain("cellular process");
+  });
+
+  it("does not prepend an extra MGI prefix for non-AmiGO gene links", async () => {
+    const nonAmigoTableData: TableData = [
+      {
+        ...mockTableData[0],
+        assocs: mockTableData[0].assocs.map((assoc) => ({
+          ...assoc,
+          subject: {
+            ...assoc.subject,
+            label: "pax2a",
+            id: "ZFIN:ZDB-GENE-990415-8",
+          },
+        })),
+      },
+    ];
+
+    const { root, waitForChanges } =
+      await render<HTMLGoAnnotationRibbonTableElement>(
+        <go-annotation-ribbon-table excludeProteinBinding={false} />,
+      );
+
+    await root.setData(nonAmigoTableData);
+    await waitForChanges();
+
+    const geneLink = root.shadowRoot?.querySelector("a")?.getAttribute("href");
+    expect(geneLink).toBe(
+      "http://amigo.geneontology.org/amigo/gene_product/ZFIN:ZDB-GENE-990415-8",
+    );
   });
 });

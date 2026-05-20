@@ -70,7 +70,9 @@ describe("go-gocam-viewer-sidebar", () => {
     const onSelectChanged = vi.fn();
 
     const { root, waitForChanges } =
-      await render<HTMLGoGocamViewerSidebarElement>(<go-gocam-viewer-sidebar />);
+      await render<HTMLGoGocamViewerSidebarElement>(
+        <go-gocam-viewer-sidebar />,
+      );
     root.addEventListener("selectChanged", onSelectChanged as EventListener);
 
     root.cam = mockCam as never;

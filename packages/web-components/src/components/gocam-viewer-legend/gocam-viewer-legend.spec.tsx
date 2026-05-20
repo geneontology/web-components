@@ -7,7 +7,9 @@ describe("go-gocam-viewer-legend", () => {
 
     expect(root.shadowRoot?.textContent).toContain("Relation Types");
     expect(root.shadowRoot?.textContent).toContain("provides input for");
-    expect(root.shadowRoot?.querySelectorAll("marker").length).toBeGreaterThan(0);
+    expect(root.shadowRoot?.querySelectorAll("marker").length).toBeGreaterThan(
+      0,
+    );
     expect(root.shadowRoot?.querySelectorAll(".section").length).toBe(3);
   });
 });

@@ -4,10 +4,7 @@
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "es2022"
-    ],
+    "lib": ["dom", "es2022"],
     "moduleResolution": "bundler",
     "module": "esnext",
     "resolveJsonModule": true,
@@ -20,5 +17,5 @@
     "jsxFragmentFactory": "h.Fragment",
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src"]
 }

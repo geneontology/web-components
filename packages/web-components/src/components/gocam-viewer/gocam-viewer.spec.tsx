@@ -22,7 +22,9 @@ describe("go-gocam-viewer", () => {
 
     expect(root.shadowRoot?.textContent).toContain("Processes and Activities");
     expect(root.shadowRoot?.textContent).toContain("Reset View");
-    expect(root.shadowRoot?.querySelector("go-gocam-viewer-sidebar")).not.toBeNull();
+    expect(
+      root.shadowRoot?.querySelector("go-gocam-viewer-sidebar"),
+    ).not.toBeNull();
     expect(root.shadowRoot?.querySelector("go-gocam-viewer-legend")).toBeNull();
   });
 });
