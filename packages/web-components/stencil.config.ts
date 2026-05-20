@@ -3,6 +3,7 @@ import { sass } from "@stencil/sass";
 
 export const config: Config = {
   namespace: "web-components",
+  tsconfig: "./tsconfig.stencil.json",
   plugins: [sass()],
   outputTargets: [
     {

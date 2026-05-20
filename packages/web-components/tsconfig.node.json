@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "esnext"
+  },
+  "include": [
+    "vitest.config.ts",
+    "vitest-setup.ts",
+    "stencil.config.ts",
+    "scripts/**/*.ts"
+  ]
+}
