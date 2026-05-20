@@ -85,7 +85,7 @@ describe("go-annotation-ribbon-table", () => {
     expect(root.shadowRoot?.textContent).toContain("cellular process");
   });
 
-  it("does not prepend an extra MGI prefix for non-AmiGO gene links", async () => {
+  it("does not prepend an MGI prefix for non-MGI gene links", async () => {
     const nonAmigoTableData: TableData = [
       {
         ...mockTableData[0],
