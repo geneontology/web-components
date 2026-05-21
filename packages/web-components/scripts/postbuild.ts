@@ -47,9 +47,14 @@ async function updateReadmeDocsUsageSections() {
 
   // Get the directories that contain the readme files produced by the docs-readme output target.
   // The file structure produced by the output target is: {dir}/{component}/readme.md.
-  const readmeConfig = config.outputTargets.find(
+  const readmeConfig = config.outputTargets?.find(
     (ot) => ot.type === "docs-readme",
   ) as OutputTargetDocsReadme;
+  if (!readmeConfig || !readmeConfig.dir) {
+    throw new Error(
+      "Could not find docs-readme output target in Stencil config.",
+    );
+  }
   const componentsDir = path.resolve(
     PROJECT_ROOT.pathname,
     readmeConfig.dir,
@@ -80,10 +85,7 @@ async function updateReadmeDocsUsageSections() {
     try {
       srcUsageContent = await fs.readdir(srcUsagePath);
     } catch (err) {
-      if (
-        Object.prototype.hasOwnProperty.call(err, "code") &&
-        err.code === "ENOENT"
-      ) {
+      if ((err as NodeJS.ErrnoException).code === "ENOENT") {
         continue;
       }
       throw err;
@@ -147,7 +149,7 @@ async function updateReadmeDocsUsageSections() {
     const readmeContent = await fs.readFile(readmePath, "utf-8");
     const tree = parser.parse(readmeContent);
     let inTargetSection = false;
-    let startIndex = null;
+    let startIndex: number | undefined = undefined;
     visit(tree, "heading", (node, index, parent) => {
       if (node.depth === 2) {
         if (
@@ -158,6 +160,13 @@ async function updateReadmeDocsUsageSections() {
           inTargetSection = true;
           startIndex = index;
         } else if (inTargetSection) {
+          if (
+            parent === undefined ||
+            index === undefined ||
+            startIndex === undefined
+          ) {
+            throw new Error("Unexpected node structure in readme file.");
+          }
           // We have found another level 2 header after the Usage one. But don't get fooled by the
           // "fake" ones that are actually there because docs-readme doesn't understand frontmatter.
           // These are distinguished by the fact that they are preceded by a thematic break. Once we
@@ -179,7 +188,7 @@ async function updateReadmeDocsUsageSections() {
     });
 
     // Handle the case where the Usage section is the last one in the file.
-    if (inTargetSection && startIndex !== null) {
+    if (inTargetSection && startIndex !== undefined) {
       const parent = tree.children;
       parent.splice(
         startIndex + 1,
